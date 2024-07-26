@@ -6,7 +6,10 @@ import { Profile } from '../routes/Profile';
 import { Root } from "../routes/Root";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Home } from "../routes/Home";
-
+import { AboutUs } from "../routes/AboutUs";
+import { Certification } from "../routes/Certification";
+import { Practitioner } from "../routes/Practitioner"
+ 
 const router = createBrowserRouter([
   {
     path: '/',
@@ -19,6 +22,18 @@ const router = createBrowserRouter([
       {
         path: '/profile',
         element: <Profile />,
+      },
+      {
+        path: '/about',
+        element: <AboutUs />
+      },
+      {
+        path: '/certification',
+        element: <Certification />
+      },
+      {
+        path: '/practitioner',
+        element: <Practitioner />
       }
     ]
   },

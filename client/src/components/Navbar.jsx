@@ -20,6 +20,9 @@ export const Navbar = () => {
         <>
             <Link to='/'>Home</Link>
             <Link to='/profile'>Profile</Link>
+            <Link to='/about'>About Us</Link>
+            <Link to='/certification'>Certification</Link>
+            <Link to='/practitioner'>Find Practitioner</Link>
             <button onClick={handleLogout}>Logout</button>
         </> :
         <>
