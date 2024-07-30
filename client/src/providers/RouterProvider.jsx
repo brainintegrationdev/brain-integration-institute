@@ -14,12 +14,47 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />
+        element: <Auth />
+      },
+      {
+        path: '/about',
+        element: <About />
       },
       {
         path: '/profile',
         element: <Profile />,
-      }
+      },
+      {
+        path: '/practitioner--home',
+        element: <Practioners />
+      },
+      {
+        path: '/home',
+        element: <Home />,
+        children: [
+          {
+            index: true,
+            element: <UserCerts_Home/>
+          },
+          {
+            path: '/usercerts-1-studyguide',
+            element: <UserCerts_StudyGuide/>
+          },
+          {
+            path: '/usercerts-2-payfee',
+            element: <UserCerts_PayFee/>
+          },
+          {
+            path: '/usercerts-3-assessmentportl',
+            element: <UserCerts_TakeAssessment/>
+          },
+        ]
+      },
+      {
+        path: '/home/usercerts',
+        element: <UserCerts />,
+        
+      },
     ]
   },
 ])

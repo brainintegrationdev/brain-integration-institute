@@ -19,7 +19,14 @@ export const Navbar = () => {
     const links = isAuthenticated ?
         <>
             <Link to='/'>Home</Link>
+            <Link to='/about'>About</Link>
+            <select name="certification--dropdown">
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+            </select>
             <Link to='/profile'>Profile</Link>
+            <Link to='/practitioner--home'>Find a Practitioner</Link>
             <button onClick={handleLogout}>Logout</button>
         </> :
         <>
