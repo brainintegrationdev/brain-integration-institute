@@ -1,6 +1,9 @@
 const { init } = require('./services/cdn');
 const { server } = require("./server");
+const morgan = require ('morgan')
 const mg = require('mongoose');
+require('dotenv').config()
+
 
 
 mg.connect(process.env.MONGODB_URI).then((config) => {
