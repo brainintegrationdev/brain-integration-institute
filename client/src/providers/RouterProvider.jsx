@@ -25,8 +25,20 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: '/practitioner--home',
-        element: <Practioners />
+        path: '/practitioners',
+        element: <Practioners />,
+      },
+      {
+        path: '/certifications',
+        element: <CertificationHome />,
+        children: [{
+          path: '/option--1',
+          element: <CertOption1/>,
+          path: '/option--2',
+          element: <CertOption2/>,
+          path: '/option--3',
+          element: <CertOption3/>,
+        }]
       },
       {
         path: '/home',
@@ -53,7 +65,6 @@ const router = createBrowserRouter([
       {
         path: '/home/usercerts',
         element: <UserCerts />,
-        
       },
     ]
   },
