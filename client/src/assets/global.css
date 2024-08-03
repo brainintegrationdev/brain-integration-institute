@@ -1,3 +1,50 @@
 * {
     box-sizing: border-box;
 }
+
+.fenix-regular {
+    font-family: "Fenix", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .banner-parent {
+    position: relative;
+  }
+  
+  .text-on-banner {
+    position: absolute;
+    right: 70%;
+  left: 5%;
+  bottom: 25%;
+ 
+  }
+
+  .accordion-header {
+    font-family: "Fenix", serif;
+    
+    font-size: 48px;
+    color: #FFFFFF;
+    padding-left: 300px;
+    padding-top: 40px;
+  }
+
+  .gradient {
+    display: flex;
+    background-image: linear-gradient(
+  to right,
+  /* First color stop at 0% */
+  #7AB252 0%,
+  /* Second color stop at 25% */
+  #60A450 28%,
+  /* Third color stop at 75% */
+  #50984F 55%,
+  /* Fourth color stop at 100% */
+  #AECF87 100%
+);
+height: 281px;
+  }
+
+  .accordion-div {
+    background-color: #ECECEC;  
+  }
