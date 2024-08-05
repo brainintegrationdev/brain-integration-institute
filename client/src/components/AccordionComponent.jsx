@@ -7,8 +7,10 @@ import 'react-accessible-accordion/dist/fancy-example.css';
 export const AccordionComponent = () => {
     console.log(AccordionCopy);
 
+    
+
     return (
-        <div className="accordion-div">
+        <div>
             <Accordion allowZeroExpanded>
                 {AccordionCopy.map((copy) => (
                     <AccordionCard {...copy} key={copy.title} />

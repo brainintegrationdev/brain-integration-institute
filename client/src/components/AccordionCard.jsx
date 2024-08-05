@@ -1,5 +1,6 @@
 
 import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
+import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png'
 import {
     AccordionItem,
     AccordionItemHeading,
@@ -13,15 +14,18 @@ import {
 
 
     return (
+        <div className="accordion-div">
         <AccordionItem>
             <AccordionItemHeading>
-                <AccordionItemButton><div>{title} <img src={AccordionDropDown} /></div></AccordionItemButton>
+                <AccordionItemButton><div className='accordion-flexbox'><img src={AccordionRadioUnfilled} /><h1 className='accordion-title'>{title}</h1> <img src={AccordionDropDown} /></div></AccordionItemButton>
             </AccordionItemHeading>
             <AccordionItemPanel>
-                <p>{text}</p>
+                <p className='accordion-text'>{text}</p>
             </AccordionItemPanel>
         </AccordionItem>
+        </div>
     );
+    
     
 };
 
