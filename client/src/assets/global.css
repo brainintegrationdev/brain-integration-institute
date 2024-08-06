@@ -2,26 +2,16 @@
     box-sizing: border-box;
 }
 
-.fenix-regular {
-    color: #FFF;
 
-text-align: center;
-font-family: Fenix;
-font-size: 48px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
-letter-spacing: -0.96px;
-opacity: var(--sds-size-stroke-border);
-  }
 
-  .seal {
+  /* Navbar */
+.seal {
     width: 134px;
-height: 134px;
-flex-shrink: 0;
+    height: 134px;
+    flex-shrink: 0;
   }
 
-  .seal-div {
+.seal-div {
     display: flex;
     padding-right: 46vw;
     justify-content: end;
@@ -36,13 +26,9 @@ flex-shrink: 0;
     gap: 4px;
 }
 
-.nav-flexbox-child {
-    
-}
 
-  .nav-links {
+.nav-links {
     color: #676767;
-    
     text-align: center;
     font-family: "Frank Ruhl Libre";
     font-size: 12px;
@@ -57,60 +43,90 @@ flex-shrink: 0;
     text-decoration: none; /* Remove underline */
 }
 
-  .banner-parent {
+/* Accordion */
+
+.banner-parent {
     position: relative;
-    
-  }
-  .green-banner{
+}
+  
+.green-banner{
     width: 1728px;
     height: 281px;
     flex-shrink: 0;
     fill: linear-gradient(90deg, #7AB252 0%, #60A450 28.01%, #50984F 54.8%, #AECF87 100%);
     opacity: var(--sds-size-stroke-border);
-  }
+}
 
-
-  .text-on-banner {
+.text-on-banner {
     position: absolute;
     right: 50%;
-  left: 5%;
-  bottom: 40%;
- 
-  }
+    left: 5%;
+    bottom: 40%;
+ }
 
-  .progress-ring {
+.progress-ring {
     width: 200px;
     height: 200px;
     flex-shrink: 0;
-  }
+}
 
-  .cert-flex {
+.cert-flex {
     display: flex;
     padding-left: 5vw;
     padding-top: 1vh;
     padding-right: 48vw;
-   
+}
 
-  }
-
-  .cert-text {
+.cert-text {
     color: #000;
     font-family: "Fira Sans";
     font-size: 20px;
     font-style: normal;
     font-weight: 300;
     line-height: normal;
-  }
+}
 
-  .text-accordion-flex {
+.text-accordion-flex {
     display: flex;
     flex-direction: column;
     padding-top: 7vh;
     padding-left: 5vw;
     margin-bottom: 10vh;
-  }
+}
 
-  .accordion-flexbox {
+
+
+.accordion-header {
+    font-family: "Fenix", serif;
+    font-size: 48px;
+    color: #FFFFFF;
+    padding-left: 200px;
+    padding-top: 40px;
+}
+
+.accordion__button:before {
+    display: none;
+}
+
+
+.accordion-title {
+    font-family: "Fira Sans", san serif;
+    font-size: 20px;
+    color: black;
+    font-weight: 700;
+}
+
+.accordion-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: 
+    gap: 16px;
+    margin-bottom: 16px;
+    border: 2px solid black;
+    border-radius: 8px;
+}
+
+.accordion-flexbox {
     display: flex;
     width: 832px;
     height: 80px;
@@ -124,56 +140,5 @@ flex-shrink: 0;
     opacity: var(--sds-size-stroke-border);
     background: #ECECEC;
     
-  }
+}
 
-  .accordion-header {
-    font-family: "Fenix", serif;
-    font-size: 48px;
-    color: #FFFFFF;
-    padding-left: 200px;
-    padding-top: 40px;
-  }
-
-  .accordion__button:before {
-    display: none;
-  }
-
-  .accordion_item {
-    display: none;
-  }
-
-  .accordion-title {
-    font-family: "Fira Sans", san serif;
-    font-size: 20px;
-    color: black;
-    font-weight: 700;
-  }
-
-  .gradient {
-    display: flex;
-    background-image: linear-gradient(
-  to right,
-  /* First color stop at 0% */
-  #7AB252 0%,
-  /* Second color stop at 25% */
-  #60A450 28%,
-  /* Third color stop at 75% */
-  #50984F 55%,
-  /* Fourth color stop at 100% */
-  #AECF87 100%
-);
-height: 281px;
-  }
-
-  .accordion-div {
-    display: flex;
-    justify-content: 
-    gap: 16px;
-    margin-bottom: 16px;
-    border: 2px solid black;
-    border-radius: 8px;
-  }
-
- .accordion_item {
-    display: none;
- }
