@@ -23,7 +23,7 @@ const practitionerList = practitioners.map(person =>
     return (
         <>
         <h1>Find Practitioner</h1>
-        <div style = {{display:"inline-block"}}>
+        <div>
         {practitionerList}
         </div>
         </>
