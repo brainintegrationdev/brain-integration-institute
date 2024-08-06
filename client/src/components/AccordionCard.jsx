@@ -1,6 +1,7 @@
 import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
 import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
 import {
+    Accordion,
     AccordionItem,
     AccordionItemHeading,
     AccordionItemButton,
@@ -10,6 +11,7 @@ import {
 const AccordionCard = () => {
     return (
         <div className="accordion-div">
+              <Accordion allowZeroExpanded={true}>
             <AccordionItem>
                 <AccordionItemHeading>
                     <AccordionItemButton>
@@ -379,6 +381,7 @@ const AccordionCard = () => {
                     </div>
                 </AccordionItemPanel>
             </AccordionItem>
+            </Accordion>
         </div>
     );
 };

@@ -1,7 +1,6 @@
-import { AccordionComponent } from '../components/AccordionComponent';
+// import { AccordionComponent } from '../components/AccordionComponent';
+import  AccordionCard  from '../components/AccordionCard'
 import GreenBannerCertPage from '../assets/icons/GreenBannerCertPage.png';
-// import BrainIntegrationSeal from '../assets/icons/BrainIntegrationSeal.png';
-// import { Navbar } from '../components/Navbar';
 import ProgressRing from '../assets/icons/Progress Ring.png';
 
 export const Certification = () => {
@@ -26,7 +25,7 @@ export const Certification = () => {
                         have any questions about the process, please contact us,
                         and a member of our board will be happy to assist you.
                     </p>
-                    <AccordionComponent />
+                    <AccordionCard />
                 </div>
             </div>
             
