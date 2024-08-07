@@ -142,3 +142,15 @@
     
 }
 
+.form-flex {
+    display: flex;
+    justify-content: center;
+    
+}
+
+.accordion-item-flex {
+    display: flex;
+    flex-direction: column;
+    margin: 16px;
+}
+
