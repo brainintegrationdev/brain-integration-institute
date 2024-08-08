@@ -6,25 +6,18 @@ import ProgressRing from '../assets/icons/Progress Ring.png';
 export const Certification = () => {
     return (
         <>
-            <div className="banner-parent">
-                <img className="green-banner" src={GreenBannerCertPage} />
-                <div className="text-on-banner">
-                    <h1 className="accordion-header">
+            <div className="relative">
+                <img className="w-1728 h-281 shrink-0" src={GreenBannerCertPage} />
+                <div className="absolute right-50 left-5 bottom-40">
+                    <h1 className="font-fenix 48px text-white text-5xl pl-12.5 pt-2.5">
                         Integration Certification
                     </h1>
                 </div>
             </div>
-            <div className="cert-flex">
-                <img className="progress-ring" src={ProgressRing} />
-                <div className="text-accordion-flex">
-                    <p className='cert-text'>
-                        Follow these steps to submit your documentation for
-                        certification review. You may complete them in any
-                        order, except for the assessment, which can only be
-                        accessed once the preceding items are completed. If you
-                        have any questions about the process, please contact us,
-                        and a member of our board will be happy to assist you.
-                    </p>
+            <div className="flex pl-5 pt-1 pr-30">
+                {/* <img className="h-48 w-48" src={ProgressRing} /> */}
+                <div className="flex flex-col pt-5 pl-5 mb-7">
+                 
                     <AccordionCard />
                 </div>
             </div>

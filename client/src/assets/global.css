@@ -53,6 +53,10 @@
 .banner-parent {
     position: relative;
 }
+
+.accordion {
+    gap: 10px;
+}
   
 .green-banner{
     width: 1728px;
@@ -113,6 +117,10 @@
     display: none;
 }
 
+.accordion {
+    width: 832px;
+}
+
 
 .accordion-title {
     font-family: "Fira Sans", san serif;
@@ -124,7 +132,7 @@
 .accordion-div {
     display: flex;
     flex-direction: column;
-    justify-content: 
+    justify-content: center; 
     gap: 16px;
     margin-bottom: 16px;
     border: 2px solid black;
@@ -136,7 +144,7 @@
     width: 832px;
     height: 80px;
     padding: 24px 16px 24px 79px;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     gap: 267px;
     flex-shrink: 0;
@@ -158,4 +166,18 @@
     flex-direction: column;
     margin: 16px;
 }
+
+
+    .accordion-item {
+        position: relative;
+    }
+
+    .accordion-item-panel {
+        border-top: 2px solid black;
+    }
+
+    .accordion-item-button {
+        border-bottom: 2px solid black;
+    }
+
 

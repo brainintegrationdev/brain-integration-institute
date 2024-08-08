@@ -32,8 +32,8 @@ export const Navbar = () => {
         </div>
     );
     return (
-        <nav className="nav-flexbox">
-            <div className="seal-div">
+        <nav className="nav-flexbox ">
+            <div className="flex pr-96 justify-end align-center pb-10 ">
                 <img className="seal" src={BrainIntegrationSeal} />
                 
             </div>
