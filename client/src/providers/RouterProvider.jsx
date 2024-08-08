@@ -7,7 +7,10 @@ import { Root } from "../routes/Root";
 import { Auth } from '../routes/Auth';
 import { useAuth0 } from "@auth0/auth0-react";
 import { Home } from "../routes/Home";
-
+import { AboutUs } from "../routes/AboutUs";
+import { Certification } from "../routes/Certification";
+import { Practitioner } from "../routes/Practitioner"
+ 
 const router = createBrowserRouter([
   {
     path: '/',
@@ -25,48 +28,18 @@ const router = createBrowserRouter([
         path: '/profile',
         element: <Profile />,
       },
-      // {
-      //   path: '/practitioners',
-      //   element: <Practioners />,
-      // },
-      // {
-      //   path: '/certifications',
-      //   element: <CertificationHome />,
-      //   children: [{
-      //     path: '/option--1',
-      //     element: <CertOption1/>,
-      //     path: '/option--2',
-      //     element: <CertOption2/>,
-      //     path: '/option--3',
-      //     element: <CertOption3/>,
-      //   }]
-      // },
-      // {
-      //   path: '/home',
-      //   element: <Home />,
-      //   children: [
-      //     {
-      //       index: true,
-      //       element: <UserCerts_Home/>
-      //     },
-      //     {
-      //       path: '/usercerts-1-studyguide',
-      //       element: <UserCerts_StudyGuide/>
-      //     },
-      //     {
-      //       path: '/usercerts-2-payfee',
-      //       element: <UserCerts_PayFee/>
-      //     },
-      //     {
-      //       path: '/usercerts-3-assessmentportl',
-      //       element: <UserCerts_TakeAssessment/>
-      //     },
-      //   ]
-      // },
-      // {
-      //   path: '/home/usercerts',
-      //   element: <UserCerts />,
-      // },
+      {
+        path: '/about',
+        element: <AboutUs />
+      },
+      {
+        path: '/certification',
+        element: <Certification />
+      },
+      {
+        path: '/practitioner',
+        element: <Practitioner />
+      }
     ]
   },
 ])

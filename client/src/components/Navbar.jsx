@@ -1,44 +1,48 @@
-import { useAuth0 } from "@auth0/auth0-react"
-import { Link } from "react-router-dom";
-
-
+import { useAuth0 } from '@auth0/auth0-react';
+import { Link } from 'react-router-dom';
+import BrainIntegrationSeal from '../assets/icons/BrainIntegrationSeal.png';
 
 export const Navbar = () => {
     const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
 
-    const handleLogin = () => loginWithRedirect({
-        authorizationParams: {
-            redirect_uri: location.origin + '/profile'
-        }
-    })
+    const handleLogin = () =>
+        loginWithRedirect({
+            authorizationParams: {
+                redirect_uri: location.origin + '/profile',
+            },
+        });
 
     const handleLogout = () => {
         logout();
-    }
+    };
 
-    const links = isAuthenticated ?
-        <>
-            <Link to='/'>Home</Link>
-            <Link to='/about'>About</Link>
-            <select name="certification--dropdown">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-            </select>
-            <Link to='/profile'>Profile</Link>
-            <Link to='/practitioner--home'>Find a Practitioner</Link>
+    const links = isAuthenticated ? (
+        <div>
+            <Link to="/">HOME</Link>
+            <Link to="/profile">PROFILE</Link>
+            <Link to="/about">ABOUT US</Link>
+            <Link to="/certification">CERTIFICATION</Link>
+            <Link to="/practitioner">FIND PRACTITIONER</Link>
             <button onClick={handleLogout}>Logout</button>
-        </> :
-        <>
-            <Link to='/'>Home</Link>
+        </div>
+    ) : (
+        <div>
+            <Link to="/">Home</Link>
             <button onClick={handleLogin}>Login</button>
-        </>
+        </div>
+    );
     return (
-        <nav style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                {links}
+        <nav className="nav-flexbox ">
+            <div className="flex pr-96 justify-end align-center pb-10 ">
+                <img className="seal" src={BrainIntegrationSeal} />
+                
             </div>
-            {isAuthenticated && <img src={user.picture} alt="avatar" width={32} height={32} />}
+            <p className="nav-links">{links} </p>
+               
+            
+            {isAuthenticated && (
+                <img src={user.picture} alt="avatar" width={32} height={32} />
+            )}
         </nav>
-    )
-}
+    );
+};
