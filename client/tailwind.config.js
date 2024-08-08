@@ -5,7 +5,18 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'libre': ['Frank Ruhle Libre', 'serif'],
+        'fira': ['Fira Sans', 'sans-serif'],
+        'fenix': ['Fenix', 'serif']
+      },
+      colors: {
+        'gray': '#ECECEC',
+        'dark-green': "#2B663D"
+      }
+     
+    },
   },
   plugins: [],
 }
