@@ -259,7 +259,7 @@ const AccordionCard = () => {
                     <AccordionItem>
                         <AccordionItemHeading>
                             <AccordionItemButton>
-                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4">
+                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 ">
                                     <div className="flex items-center gap-2">
                                         <img src={AccordionRadioUnfilled} />
                                         <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
@@ -377,7 +377,7 @@ const AccordionCard = () => {
                     <AccordionItem>
                         <AccordionItemHeading>
                             <AccordionItemButton>
-                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4">
+                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6">
                                     <div className="flex items-center gap-2">
                                         <img src={AccordionRadioUnfilled} />
                                         <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
