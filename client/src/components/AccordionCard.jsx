@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
 import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
-import ProgressRing from '../assets/icons/Progress Ring.png';
+import ProgressRing0 from '../assets/icons/Progress Ring0.png';
+import PayForAssessmentBtn from '../assets/icons/PayForAssessmentBtn.png';
+import StartAssessmentBtn from '../assets/icons/StartAssessmentBtn.png';
 import {
     Accordion,
     AccordionItem,
@@ -11,10 +14,30 @@ import {
     AccordionItemPanel,
 } from 'react-accessible-accordion';
 
+//mock submission to DB until backend created
+
+//conditionally render the correct progress ring based on the number of completed items out of the array of 9 [indexes 0-8, or 9 items total starting at 0% and ending at 100%]
+//it needs to persist a refresh
+//maybe a boolean value for each section - is completed?  or something similar
+
+//each section can only upload one document EXCEPT clinical hours and brain integration training
+//buttons for sections that have already had something uploaded (excluding the above two) will have a boolean value isCompleted, setIsCompleted.
+//with a default value of false, will toggle to true once an item is uploaded.  Once toggled to true, setProgress will ++
+//if the uploaded item icon x is clicked (deleting the document), isCompleted will toggle back to false for this section and the state progress will update accordingly
+//the progress number will be tied to conditional rendering of the progress ring.
+//there are 9 progress ring options
+
 const AccordionCard = () => {
+    const [progress, setProgress] = useState(1);
+
+    const submitDocument = () => {
+        setProgress((prevProgress) => prevProgress + 1);
+        console.log('document submitted!');
+        console.log(progress);
+    };
     return (
         <div className="flex">
-            <img className="h-48 w-48 ml-20" src={ProgressRing} />
+            <img className="h-48 w-48 ml-20" src={ProgressRing0} />
             <div className="flex flex-col justify-center gap-4  w-[832px] pl-10 ">
                 <p className="font-fira text-xl font-light pt-20 pb-10 pl-10">
                     Follow these steps to submit your documentation for
@@ -25,60 +48,107 @@ const AccordionCard = () => {
                     board will be happy to assist you.
                 </p>
                 <Accordion allowZeroExpanded={true}>
-                    <AccordionItem className="accordion-item overflow-hidden">
+                    <AccordionItem>
                         <AccordionItemHeading>
                             <AccordionItemButton>
-                                <div className="flex h-[80px] w-full rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4 ">
+                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4">
                                     <div className="flex items-center gap-2">
                                         <img
                                             src={AccordionRadioUnfilled}
                                             alt="Radio Icon"
-                                            className="shrink-0"
                                         />
                                         <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
-                                            Video Presentation
+                                            Brain Integration Training
                                         </h1>
                                     </div>
                                     <img
                                         src={AccordionDropDown}
                                         alt="Dropdown Arrow"
+                                        className="ml-auto"
                                     />
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
-                            <div className="flex flex-col ml-4 ">
-                                <h1>
-                                    Submit video recording of a documented Brain
-                                    Integration session.{' '}
+                            <div className="flex flex-col ml-4">
+                                <h1 className="font-fenix text-dark-green font-bold text-xl">
+                                    Complete 500 hours of relevant brain
+                                    integration training.
                                 </h1>
-                                <ul>
-                                    Video must not exceed 30 minutes in length
-                                    and must include the following knowledge and
-                                    skills:
-                                    <br></br>
-                                    <li>
-                                        {' '}
-                                        Physical demonstration of knowledge{' '}
-                                    </li>
-                                    <li>
-                                        Explaining the process of Brain
-                                        Integration{' '}
-                                    </li>
-                                    <li>
-                                        Express knowledge of appropriate
-                                        reasoning of the procedure{' '}
-                                    </li>
-                                    <li>Demonstrate balance process</li>
-                                    <li>Powers of stress alleviation</li>
-                                    <li>
-                                        Knowledge of meridian points/alarm
-                                        points
-                                    </li>
-                                    <li>Pause-lock procedure</li>
-                                </ul>
+                                <p>
+                                    The Brain Integration Training program
+                                    requires a comprehensive 500-hour training
+                                    to ensure proficiency and expertise in the
+                                    field. The training is divided into three
+                                    key areas: Standard Knowledge Base,
+                                    Professional Training, and Competency Base.
+                                    Below is a detailed breakdown of each
+                                    component:
+                                </p>
+                                <h3>Standard Knowledge Base</h3>
+                                <p>
+                                    Anatomy and Physiology: Understanding the
+                                    human body&apos;s structure and function,
+                                    with a focus on the brain and nervous
+                                    system. Brain Integration Awareness and
+                                    Systems: Learning the principles of brain
+                                    integration, including how different parts
+                                    of the brain communicate and work together.
+                                    Executive Functions: Studying the
+                                    brain&apos;s higher-order processes, such as
+                                    planning, decision-making, problem-solving,
+                                    and impulse control. Senses and Reflexes:
+                                    Exploring how sensory input and reflex
+                                    actions contribute to brain function and
+                                    integration. Techniques and Applications:
+                                    Mastering various techniques for brain
+                                    integration and their practical applications
+                                    in clinical settings.
+                                </p>
+                                <h3>Professional Training</h3>
+                                <p>
+                                    Objectives and Assessments: Setting clear
+                                    objectives for brain integration sessions
+                                    and learning how to assess client progress
+                                    effectively. Professional Conduct:
+                                    Maintaining a high standard of
+                                    professionalism in all interactions with
+                                    clients and colleagues. Ethics and
+                                    Boundaries: Adhering to ethical guidelines
+                                    and establishing appropriate boundaries in
+                                    client relationships. Good Business
+                                    Practices: Implementing sound business
+                                    practices, including client management,
+                                    record-keeping, and financial
+                                    responsibilities.
+                                </p>
+                                <h3>Competency Base</h3>
+                                <p>
+                                    Effective Communication: Developing strong
+                                    communication skills to interact effectively
+                                    with clients and colleagues. Client Clinic
+                                    Services: Providing comprehensive clinic
+                                    services, from initial consultations to
+                                    follow-up sessions. Competency-Based
+                                    Testing: Demonstrating proficiency through
+                                    practical exams and assessments.
+                                    Certification: Successfully completing the
+                                    certification process to become a recognized
+                                    Brain Integration practitioner. Upon
+                                    completion of the 500-hour training,
+                                    participants must upload proof of their
+                                    training hours to receive certification.
+                                    This ensures that all practitioners meet the
+                                    rigorous standards required to provide
+                                    high-quality brain integration services.
+                                </p>
                                 <div className="form-flex">
-                                    <img src={UploadBtn} />
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
                                 </div>
                             </div>
                         </AccordionItemPanel>
@@ -132,6 +202,14 @@ const AccordionCard = () => {
                                         individuals with special needs{' '}
                                     </li>
                                 </ul>
+                                <div className="form-flex">
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
                             </div>
                         </AccordionItemPanel>
                     </AccordionItem>
@@ -154,14 +232,27 @@ const AccordionCard = () => {
                             </AccordionItemButton>
                         </AccordionItemHeading>
                         <AccordionItemPanel>
-                            <h1> Show proof of First Aid Certification.</h1>
-                            <p>
-                                Upload your current First Aid certifications.
-                                Scan or photograph both sides of your
-                                certification card. Save the files as PDF or
-                                JPEG. Click the “Upload” button and select your
-                                files.
-                            </p>
+                            <div className="flex flex-col ml-4">
+                                <h1 className="font-fenix text-dark-green font-bold text-xl">
+                                    {' '}
+                                    Show proof of First Aid Certification.
+                                </h1>
+                                <p>
+                                    Upload your current First Aid
+                                    certifications. Scan or photograph both
+                                    sides of your certification card. Save the
+                                    files as PDF or JPEG. Click the “Upload”
+                                    button and select your files.
+                                </p>
+                                <div className="form-flex">
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
+                            </div>
                         </AccordionItemPanel>
                     </AccordionItem>
 
@@ -209,6 +300,77 @@ const AccordionCard = () => {
                                     Once completed, copy the certificate and
                                     upload the documents.
                                 </p>
+                                <div className="form-flex">
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+                        </AccordionItemPanel>
+                    </AccordionItem>
+                    <AccordionItem className="accordion-item overflow-hidden">
+                        <AccordionItemHeading>
+                            <AccordionItemButton>
+                                <div className="flex h-[80px] w-full rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4 ">
+                                    <div className="flex items-center gap-2">
+                                        <img
+                                            src={AccordionRadioUnfilled}
+                                            alt="Radio Icon"
+                                            className="shrink-0"
+                                        />
+                                        <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
+                                            Video Presentation
+                                        </h1>
+                                    </div>
+                                    <img
+                                        src={AccordionDropDown}
+                                        alt="Dropdown Arrow"
+                                    />
+                                </div>
+                            </AccordionItemButton>
+                        </AccordionItemHeading>
+                        <AccordionItemPanel>
+                            <div className="flex flex-col ml-4 ">
+                                <h1>
+                                    Submit video recording of a documented Brain
+                                    Integration session.{' '}
+                                </h1>
+                                <ul>
+                                    Video must not exceed 30 minutes in length
+                                    and must include the following knowledge and
+                                    skills:
+                                    <br></br>
+                                    <li>
+                                        {' '}
+                                        Physical demonstration of knowledge{' '}
+                                    </li>
+                                    <li>
+                                        Explaining the process of Brain
+                                        Integration{' '}
+                                    </li>
+                                    <li>
+                                        Express knowledge of appropriate
+                                        reasoning of the procedure{' '}
+                                    </li>
+                                    <li>Demonstrate balance process</li>
+                                    <li>Powers of stress alleviation</li>
+                                    <li>
+                                        Knowledge of meridian points/alarm
+                                        points
+                                    </li>
+                                    <li>Pause-lock procedure</li>
+                                </ul>
+                                <div className="form-flex">
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
                             </div>
                         </AccordionItemPanel>
                     </AccordionItem>
@@ -253,6 +415,14 @@ const AccordionCard = () => {
                                         button below and select your file.
                                     </li>
                                 </ul>
+                                <div className="form-flex">
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
                             </div>
                         </AccordionItemPanel>
                     </AccordionItem>
@@ -337,7 +507,9 @@ const AccordionCard = () => {
                                             <li>Dendrites</li>
                                         </ul>
                                         <div className="form-flex">
-                                            <img src={GetStudyGuideBtn} />
+                                            <button>
+                                                <img src={GetStudyGuideBtn} onClick={submitDocument}/>
+                                            </button>
                                         </div>
                                     </div>
 
@@ -484,6 +656,18 @@ const AccordionCard = () => {
                                     rigorous standards required to provide
                                     high-quality brain integration services.
                                 </p>
+
+                                <div className="form-flex">
+                                    <button>
+                                        <img
+                                            src={PayForAssessmentBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
+                                <div className="form-flex">
+                                    <img src={StartAssessmentBtn} />
+                                </div>
                             </div>
                         </AccordionItemPanel>
                     </AccordionItem>
