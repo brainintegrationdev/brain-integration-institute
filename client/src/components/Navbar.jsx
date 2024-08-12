@@ -37,7 +37,7 @@ export const Navbar = () => {
                 <img className="seal" src={BrainIntegrationSeal} />
                 
             </div>
-            <p className="nav-links">{links} </p>
+            <div className="nav-links">{links} </div>
                
             
             {isAuthenticated && (
