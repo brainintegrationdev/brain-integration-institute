@@ -6,6 +6,15 @@ import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
 import ProgressRing0 from '../assets/icons/Progress Ring0.png';
 import PayForAssessmentBtn from '../assets/icons/PayForAssessmentBtn.png';
 import StartAssessmentBtn from '../assets/icons/StartAssessmentBtn.png';
+import ProgressRing1 from '../assets/icons/ProgressRing1.png';
+import ProgressRing2 from '../assets/icons/ProgressRing2.png';
+import ProgressRing3 from '../assets/icons/ProgressRing3.png';
+import ProgressRing4 from '../assets/icons/ProgressRing4.png';
+import ProgressRing5 from '../assets/icons/ProgressRing5.png';
+import ProgressRing6 from '../assets/icons/ProgressRing6.png';
+import ProgressRing7 from '../assets/icons/ProgressRing7.png';
+import ProgressRing8 from '../assets/icons/ProgressRing8.png';
+
 import {
     Accordion,
     AccordionItem,
@@ -16,28 +25,46 @@ import {
 
 //mock submission to DB until backend created
 
-//conditionally render the correct progress ring based on the number of completed items out of the array of 9 [indexes 0-8, or 9 items total starting at 0% and ending at 100%]
-//it needs to persist a refresh
-//maybe a boolean value for each section - is completed?  or something similar
-
-//each section can only upload one document EXCEPT clinical hours and brain integration training
-//buttons for sections that have already had something uploaded (excluding the above two) will have a boolean value isCompleted, setIsCompleted.
-//with a default value of false, will toggle to true once an item is uploaded.  Once toggled to true, setProgress will ++
-//if the uploaded item icon x is clicked (deleting the document), isCompleted will toggle back to false for this section and the state progress will update accordingly
-//the progress number will be tied to conditional rendering of the progress ring.
-//there are 9 progress ring options
-
 const AccordionCard = () => {
-    const [progress, setProgress] = useState(1);
+    const [progress, setProgress] = useState(0);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    const progressRingImages = [
+        ProgressRing0,
+        ProgressRing1,
+        ProgressRing2,
+        ProgressRing3,
+        ProgressRing4,
+        ProgressRing5,
+        ProgressRing6,
+        ProgressRing7,
+        ProgressRing8,
+    ];
 
     const submitDocument = () => {
-        setProgress((prevProgress) => prevProgress + 1);
-        console.log('document submitted!');
-        console.log(progress);
+        if (progress < 8) {
+            setProgress((prevProgress) => prevProgress + 1);
+            console.log('document submitted!');
+            console.log(progress);
+            localStorage.setItem('progress', progress);
+            setIsSubmitted(true);
+        } else {
+            return;
+        }
     };
+
+    console.log(isSubmitted);
+
+    const accordionArrowClick = () => {
+        setIsSubmitted(false);
+    };
+
     return (
         <div className="flex">
-            <img className="h-48 w-48 ml-20" src={ProgressRing0} />
+            <img
+                className="h-48 w-48 ml-20"
+                src={progressRingImages[progress]}
+            />
             <div className="flex flex-col justify-center gap-4  w-[832px] pl-10 ">
                 <p className="font-fira text-xl font-light pt-20 pb-10 pl-10">
                     Follow these steps to submit your documentation for
@@ -61,11 +88,13 @@ const AccordionCard = () => {
                                             Brain Integration Training
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -142,7 +171,9 @@ const AccordionCard = () => {
                                     rigorous standards required to provide
                                     high-quality brain integration services.
                                 </p>
-                                <div className="form-flex">
+
+                                <div className="form-flex gap-10">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -166,11 +197,13 @@ const AccordionCard = () => {
                                             Clinical Hours
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -203,6 +236,7 @@ const AccordionCard = () => {
                                     </li>
                                 </ul>
                                 <div className="form-flex">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -223,11 +257,13 @@ const AccordionCard = () => {
                                             First Aid Certification
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -245,6 +281,7 @@ const AccordionCard = () => {
                                     button and select your files.
                                 </p>
                                 <div className="form-flex">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -266,11 +303,13 @@ const AccordionCard = () => {
                                             CPR Certification
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -301,6 +340,7 @@ const AccordionCard = () => {
                                     upload the documents.
                                 </p>
                                 <div className="form-flex">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -325,10 +365,13 @@ const AccordionCard = () => {
                                             Video Presentation
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -364,6 +407,7 @@ const AccordionCard = () => {
                                     <li>Pause-lock procedure</li>
                                 </ul>
                                 <div className="form-flex">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -384,11 +428,13 @@ const AccordionCard = () => {
                                             Insurance
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -416,6 +462,7 @@ const AccordionCard = () => {
                                     </li>
                                 </ul>
                                 <div className="form-flex">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -436,11 +483,13 @@ const AccordionCard = () => {
                                             Study Guide
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -507,8 +556,12 @@ const AccordionCard = () => {
                                             <li>Dendrites</li>
                                         </ul>
                                         <div className="form-flex">
+                                            {isSubmitted && <p>Study Guide</p>}
                                             <button>
-                                                <img src={GetStudyGuideBtn} onClick={submitDocument}/>
+                                                <img
+                                                    src={GetStudyGuideBtn}
+                                                    onClick={submitDocument}
+                                                />
                                             </button>
                                         </div>
                                     </div>
@@ -575,11 +628,13 @@ const AccordionCard = () => {
                                             Assessment
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -656,18 +711,21 @@ const AccordionCard = () => {
                                     rigorous standards required to provide
                                     high-quality brain integration services.
                                 </p>
-
-                                <div className="form-flex">
-                                    <button>
-                                        <img
-                                            src={PayForAssessmentBtn}
-                                            onClick={submitDocument}
-                                        />
-                                    </button>
-                                </div>
-                                <div className="form-flex">
-                                    <img src={StartAssessmentBtn} />
-                                </div>
+                                {!isSubmitted && (
+                                    <div className="form-flex">
+                                        <button>
+                                            <img
+                                                src={PayForAssessmentBtn}
+                                                onClick={submitDocument}
+                                            />
+                                        </button>
+                                    </div>
+                                )}
+                                {isSubmitted && (
+                                    <div className="form-flex">
+                                        <img src={StartAssessmentBtn} />
+                                    </div>
+                                )}
                             </div>
                         </AccordionItemPanel>
                     </AccordionItem>
