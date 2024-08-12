@@ -1,16 +1,56 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { PractitionerCard } from "../components/PractitionerCard";
 import { PractitionerContext } from "../contexts";
 import banner from "../assets/icons/PractitionerBackground.png";
 import paleBanner from "../assets/icons/PaleGreenPractitionerBackground.png";
 
 export const Practitioner = () => {
+
   const { practitioners } = useContext(PractitionerContext);
 
-  const practitionerList = practitioners.map((person) => (
+  const [searchQuery, setSearchQuery] = useState({
+    field : "",
+    value : ""
+  })
+
+  const [renderedPractitioners, setRenderedPractitioners] = useState([])
+
+  const searchHandler = event => {
+        
+    setSearchQuery({
+      field: event.target.name.toLowerCase(),
+      value : event.target.value.toLowerCase()})
+    }
+
+    useEffect(() => {
+console.log(searchQuery)
+      if (searchQuery.field && searchQuery.value) {
+      let field = searchQuery.field
+      const displayedPractitioners = practitioners.filter(practitioner => {
+        if (field === "name") {
+          const firstName = practitioner.name.firstName.toLowerCase();
+          const lastName = practitioner.name.lastName.toLowerCase();
+          return (
+            firstName.indexOf(searchQuery.value) !== -1 ||
+            lastName.indexOf(searchQuery.value) !== -1
+          );
+        } else {
+          const searchValue = practitioner[field]?.toLowerCase();
+          return searchValue && searchValue.indexOf(searchQuery.value) !== -1;
+        }
+      });
+      setRenderedPractitioners(displayedPractitioners)
+    }else {
+      setRenderedPractitioners(practitioners || []);
+    }
+  }, [practitioners, searchQuery])
+
+
+  const practitionerList = renderedPractitioners.map((person) => (
     <PractitionerCard
-      firstName={person.firstName}
-      lastName={person.lastName}
+   
+      firstName={person.name.firstName}
+      lastName={person.name.lastName}
       title={person.title}
       location={person.location}
       imgURL={person.imgURL}
@@ -31,31 +71,27 @@ export const Practitioner = () => {
           backgroundRepeat: "no-repeat, no-repeat",
         }}
       >
-        <div className="FindACertifiedPractitioner left-[10.75rem] top-[3rem] absolute text-center text-white text-3xl font-normal font-['Fenix']">
+        <div className="FindACertifiedPractitioner left-[10%] top-[15%] absolute text-center text-white text-5xl font-normal font-['Fenix']">
           Find a Certified Practitioner
         </div>
       </div>
-      <div className="border relative">
-        <div className="RefineResults left-[240px] top-[0px] relative text-center text-black text-4xl font-normal font-['Fira Sans']">Refine Results</div>
+      <div className="w-[75%] flex flex-col relative mx-auto">
+        <div className="RefineResults py-2 relative text-start text-black text-4xl font-normal font-['Fira Sans']">Refine Results</div>
 
-        <div className="SearchBar w-96 px-4 py-2 left-[0px] top-[0px] relative rounded-full border border-[#808080] justify-between items-center inline-flex">
-          <div className="Name text-center text-black/50 text-xl font-normal font-['Fira Sans']">Specialty ...</div>
-          <div className="UilSearch w-8 h-8 relative" />
-        </div>
+<div className = "flex justify-between py-2">
 
-        <div className="SearchBar w-96 px-4 py-2 left-[238px] top-[0px] relative rounded-full border border-[#808080] justify-between items-center inline-flex">
-          <div className="Name text-center text-black/50 text-xl font-normal font-['Fira Sans']">Name ...</div>
-          <div className="UilSearch w-8 h-8 relative" />
-        </div>
 
-        <div className="SearchBar w-96 px-4 py-2 left-[450px] top-[0px] relative rounded-full border border-[#808080] justify-between items-center inline-flex">
-          <div className="Name text-center text-black/50 text-xl font-normal font-['Fira Sans']">Zip Code, City or State ...</div>
-          <div className="UilSearch w-8 h-8 relative" />
-        </div>
+        <input className="SearchBar w-96 px-4 py-2 l relative rounded-full border border-[#808080] justify-between items-center inline-flex text-black/50 text-xl font-normal font-['Fira Sans']" name = "title" onChange = {searchHandler} placeholder = "Specialty..." />
 
-        <div className="Results2 left-[819px] top-[0px] relative text-center text-xl font-medium font-['Inter']">Results: 2</div>
+
+        <input className="SearchBar w-96 px-4 py-2 l relative rounded-full border border-[#808080] justify-between items-center inline-flex text-black/50 text-xl font-normal font-['Fira Sans']" name = "name" onChange = {searchHandler} placeholder = "Name..." />
+
+        <input className="SearchBar w-96 px-4 py-2 l relative rounded-full border border-[#808080] justify-between items-center inline-flex text-black/50 text-xl font-normal font-['Fira Sans']" name = "location" onChange = {searchHandler} placeholder = "Zip Code, City or State..." />
+
+</div>
+        <div className="Results2 relative text-center text-xl py-2 font-medium font-['Inter']">Results: 2</div>
       </div>
-      <div className="CertPractitionerCardsContainer relative flex flex-wrap justify-start gap-4">
+      <div className="CertPractitionerCardsContainer py-2 w-[75%] mx-auto relative flex flex-wrap justify-between gap-4">
         {practitionerList}
       </div>
     </>
