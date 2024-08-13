@@ -1,8 +1,20 @@
+import { useState } from 'react';
 import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
 import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
-import ProgressRing from '../assets/icons/Progress Ring.png';
+import ProgressRing0 from '../assets/icons/Progress Ring0.png';
+import PayForAssessmentBtn from '../assets/icons/PayForAssessmentBtn.png';
+import StartAssessmentBtn from '../assets/icons/StartAssessmentBtn.png';
+import ProgressRing1 from '../assets/icons/ProgressRing1.png';
+import ProgressRing2 from '../assets/icons/ProgressRing2.png';
+import ProgressRing3 from '../assets/icons/ProgressRing3.png';
+import ProgressRing4 from '../assets/icons/ProgressRing4.png';
+import ProgressRing5 from '../assets/icons/ProgressRing5.png';
+import ProgressRing6 from '../assets/icons/ProgressRing6.png';
+import ProgressRing7 from '../assets/icons/ProgressRing7.png';
+import ProgressRing8 from '../assets/icons/ProgressRing8.png';
+
 import {
     Accordion,
     AccordionItem,
@@ -11,10 +23,48 @@ import {
     AccordionItemPanel,
 } from 'react-accessible-accordion';
 
+//mock submission to DB until backend created
+
 const AccordionCard = () => {
+    const [progress, setProgress] = useState(0);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    const progressRingImages = [
+        ProgressRing0,
+        ProgressRing1,
+        ProgressRing2,
+        ProgressRing3,
+        ProgressRing4,
+        ProgressRing5,
+        ProgressRing6,
+        ProgressRing7,
+        ProgressRing8,
+    ];
+
+    const submitDocument = () => {
+        if (progress < 8) {
+            setProgress((prevProgress) => prevProgress + 1);
+            console.log('document submitted!');
+            console.log(progress);
+            localStorage.setItem('progress', progress);
+            setIsSubmitted(true);
+        } else {
+            return;
+        }
+    };
+
+    console.log(isSubmitted);
+
+    const accordionArrowClick = () => {
+        setIsSubmitted(false);
+    };
+
     return (
         <div className="flex">
-            <img className="h-48 w-48 ml-20" src={ProgressRing} />
+            <img
+                className="h-48 w-48 ml-20"
+                src={progressRingImages[progress]}
+            />
             <div className="flex flex-col justify-center gap-4  w-[832px] pl-10 ">
                 <p className="font-fira text-xl font-light pt-20 pb-10 pl-10">
                     Follow these steps to submit your documentation for
@@ -25,6 +75,282 @@ const AccordionCard = () => {
                     board will be happy to assist you.
                 </p>
                 <Accordion allowZeroExpanded={true}>
+                    <AccordionItem>
+                        <AccordionItemHeading>
+                            <AccordionItemButton>
+                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4">
+                                    <div className="flex items-center gap-2">
+                                        <img
+                                            src={AccordionRadioUnfilled}
+                                            alt="Radio Icon"
+                                        />
+                                        <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
+                                            Brain Integration Training
+                                        </h1>
+                                    </div>
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
+                                </div>
+                            </AccordionItemButton>
+                        </AccordionItemHeading>
+                        <AccordionItemPanel>
+                            <div className="flex flex-col ml-4">
+                                <h1 className="font-fenix text-dark-green font-bold text-xl">
+                                    Complete 500 hours of relevant brain
+                                    integration training.
+                                </h1>
+                                <p>
+                                    The Brain Integration Training program
+                                    requires a comprehensive 500-hour training
+                                    to ensure proficiency and expertise in the
+                                    field. The training is divided into three
+                                    key areas: Standard Knowledge Base,
+                                    Professional Training, and Competency Base.
+                                    Below is a detailed breakdown of each
+                                    component:
+                                </p>
+                                <h3>Standard Knowledge Base</h3>
+                                <p>
+                                    Anatomy and Physiology: Understanding the
+                                    human body&apos;s structure and function,
+                                    with a focus on the brain and nervous
+                                    system. Brain Integration Awareness and
+                                    Systems: Learning the principles of brain
+                                    integration, including how different parts
+                                    of the brain communicate and work together.
+                                    Executive Functions: Studying the
+                                    brain&apos;s higher-order processes, such as
+                                    planning, decision-making, problem-solving,
+                                    and impulse control. Senses and Reflexes:
+                                    Exploring how sensory input and reflex
+                                    actions contribute to brain function and
+                                    integration. Techniques and Applications:
+                                    Mastering various techniques for brain
+                                    integration and their practical applications
+                                    in clinical settings.
+                                </p>
+                                <h3>Professional Training</h3>
+                                <p>
+                                    Objectives and Assessments: Setting clear
+                                    objectives for brain integration sessions
+                                    and learning how to assess client progress
+                                    effectively. Professional Conduct:
+                                    Maintaining a high standard of
+                                    professionalism in all interactions with
+                                    clients and colleagues. Ethics and
+                                    Boundaries: Adhering to ethical guidelines
+                                    and establishing appropriate boundaries in
+                                    client relationships. Good Business
+                                    Practices: Implementing sound business
+                                    practices, including client management,
+                                    record-keeping, and financial
+                                    responsibilities.
+                                </p>
+                                <h3>Competency Base</h3>
+                                <p>
+                                    Effective Communication: Developing strong
+                                    communication skills to interact effectively
+                                    with clients and colleagues. Client Clinic
+                                    Services: Providing comprehensive clinic
+                                    services, from initial consultations to
+                                    follow-up sessions. Competency-Based
+                                    Testing: Demonstrating proficiency through
+                                    practical exams and assessments.
+                                    Certification: Successfully completing the
+                                    certification process to become a recognized
+                                    Brain Integration practitioner. Upon
+                                    completion of the 500-hour training,
+                                    participants must upload proof of their
+                                    training hours to receive certification.
+                                    This ensures that all practitioners meet the
+                                    rigorous standards required to provide
+                                    high-quality brain integration services.
+                                </p>
+
+                                <div className="form-flex gap-10">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+                        </AccordionItemPanel>
+                    </AccordionItem>
+                    <AccordionItem>
+                        <AccordionItemHeading>
+                            <AccordionItemButton>
+                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 ">
+                                    <div className="flex items-center gap-2">
+                                        <img
+                                            src={AccordionRadioUnfilled}
+                                            alt="Radio Icon"
+                                        />
+                                        <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
+                                            Clinical Hours
+                                        </h1>
+                                    </div>
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
+                                </div>
+                            </AccordionItemButton>
+                        </AccordionItemHeading>
+                        <AccordionItemPanel>
+                            <div className="flex flex-col ml-4">
+                                <p className="font-fenix text-dark-green font-bold text-xl">
+                                    Completion of 200 hours of clinical practice
+                                    in brain integration or kinesiology
+                                    including various populations and settings.{' '}
+                                </p>
+                                <ul>
+                                    We encourage the following:
+                                    <li>Practicum with the public </li>
+                                    <li>
+                                        Practicums in a lab setting with
+                                        oversight{' '}
+                                    </li>
+                                    <li>
+                                        SOAP notes, or subjective, objective,
+                                        assessment, and plan notes, are a
+                                        standardized method used by
+                                        professionals to document client
+                                        interacations
+                                    </li>
+                                    <li>
+                                        {' '}
+                                        Experience brain integration with
+                                        children, teenagers, adults, and
+                                        individuals with special needs{' '}
+                                    </li>
+                                </ul>
+                                <div className="form-flex">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+                        </AccordionItemPanel>
+                    </AccordionItem>
+                    <AccordionItem>
+                        <AccordionItemHeading>
+                            <AccordionItemButton>
+                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4">
+                                    <div className="flex items-center gap-2">
+                                        <img src={AccordionRadioUnfilled} />
+                                        <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
+                                            First Aid Certification
+                                        </h1>
+                                    </div>
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
+                                </div>
+                            </AccordionItemButton>
+                        </AccordionItemHeading>
+                        <AccordionItemPanel>
+                            <div className="flex flex-col ml-4">
+                                <h1 className="font-fenix text-dark-green font-bold text-xl">
+                                    {' '}
+                                    Show proof of First Aid Certification.
+                                </h1>
+                                <p>
+                                    Upload your current First Aid
+                                    certifications. Scan or photograph both
+                                    sides of your certification card. Save the
+                                    files as PDF or JPEG. Click the “Upload”
+                                    button and select your files.
+                                </p>
+                                <div className="form-flex">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+                        </AccordionItemPanel>
+                    </AccordionItem>
+
+                    <AccordionItem>
+                        <AccordionItemHeading>
+                            <AccordionItemButton>
+                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 ">
+                                    <div className="flex items-center gap-2">
+                                        <img src={AccordionRadioUnfilled} />
+                                        <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
+                                            CPR Certification
+                                        </h1>
+                                    </div>
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
+                                </div>
+                            </AccordionItemButton>
+                        </AccordionItemHeading>
+                        <AccordionItemPanel>
+                            <div className="flex flex-col ml-4">
+                                <h1>Show proof of CPR certification</h1>
+                                <p>
+                                    Upload your current CPR certification. Scan
+                                    or photograph both sides of your
+                                    certification card. Save the files as PDF or
+                                    JPEG. Click the &quot; Upload&quot; button
+                                    and select your files.
+                                </p>
+
+                                <p>
+                                    Here is a suggested location to complete
+                                    this requirement by using your smartphone:
+                                    <span>
+                                        {' '}
+                                        <a href="https://resuscitech.io/smart-certification">
+                                            https://resuscitech.io/smart-certification
+                                        </a>{' '}
+                                    </span>
+                                </p>
+
+                                <p>
+                                    Once completed, copy the certificate and
+                                    upload the documents.
+                                </p>
+                                <div className="form-flex">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+                        </AccordionItemPanel>
+                    </AccordionItem>
                     <AccordionItem className="accordion-item overflow-hidden">
                         <AccordionItemHeading>
                             <AccordionItemButton>
@@ -39,10 +365,13 @@ const AccordionCard = () => {
                                             Video Presentation
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -78,155 +407,34 @@ const AccordionCard = () => {
                                     <li>Pause-lock procedure</li>
                                 </ul>
                                 <div className="form-flex">
-                                    <img src={UploadBtn} />
-                                </div>
-                            </div>
-                        </AccordionItemPanel>
-                    </AccordionItem>
-                    <AccordionItem>
-                        <AccordionItemHeading>
-                            <AccordionItemButton>
-                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 ">
-                                    <div className="flex items-center gap-2">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
+                                    <button>
                                         <img
-                                            src={AccordionRadioUnfilled}
-                                            alt="Radio Icon"
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
                                         />
-                                        <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
-                                            Clinical Hours
-                                        </h1>
-                                    </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    </button>
                                 </div>
-                            </AccordionItemButton>
-                        </AccordionItemHeading>
-                        <AccordionItemPanel>
-                            <div className="flex flex-col ml-4">
-                                <p className="font-fenix text-dark-green font-bold text-xl">
-                                    Completion of 200 hours of clinical practice
-                                    in brain integration or kinesiology
-                                    including various populations and settings.{' '}
-                                </p>
-                                <ul>
-                                    We encourage the following:
-                                    <li>Practicum with the public </li>
-                                    <li>
-                                        Practicums in a lab setting with
-                                        oversight{' '}
-                                    </li>
-                                    <li>
-                                        SOAP notes, or subjective, objective,
-                                        assessment, and plan notes, are a
-                                        standardized method used by
-                                        professionals to document client
-                                        interacations
-                                    </li>
-                                    <li>
-                                        {' '}
-                                        Experience brain integration with
-                                        children, teenagers, adults, and
-                                        individuals with special needs{' '}
-                                    </li>
-                                </ul>
                             </div>
                         </AccordionItemPanel>
                     </AccordionItem>
                     <AccordionItem>
                         <AccordionItemHeading>
                             <AccordionItemButton>
-                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4">
-                                    <div className="flex items-center gap-2">
-                                        <img src={AccordionRadioUnfilled} />
-                                        <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
-                                            First Aid Certification
-                                        </h1>
-                                    </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
-                                </div>
-                            </AccordionItemButton>
-                        </AccordionItemHeading>
-                        <AccordionItemPanel>
-                            <h1> Show proof of First Aid Certification.</h1>
-                            <p>
-                                Upload your current First Aid certifications.
-                                Scan or photograph both sides of your
-                                certification card. Save the files as PDF or
-                                JPEG. Click the “Upload” button and select your
-                                files.
-                            </p>
-                        </AccordionItemPanel>
-                    </AccordionItem>
-
-                    <AccordionItem>
-                        <AccordionItemHeading>
-                            <AccordionItemButton>
-                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4">
-                                    <div className="flex items-center gap-2">
-                                        <img src={AccordionRadioUnfilled} />
-                                        <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
-                                            CPR Certification
-                                        </h1>
-                                    </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
-                                </div>
-                            </AccordionItemButton>
-                        </AccordionItemHeading>
-                        <AccordionItemPanel>
-                            <div className="flex flex-col ml-4">
-                                <h1>Show proof of CPR certification</h1>
-                                <p>
-                                    Upload your current CPR certification. Scan
-                                    or photograph both sides of your
-                                    certification card. Save the files as PDF or
-                                    JPEG. Click the &quot; Upload&quot; button
-                                    and select your files.
-                                </p>
-
-                                <p>
-                                    Here is a suggested location to complete
-                                    this requirement by using your smartphone:
-                                    <span>
-                                        {' '}
-                                        <a href="https://resuscitech.io/smart-certification">
-                                            https://resuscitech.io/smart-certification
-                                        </a>{' '}
-                                    </span>
-                                </p>
-
-                                <p>
-                                    Once completed, copy the certificate and
-                                    upload the documents.
-                                </p>
-                            </div>
-                        </AccordionItemPanel>
-                    </AccordionItem>
-                    <AccordionItem>
-                        <AccordionItemHeading>
-                            <AccordionItemButton>
-                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4">
+                                <div className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6">
                                     <div className="flex items-center gap-2">
                                         <img src={AccordionRadioUnfilled} />
                                         <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
                                             Insurance
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -253,6 +461,15 @@ const AccordionCard = () => {
                                         button below and select your file.
                                     </li>
                                 </ul>
+                                <div className="form-flex">
+                                    {isSubmitted && <p>Uploaded File Name</p>}
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={submitDocument}
+                                        />
+                                    </button>
+                                </div>
                             </div>
                         </AccordionItemPanel>
                     </AccordionItem>
@@ -266,11 +483,13 @@ const AccordionCard = () => {
                                             Study Guide
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -337,7 +556,13 @@ const AccordionCard = () => {
                                             <li>Dendrites</li>
                                         </ul>
                                         <div className="form-flex">
-                                            <img src={GetStudyGuideBtn} />
+                                            {isSubmitted && <p>Study Guide</p>}
+                                            <button>
+                                                <img
+                                                    src={GetStudyGuideBtn}
+                                                    onClick={submitDocument}
+                                                />
+                                            </button>
                                         </div>
                                     </div>
 
@@ -403,11 +628,13 @@ const AccordionCard = () => {
                                             Assessment
                                         </h1>
                                     </div>
-                                    <img
-                                        src={AccordionDropDown}
-                                        alt="Dropdown Arrow"
-                                        className="ml-auto"
-                                    />
+                                    <button onClick={accordionArrowClick}>
+                                        <img
+                                            src={AccordionDropDown}
+                                            alt="Dropdown Arrow"
+                                            className="ml-auto"
+                                        />
+                                    </button>
                                 </div>
                             </AccordionItemButton>
                         </AccordionItemHeading>
@@ -484,6 +711,21 @@ const AccordionCard = () => {
                                     rigorous standards required to provide
                                     high-quality brain integration services.
                                 </p>
+                                {!isSubmitted && (
+                                    <div className="form-flex">
+                                        <button>
+                                            <img
+                                                src={PayForAssessmentBtn}
+                                                onClick={submitDocument}
+                                            />
+                                        </button>
+                                    </div>
+                                )}
+                                {isSubmitted && (
+                                    <div className="form-flex">
+                                        <img src={StartAssessmentBtn} />
+                                    </div>
+                                )}
                             </div>
                         </AccordionItemPanel>
                     </AccordionItem>

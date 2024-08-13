@@ -1,7 +1,7 @@
 // import { AccordionComponent } from '../components/AccordionComponent';
 import  AccordionCard  from '../components/AccordionCard'
 import GreenBannerCertPage from '../assets/icons/GreenBannerCertPage.png';
-import ProgressRing from '../assets/icons/Progress Ring.png';
+
 
 export const Certification = () => {
     return (
