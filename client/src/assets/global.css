@@ -10,11 +10,7 @@
 
 
   /* Navbar */
-.seal {
-    width: 134px;
-    height: 134px;
-    flex-shrink: 0;
-  }
+
 
 .seal-div {
     display: flex;
@@ -26,21 +22,25 @@
 
 .nav-flexbox {
     display: flex;
-    justify-content: end;
+    justify-content: start;
     align-items: center;
+    padding-left: 332px;
     gap: 4px;
 }
 
 
 .nav-links {
+    display: flex;
     color: #676767;
-    text-align: center;
+    /* text-align: center; */
     font-family: "Frank Ruhl Libre";
     font-size: 12px;
     font-style: normal;
     font-weight: 700;
+    align-items: center;
     line-height: normal;
     letter-spacing: 0.48px;
+    gap: 10px;
   }
 
   .nav-links a {

@@ -3,13 +3,14 @@ import  AccordionCard  from '../components/AccordionCard'
 import GreenBannerCertPage from '../assets/icons/GreenBannerCertPage.png';
 
 
+
 export const Certification = () => {
     return (
         <>
             <div className="relative">
-                <img className="w-1728 h-281 shrink-0" src={GreenBannerCertPage} />
-                <div className="absolute right-50 left-5 bottom-40">
-                    <h1 className="font-fenix 48px text-white text-5xl pl-12.5 pt-2.5">
+                <img className="w-[1728px] h-[104px] shrink-0" src={GreenBannerCertPage} />
+                <div className="absolute right-50 left-12 bottom-10 pl-80">
+                    <h1 className="font-fenix 48px text-white text-5xl pl-12.5 pt-2.5 drop-shadow-md">
                         Integration Certification
                     </h1>
                 </div>
