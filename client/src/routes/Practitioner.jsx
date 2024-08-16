@@ -9,41 +9,41 @@ export const Practitioner = () => {
   const { practitioners } = useContext(PractitionerContext);
 
   const [searchQuery, setSearchQuery] = useState({
-    field : "",
-    value : ""
+    name: "",
+    title: "",
+    location: "",
   })
 
   const [renderedPractitioners, setRenderedPractitioners] = useState([])
 
-  const searchHandler = event => {
-        
-    setSearchQuery({
-      field: event.target.name.toLowerCase(),
-      value : event.target.value.toLowerCase()})
-    }
+  const searchHandler = (event) => {
+    const { name, value } = event.target;
+    setSearchQuery((prevQuery) => ({
+      ...prevQuery,
+      [name]: value.toLowerCase(),
+    }));
+  };
 
-    useEffect(() => {
-console.log(searchQuery)
-      if (searchQuery.field && searchQuery.value) {
-      let field = searchQuery.field
-      const displayedPractitioners = practitioners.filter(practitioner => {
-        if (field === "name") {
-          const firstName = practitioner.name.firstName.toLowerCase();
-          const lastName = practitioner.name.lastName.toLowerCase();
-          return (
-            firstName.indexOf(searchQuery.value) !== -1 ||
-            lastName.indexOf(searchQuery.value) !== -1
-          );
-        } else {
-          const searchValue = practitioner[field]?.toLowerCase();
-          return searchValue && searchValue.indexOf(searchQuery.value) !== -1;
-        }
-      });
-      setRenderedPractitioners(displayedPractitioners)
-    }else {
-      setRenderedPractitioners(practitioners || []);
-    }
-  }, [practitioners, searchQuery])
+  useEffect(() => {
+    const { name, title, location } = searchQuery;
+
+    const displayedPractitioners = practitioners.filter((practitioner) => {
+      const firstName = practitioner.name.firstName.toLowerCase();
+      const lastName = practitioner.name.lastName.toLowerCase();
+      const practitionerTitle = practitioner.title.toLowerCase();
+      const practitionerLocation = practitioner.location.toLowerCase();
+
+      return (
+        (name === "" ||
+          firstName.includes(name) ||
+          lastName.includes(name)) &&
+        (title === "" || practitionerTitle.includes(title)) &&
+        (location === "" || practitionerLocation.includes(location))
+      );
+    });
+
+    setRenderedPractitioners(displayedPractitioners);
+  }, [practitioners, searchQuery]);
 
 
   const practitionerList = renderedPractitioners.map((person) => (
@@ -89,7 +89,7 @@ console.log(searchQuery)
         <input className="SearchBar w-96 px-4 py-2 l relative rounded-full border border-[#808080] justify-between items-center inline-flex text-black/50 text-xl font-normal font-['Fira Sans']" name = "location" onChange = {searchHandler} placeholder = "Zip Code, City or State..." />
 
 </div>
-        <div className="Results2 relative text-center text-xl py-2 font-medium font-['Inter']">Results: 2</div>
+       {(searchQuery.name !== "" || searchQuery.title !== "" || searchQuery.location !== "") && <div className="Results2 relative text-center text-xl py-2 font-medium font-['Inter']">Results : {renderedPractitioners.length}</div>}
       </div>
       <div className="CertPractitionerCardsContainer py-2 w-[75%] mx-auto relative flex flex-wrap justify-between gap-4">
         {practitionerList}
