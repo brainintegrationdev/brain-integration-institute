@@ -23,9 +23,13 @@ export default function Insurance(props) {
                 <AccordionItemButton>
                     <div
                         onClick={toggleExpand}
-                        className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4"
+                        className={
+                            isExpanded
+                                ? 'expanded-accordion'
+                                : 'collapsed-accordion'
+                        }
                     >
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 pl-9">
                             {!isExpanded ? (
                                 <>
                                     <img src={AccordionRadioUnfilled} />
@@ -40,16 +44,23 @@ export default function Insurance(props) {
                             )}
                         </div>
                         {isExpanded ? (
-                            <button>
+                            <button className="pr-5">
                                 <img
                                     src={AccordionUpArrow}
                                     alt="Dropdown Arrow"
-                                    className="ml-auto"
+                                    className={`transform transition-transform duration-500 ${
+                                        isExpanded ? 'rotate-0' : 'rotate-180'
+                                    }`}
                                 />
                             </button>
                         ) : (
-                            <button onClick={toggleExpand}>
-                                <img src={AccordionDropDown} />
+                            <button onClick={toggleExpand} className="pr-5">
+                                <img
+                                    src={AccordionUpArrow}
+                                    className={`transform transition-transform duration-500 ${
+                                        isExpanded ? 'rotate-0' : 'rotate-180'
+                                    }`}
+                                />
                             </button>
                         )}
                     </div>

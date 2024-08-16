@@ -1,7 +1,4 @@
 import { useState } from 'react';
-import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
-import AccordionUpArrow from '../assets/icons/AccordionUpArrow.png';
-import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
 import ProgressBar0 from '../assets/icons/ProgressBar0.png';
@@ -13,8 +10,8 @@ import ProgressBar5 from '../assets/icons/ProgressBar5.png';
 import ProgressBar6 from '../assets/icons/ProgressBar6.png';
 import ProgressBar7 from '../assets/icons/ProgressBar7.png';
 import ProgressBar8 from '../assets/icons/ProgressBar8.png';
-import PayForAssessmentBtn from '../assets/icons/PayForAssessmentBtn.png';
-import StartAssessmentBtn from '../assets/icons/StartAssessmentBtn.png';
+import StudyGuidePages from '../assets/icons/StudyGuidePages.png';
+import PayforandStart from '../assets/icons/PayforandStart.png';
 import Assessment from './Assessment';
 import Insurance from './Insurance';
 import Brain from './Brain';
@@ -65,7 +62,7 @@ const AccordionCard = () => {
             {isAuthenticated && (
                 <div>
                     <img
-                        className="h-[200px] w-[200px] ml-20 rounded-full"
+                        className="h-[200px] w-[200px] ml-20 mr-[80px] rounded-full"
                         src={user.picture}
                         alt="avatar"
                     />
@@ -83,14 +80,18 @@ const AccordionCard = () => {
                     </span>
                     , and a member of our board will be happy to assist you.
                 </p>
-                <div className="flex flex-col justify-center items-center gap-4">
+                <div className="flex flex-col justify-center items-center pl-20 gap-4 pb-5">
                     <img src={certProgressImages[progress]} />
                 </div>
 
-                <Accordion allowZeroExpanded={true}>
+                <Accordion
+                    allowMultipleExpanded={true}
+                    allowZeroExpanded={true}
+                    className="w-[826px]"
+                >
                     <Brain title="Brain Integration Training">
-                        <div className="flex flex-col pl-6 pr-6 border border-y-0 rounded-lg">
-                            <h1 className="font-fira text-dark-green font-bold text-xl">
+                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-xl pt-10">
                                 Complete 500 hours of relevant brain integration
                                 training.
                             </h1>
@@ -111,18 +112,19 @@ const AccordionCard = () => {
                             <p>
                                 Anatomy and Physiology: Understanding the human
                                 body&apos;s structure and function, with a focus
-                                on the brain and nervous system. Brain
+                                on the brain and nervous system. <br></br>Brain
                                 Integration Awareness and Systems: Learning the
                                 principles of brain integration, including how
                                 different parts of the brain communicate and
-                                work together. Executive Functions: Studying the
-                                brain&apos;s higher-order processes, such as
-                                planning, decision-making, problem-solving, and
-                                impulse control. Senses and Reflexes: Exploring
-                                how sensory input and reflex actions contribute
-                                to brain function and integration. Techniques
-                                and Applications: Mastering various techniques
-                                for brain integration and their practical
+                                work together. <br></br>Executive Functions:
+                                Studying the brain&apos;s higher-order
+                                processes, such as planning, decision-making,
+                                problem-solving, and impulse control. <br></br>
+                                Senses and Reflexes: Exploring how sensory input
+                                and reflex actions contribute to brain function
+                                and integration. <br></br>Techniques and
+                                Applications: Mastering various techniques for
+                                brain integration and their practical
                                 applications in clinical settings.
                             </p>
                             <br></br>
@@ -133,15 +135,15 @@ const AccordionCard = () => {
                                 Objectives and Assessments: Setting clear
                                 objectives for brain integration sessions and
                                 learning how to assess client progress
-                                effectively. Professional Conduct: Maintaining a
-                                high standard of professionalism in all
-                                interactions with clients and colleagues. Ethics
-                                and Boundaries: Adhering to ethical guidelines
-                                and establishing appropriate boundaries in
-                                client relationships. Good Business Practices:
-                                Implementing sound business practices, including
-                                client management, record-keeping, and financial
-                                responsibilities.
+                                effectively.<br></br> Professional Conduct:
+                                Maintaining a high standard of professionalism
+                                in all interactions with clients and colleagues.
+                                <br></br> Ethics and Boundaries: Adhering to
+                                ethical guidelines and establishing appropriate
+                                boundaries in client relationships. <br></br>
+                                Good Business Practices: Implementing sound
+                                business practices, including client management,
+                                record-keeping, and financial responsibilities.
                             </p>
                             <br></br>
                             <h3 className="font-fira text-black text-base font-bold">
@@ -150,26 +152,26 @@ const AccordionCard = () => {
                             <p>
                                 Effective Communication: Developing strong
                                 communication skills to interact effectively
-                                with clients and colleagues. Client Clinic
-                                Services: Providing comprehensive clinic
+                                with clients and colleagues.<br></br> Client
+                                Clinic Services: Providing comprehensive clinic
                                 services, from initial consultations to
-                                follow-up sessions. Competency-Based Testing:
-                                Demonstrating proficiency through practical
-                                exams and assessments. Certification:
-                                Successfully completing the certification
-                                process to become a recognized Brain Integration
-                                practitioner. Upon completion of the 500-hour
-                                training, participants must upload proof of
-                                their training hours to receive certification.
-                                This ensures that all practitioners meet the
-                                rigorous standards required to provide
-                                high-quality brain integration services.
+                                follow-up sessions.<br></br> Competency-Based
+                                Testing: Demonstrating proficiency through
+                                practical exams and assessments. <br></br>
+                                Certification: Successfully completing the
+                                certification process to become a recognized
+                                Brain Integration practitioner.<br></br> Upon
+                                completion of the 500-hour training,
+                                participants must upload proof of their training
+                                hours to receive certification. This ensures
+                                that all practitioners meet the rigorous
+                                standards required to provide high-quality brain
+                                integration services.
                             </p>
                             <br></br>
 
-                            <div className="flex flex-col justify-center items-center gap-10 pt-5 pb-6">
-                             
-                                <div className="flex gap-10">
+                            <div className="flex flex-col justify-center items-center gap-10 pt-10 pb-2">
+                                <div className="flex gap-10 pb-5">
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -181,7 +183,7 @@ const AccordionCard = () => {
                         </div>
                     </Brain>
                     <Clinical title="Clinical Hours">
-                        <div className="flex flex-col pl-6 pr-6 border border-y-0 rounded-lg">
+                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <p className="font-fira text-dark-green font-bold text-xl pt-10">
                                 Completion of 200 hours of clinical practice in
                                 brain integration or kinesiology including
@@ -199,8 +201,11 @@ const AccordionCard = () => {
                                 <li className="pl-4 -ml-4">
                                     SOAP notes, or subjective, objective,
                                     assessment, and plan notes, are a
-                                    standardized method used by professionals to
-                                    document client interacations
+                                    standardized method used by{' '}
+                                    <span className="pl-5">
+                                        professionals to document client
+                                        interacations
+                                    </span>
                                 </li>
                                 <li className="list-disc list-inside">
                                     {' '}
@@ -209,9 +214,8 @@ const AccordionCard = () => {
                                     special needs{' '}
                                 </li>
                             </ul>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-5 pb-6">
-                            
-                                <div className="flex gap-10">
+                            <div className="flex flex-col justify-center items-center gap-10 pt-10 ">
+                                <div className="flex gap-10 pb-5">
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -223,7 +227,7 @@ const AccordionCard = () => {
                         </div>
                     </Clinical>
                     <FirstAid title="First Aid Certification">
-                        <div className="flex flex-col pl-6 pr-6 border border-y-0 rounded-lg">
+                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 {' '}
                                 Show proof of First Aid certification.
@@ -235,9 +239,8 @@ const AccordionCard = () => {
                                 JPEG. Click the “Upload” button and select your
                                 files.
                             </p>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-5 pb-6">
-                               
-                                <div className="flex gap-10">
+                            <div className="flex flex-col justify-center items-center gap-10 pt-20 ">
+                                <div className="flex gap-10 pb-5">
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -249,7 +252,7 @@ const AccordionCard = () => {
                         </div>
                     </FirstAid>
                     <CPR title="CPR Certification">
-                        <div className="flex flex-col pl-6 pr-6  border border-y-0 rounded-lg">
+                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 {' '}
                                 Show proof of CPR certification
@@ -277,9 +280,8 @@ const AccordionCard = () => {
                                 Once completed, copy the certificate and upload
                                 the documents.
                             </p>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-5 pb-6">
-                               
-                                <div className="flex gap-10">
+                            <div className="flex flex-col justify-center items-center gap-10 pt-20">
+                                <div className="flex gap-10 pb-5">
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -291,7 +293,7 @@ const AccordionCard = () => {
                         </div>
                     </CPR>
                     <Video title="Video Presentation">
-                        <div className="flex flex-col pl-6 pr-6 border border-y-0 rounded-lg">
+                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 Submit video recording of a documented Brain
                                 Integration session.{' '}
@@ -323,9 +325,8 @@ const AccordionCard = () => {
                                     Pause-lock procedure
                                 </li>
                             </ul>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-5 pb-6">
-                               
-                                <div className="flex gap-10">
+                            <div className="flex flex-col justify-center items-center gap-10 pt-20">
+                                <div className="flex gap-10 pb-5">
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -338,12 +339,12 @@ const AccordionCard = () => {
                     </Video>
 
                     <Insurance title="Insurance">
-                        <div className="flex flex-col pl-6 pr-6 border border-y-0 rounded-lg">
-                        <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
+                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 Show proof of professional and liability
                                 insurance{' '}
                             </h1>
-                            <p className='pb-8 text-base'>
+                            <p className="pb-8 text-base">
                                 Show proof of professional and liability
                                 insurance Upload proof of professional and
                                 liability insurance (e.g., ABMP).
@@ -354,15 +355,16 @@ const AccordionCard = () => {
                                     Scan or photograph your insurance
                                     certificate.
                                 </li>
-                                <li className="font-fira text-black text-base font-normal">Save the file as PDF or JPEG.</li>
+                                <li className="font-fira text-black text-base font-normal">
+                                    Save the file as PDF or JPEG.
+                                </li>
                                 <li className="font-fira text-black text-base font-normal">
                                     Click the &quot;Upload Insurance&quot;
                                     button below and select your file.
                                 </li>
                             </ul>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-5 pb-6">
-                                
-                                <div className="flex gap-10">
+                            <div className="flex flex-col justify-center items-center gap-10 pt-10">
+                                <div className="flex gap-10 pb-5">
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -375,8 +377,8 @@ const AccordionCard = () => {
                     </Insurance>
 
                     <StudyGuide title={'Study Guide'}>
-                        <div className="flex flex-col items-stretch pl-6 pr-6 border border-y-0 rounded-lg">
-                            <h1 className="font-fira text-dark-green font-bold text-xl pb-5">
+                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-xl pb-5 pt-10">
                                 Areas of knowledge for the Study Guide
                             </h1>
                             <h1 className="font-fira text-black font-normal text-xl pb-5">
@@ -487,22 +489,37 @@ const AccordionCard = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-5 pb-6">
-                               
-                                <div className="flex gap-10">
+                            <div className="flex flex-col justify-center items-center gap-10 pt-5 pb-5">
+                                <div className="flex flex-col gap-10">
+                                    <p className="pt-[50px] pr-[300px]">
+                                        Purchase the Comprehensive Study guide:
+                                        $65.00 + tax.{' '}
+                                    </p>
+                                    <div className="flex items-center">
+                                    <img
+                                            src={StudyGuidePages}
+                                            className="h-[50px] w-[50px]"
+                                        />
+                                        <p className="font-fira font-bold text-blue">
+                                            Study Guide
+                                        </p>
                                     <button>
                                         <img
-                                            src={UploadBtn}
+                                            className="pl-[100px]"
+                                            src={GetStudyGuideBtn}
                                             onClick={submitDocument}
                                         />
                                     </button>
+                                    
+                                      
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </StudyGuide>
                     <Assessment title={'Assessment'}>
-                        <div className="flex flex-col pl-6 pr-6 border border-y-0 rounded-lg">
-                            <h1 className="font-fira text-dark-green font-bold text-xl">
+                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-xl pt-10">
                                 Complete 500 hours of relevant brain integration
                                 training.
                             </h1>
@@ -578,30 +595,15 @@ const AccordionCard = () => {
                                 high-quality brain integration services.
                             </p>
                             <br></br>
-                            {!isSubmitted ? (
-                                <div className="form-flex gap-10 pt-20">
-                                    <button>
-                                        <img
-                                            src={PayForAssessmentBtn}
-                                            onClick={submitDocument}
-                                        />
-                                    </button>
-                                </div>
-                            ): (<div className="form-flex gap-10 pt-20">
-                                <button disabled>
+
+                            <div className="form-flex gap-10 pt-20 pb-5">
+                                <button>
                                     <img
-                                        src={PayForAssessmentBtn}
+                                        src={PayforandStart}
                                         onClick={submitDocument}
                                     />
                                 </button>
                             </div>
-
-                            )}
-                            {isSubmitted && (
-                                <div className="pb-5">
-                                    <img src={StartAssessmentBtn} />
-                                </div>
-                            )}
                         </div>
                     </Assessment>
                 </Accordion>

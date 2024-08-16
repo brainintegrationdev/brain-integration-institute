@@ -11,7 +11,7 @@ import AccordionUpArrow from '../assets/icons/AccordionUpArrow.png';
 import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
 import { useState } from 'react';
 
-export default function CPR(props){
+export default function CPR(props) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     function toggleExpand() {
@@ -19,42 +19,54 @@ export default function CPR(props){
     }
     return (
         <AccordionItem>
-        <AccordionItemHeading>
-            <AccordionItemButton>
-                <div
-                    onClick={toggleExpand}
-                    className="flex h-[80px] rounded-lg border border-black flex-shrink-0 bg-gray justify-between items-center pl-9 pt-6 pr-4 pb-6 my-4"
-                >
-                    <div className="flex items-center gap-2">
-                   
-                        {!isExpanded ? (
-                            <>
-                            <img src={AccordionRadioUnfilled} />
-                        
-
-                        <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
-                            {props.title}
-                        </h1> </>) : ( <h1 className="font-fira text-xl text-black font-bold tracking-tight ">
-                            {props.title}
-                        </h1>)}
+            <AccordionItemHeading>
+                <AccordionItemButton>
+                    <div
+                        onClick={toggleExpand}
+                        className={
+                            isExpanded
+                                ? 'expanded-accordion'
+                                : 'collapsed-accordion'
+                        }
+                    >
+                        <div className="flex items-center gap-2 pl-9">
+                            {!isExpanded ? (
+                                <>
+                                    <img src={AccordionRadioUnfilled} />
+                                    <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
+                                        {props.title}
+                                    </h1>{' '}
+                                </>
+                            ) : (
+                                <h1 className="font-fira text-xl text-black font-bold tracking-tight ">
+                                    {props.title}
+                                </h1>
+                            )}
+                        </div>
+                        {isExpanded ? (
+                            <button className="pr-5">
+                                <img
+                                    src={AccordionUpArrow}
+                                    alt="Dropdown Arrow"
+                                    className={`transform transition-transform duration-500 ${
+                                        isExpanded ? 'rotate-0' : 'rotate-180'
+                                    }`}
+                                />
+                            </button>
+                        ) : (
+                            <button onClick={toggleExpand} className="pr-5">
+                                <img
+                                    src={AccordionUpArrow}
+                                    className={`transform transition-transform duration-500 ${
+                                        isExpanded ? 'rotate-0' : 'rotate-180'
+                                    }`}
+                                />
+                            </button>
+                        )}
                     </div>
-                    {isExpanded ? (
-                        <button>
-                            <img
-                                src={AccordionUpArrow}
-                                alt="Dropdown Arrow"
-                                className="ml-auto"
-                            />
-                        </button>
-                    ) : (
-                        <button onClick={toggleExpand}>
-                            <img src={AccordionDropDown} />
-                        </button>
-                    )}
-                </div>
-            </AccordionItemButton>
-        </AccordionItemHeading>
-        <AccordionItemPanel>{props.children}</AccordionItemPanel>
-    </AccordionItem>
-);
+                </AccordionItemButton>
+            </AccordionItemHeading>
+            <AccordionItemPanel>{props.children}</AccordionItemPanel>
+        </AccordionItem>
+    );
 }
