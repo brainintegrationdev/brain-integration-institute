@@ -13,8 +13,14 @@ export default {
       },
       colors: {
         'gray': '#ECECEC',
-        'dark-green': "#2B663D"
-      }
+        'dark-green': "#2B663D",
+        'blue': '#4F72AF',
+        'dark-gray': "#676767"
+      }, 
+      dropShadow: {
+        'md': '0 4px 4px rgba(0, 0, 0, 0.25)',
+     
+    },
      
     },
   },
