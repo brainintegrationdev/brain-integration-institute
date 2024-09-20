@@ -24,13 +24,14 @@ import StudyGuide from './StudyGuide';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { Accordion } from 'react-accessible-accordion';
-import e from 'cors';
+// import e from 'cors';
 
 //mock submission to DB until backend created
 
 const AccordionCard = () => {
     const [progress, setProgress] = useState(0);
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    // eslint-disable-next-line no-unused-vars
+    const [isSubmitited, setIsSubmitted] = useState(false);
     const { isAuthenticated, user } = useAuth0();
 
     const certProgressImages = [
