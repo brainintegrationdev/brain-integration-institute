@@ -1,24 +1,26 @@
 import { useEffect, useRef } from "react"
 
-const UploadWidget = () => {
-    const cloudinaryRef = useRef()
-    const widgetRef = useRef()
-    useEffect(() => {
-        cloudinaryRef.current = window.cloudinary,
-        console.log(cloudinaryRef.current)
-        widgetRef.current = cloudinary.current.createUploadWidget({
-            cloudName: '',
-            uploadPreset: '',
-        }, (error, result) => {
-            console.log(result)
-        })
-    })
-    return(
-        <button onClick={() => widgetRef.current.open()}>
-            Upload
-        </button>
-    )
-}
+// const UploadWidget = () => {
+//     const cloudinaryRef = useRef()
+//     const widgetRef = useRef()
+//     useEffect(() => {
+//         cloudinaryRef.current = window.cloudinary,
+//         console.log(cloudinaryRef.current)
+//         widgetRef.current = cloudinary.current.createUploadWidget({
+//             cloudName: '',
+//             uploadPreset: '',
+//         }, (error, result) => {
+//             console.log(result)
+//         })
+//     })
+//     return(
+//         <button onClick={() => widgetRef.current.open()}>
+//             Upload
+//         </button>
+//     )
+// }
+
+///I have created a separate component for the upload widget - Ash 
 
 const StudyGDownloadWidget = () => {
     
