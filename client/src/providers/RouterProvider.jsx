@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Auth />
+        element: <Home />
       },
       // {
       //   path: '/about',
@@ -43,6 +43,8 @@ const router = createBrowserRouter([
     ]
   },
 ])
+
+//changed back to Home component.  Auth0 should handle authentication, but we can add secondary way to authenticate/register using this Auth route.  
 
 export const RouteProvider = () => {
   const { isLoading } = useAuth0();
