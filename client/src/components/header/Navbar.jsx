@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
-import BrainIntegrationSeal from '../assets/icons/BrainIntegrationSeal.png';
-import bell from '../assets/icons/bell.png'
+import BrainIntegrationSeal from '../../assets/icons/BrainIntegrationSeal.png';
+import bell from '../../assets/icons/bell.png'
 
 export const Navbar = () => {
     const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
