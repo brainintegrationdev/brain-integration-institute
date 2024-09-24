@@ -1,16 +1,16 @@
-const { FileModel } = require("../models/file");
+const { File } = require("../models/file");
 const { upload } = require("./cdn");
 
-const getAllFilesByOwner = async (owner) => await FileModel.find({
+const getAllFilesByOwner = async (owner) => await File.find({
     owner
 });
 
 const createFile = async ({ filename, owner, file }) => {
     const metadata = await upload(filename, file);
-    const doc = new FileModel({
+    const doc = new File({
         filename,
         public_id: metadata.public_id,
-        url: metadata.secure_url,
+        url: metadata.url,
         owner
     })
 
