@@ -81,12 +81,25 @@ export const Practitioner = () => {
 <div className = "flex justify-between py-2">
 
 
-        <input className="SearchBar w-96 px-4 py-2 l relative rounded-full border border-[#808080] justify-between items-center inline-flex text-black/50 text-xl font-normal font-['Fira Sans']" name = "title" onChange = {searchHandler} placeholder = "Specialty..." />
+        <input 
+        className="SearchBar w-96 px-4 py-2 l relative rounded-full border border-[#808080] justify-between items-center inline-flex text-black/50 text-xl font-normal font-['Fira Sans']" 
+        name = "title" 
+        onChange = {searchHandler} 
+        placeholder = "Specialty..." 
+        />
 
 
-        <input className="SearchBar w-96 px-4 py-2 l relative rounded-full border border-[#808080] justify-between items-center inline-flex text-black/50 text-xl font-normal font-['Fira Sans']" name = "name" onChange = {searchHandler} placeholder = "Name..." />
+        <input 
+        className="SearchBar w-96 px-4 py-2 l relative rounded-full border border-[#808080] justify-between items-center inline-flex text-black/50 text-xl font-normal font-['Fira Sans']" 
+        name = "name" 
+        onChange = {searchHandler} 
+        placeholder = "Name..." />
 
-        <input className="SearchBar w-96 px-4 py-2 l relative rounded-full border border-[#808080] justify-between items-center inline-flex text-black/50 text-xl font-normal font-['Fira Sans']" name = "location" onChange = {searchHandler} placeholder = "Zip Code, City or State..." />
+        <input 
+        className="SearchBar w-96 px-4 py-2 l relative rounded-full border border-[#808080] justify-between items-center inline-flex text-black/50 text-xl font-normal font-['Fira Sans']" 
+        name = "location" 
+        onChange = {searchHandler} 
+        placeholder = "Zip Code, City or State..." />
 
 </div>
        {(searchQuery.name !== "" || searchQuery.title !== "" || searchQuery.location !== "") && <div className="Results2 relative text-center text-xl py-2 font-medium font-['Inter']">Results : {renderedPractitioners.length}</div>}
