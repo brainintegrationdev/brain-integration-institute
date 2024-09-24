@@ -4,6 +4,7 @@ import {
 } from "react-router-dom";
 import { Profile } from '../routes/Profile';
 import { Root } from "../routes/Root";
+import { Auth } from '../routes/Auth';
 import { useAuth0 } from "@auth0/auth0-react";
 import { Home } from "../routes/Home";
 import { AboutUs } from "../routes/AboutUs";
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
         index: true,
         element: <Home />
       },
+      // {
+      //   path: '/about',
+      //   element: <About />
+      // },
       {
         path: '/profile',
         element: <Profile />,
@@ -38,6 +43,8 @@ const router = createBrowserRouter([
     ]
   },
 ])
+
+//changed back to Home component.  Auth0 should handle authentication, but we can add secondary way to authenticate/register using this Auth route.  
 
 export const RouteProvider = () => {
   const { isLoading } = useAuth0();
