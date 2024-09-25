@@ -1,6 +1,6 @@
 // import { AccordionComponent } from '../components/AccordionComponent';
 import  AccordionCard  from '../components/AccordionCard'
-import GreenBannerCertPage from '../assets/icons/GreenBannerCertPage.png';
+// import GreenBannerCertPage from '../assets/icons/GreenBannerCertPage.png';
 import banner from "../assets/icons/PractitionerBackground.png";
 import paleBanner from "../assets/icons/PaleGreenPractitionerBackground.png";
 

@@ -1,23 +1,20 @@
-const { File } = require("../models/file");
+const  File  = require("../models/file");
 const { upload } = require("./cdn");
 
 const getAllFilesByOwner = async (owner) => await File.find({
     owner
 });
 
-const createFile = async ({ filename, owner, file }) => {
-    const metadata = await upload(filename, file);
-    const doc = new File({
-        filename,
-        public_id: metadata.public_id,
-        url: metadata.url,
-        owner
-    })
-
-    return await doc.save()
-}
+/**
+ * Create a new file entry in the database
+ * @param {Object} metadata - The file metadata to save
+ */
+const createFile = async (metadata) => {
+    const file = new File(metadata);
+    await file.save();
+    return file;
+};
 
 module.exports = {
-    getAllFilesByOwner,
-    createFile
-}
+    createFile,
+};

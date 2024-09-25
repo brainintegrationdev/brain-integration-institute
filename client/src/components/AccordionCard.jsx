@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
 import ProgressBar0 from '../assets/icons/ProgressBar0.png';
@@ -20,15 +20,19 @@ import CPR from './CPR';
 import FirstAid from './FirstAid';
 import Video from './Video';
 import StudyGuide from './StudyGuide';
+import UploadWidget from './UploadWidget';
+// import { CloudinaryProvider } from '../providers/CloudinaryProvider';
 
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { Accordion } from 'react-accessible-accordion';
 import e from 'cors';
+import { CloudinaryContext } from '../contexts';
 
 //mock submission to DB until backend created
 
 const AccordionCard = () => {
+    const { uwConfig, initializeCloudinaryWidget } = useContext(CloudinaryContext)
     const [progress, setProgress] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { isAuthenticated, user } = useAuth0();
@@ -83,7 +87,7 @@ const AccordionCard = () => {
                 <div className="flex flex-col justify-center items-center pl-20 gap-4 pb-5">
                     <img src={certProgressImages[progress]} />
                 </div>
-
+             
                 <Accordion
                     allowMultipleExpanded={true}
                     allowZeroExpanded={true}
@@ -172,12 +176,9 @@ const AccordionCard = () => {
 
                             <div className="flex flex-col justify-center items-center gap-10 pt-10 pb-2">
                                 <div className="flex gap-10 pb-5">
-                                    <button>
-                                        <img
-                                            src={UploadBtn}
-                                            onClick={submitDocument}
-                                        />
-                                    </button>
+                                <button onClick={initializeCloudinaryWidget}>
+                Upload
+            </button>
                                 </div>
                             </div>
                         </div>
