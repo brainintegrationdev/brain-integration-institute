@@ -10,8 +10,9 @@ import "./assets/global.css"
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+
     <AuthProvider>
-      <CloudinaryProvider>
+    <CloudinaryProvider>
       <PractitionerProvider>
       <FileProvider>
         <RouteProvider />
@@ -19,5 +20,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </PractitionerProvider>
       </CloudinaryProvider>
     </AuthProvider>
+   
   </React.StrictMode>
 )

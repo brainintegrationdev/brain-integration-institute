@@ -13,18 +13,32 @@ export const Navbar = () => {
             },
         });
 
+        console.log(loginWithRedirect)
+
     const handleLogout = () => {
         logout();
+        console.log("logged out")
     };
+
+    console.log(isAuthenticated)
 
     const links = isAuthenticated ? (
         <div className='flex font-libre text-dark-gray items-center text-center text-base justify-center gap-10 pl-[356px]'>
             <Link to="/">HOME</Link>
-            {/* <Link to="/profile">PROFILE</Link> */}
+            <Link to="/profile">PROFILE</Link>
             <Link to="/about">ABOUT US</Link>
             <Link to="/certification">CERTIFICATION</Link>
             <Link to="/practitioner">FIND PRACTITIONER</Link>
             <button onClick={handleLogout}>Logout</button>
+            <div className='flex justify-end'>
+                        <img className="pl-[90px]" src={bell} />
+                        <img
+                            className="h-[32px] w-[32px] ml-4 rounded-full"
+                            src={user.picture}
+                            alt="avatar"
+                            
+                        />
+                    </div>
         </div>
     ) : (
         <div>
@@ -43,17 +57,7 @@ export const Navbar = () => {
             </div>
             <div className="flex font-libre text-dark-gray items-center text-center text-base justify-center font-bold">
                 <div>{links} </div>
-                {isAuthenticated && (
-                    <div className='flex justify-end'>
-                        <img className="pl-[90px]" src={bell} />
-                        <img
-                            className="h-[32px] w-[32px] ml-4 rounded-full"
-                            src={user.picture}
-                            alt="avatar"
-                            
-                        />
-                    </div>
-                )}
+            
             </div>
         </nav>
     );

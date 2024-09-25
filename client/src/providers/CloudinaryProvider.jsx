@@ -11,15 +11,28 @@ import { AdvancedImage, responsive, placeholder } from '@cloudinary/react';
 export const CloudinaryProvider = ({ children }) => {
     const [publicId, setPublicId] = useState('');
     const [loaded, setLoaded] = useState(false);
+    const { user } = useAuth0();
+
+    console.log(user)
     // Define the uwConfig object from environment variables
+    
     const uwConfig = {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUDNAME,
         uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+        asset_folder: 'users/ash',
+      
+        resource_type: 'auto',
+        
     };
+
+    console.log(uwConfig)
 
     const cld = new Cloudinary({
         cloud: {
             cloudName: uwConfig.cloudName,
+            uploadPreset: uwConfig.uploadPreset,
+            asset_folder: uwConfig.asset_folder
+            
         },
     });
 
@@ -50,12 +63,14 @@ export const CloudinaryProvider = ({ children }) => {
     }, [loaded]);
 
     const initializeCloudinaryWidget = () => {
+     
         if (loaded) {
             // console.log('widget loaded!');
             const myWidget = window.cloudinary.createUploadWidget(
                 {
                     cloudName: uwConfig.cloudName,
                     uploadPreset: uwConfig.uploadPreset,
+                    folder: uwConfig.asset_folder
                 },
 
                 async (error, result) => {
@@ -65,6 +80,8 @@ export const CloudinaryProvider = ({ children }) => {
                     }
                     if (result.event === 'success') {
                         // console.log('success', result);
+                        console.log('Public ID sent to Cloudinary:', result.info.public_id);  // Log public_id
+                        console.log('Upload Result:', result.info);
                         const fileMetadata = {
                             publicId: result.info.public_id,
                             url: result.info.secure_url,
