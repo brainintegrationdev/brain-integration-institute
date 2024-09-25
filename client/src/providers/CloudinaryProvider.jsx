@@ -51,7 +51,7 @@ export const CloudinaryProvider = ({ children }) => {
 
     const initializeCloudinaryWidget = () => {
         if (loaded) {
-            console.log('widget loaded!');
+            // console.log('widget loaded!');
             const myWidget = window.cloudinary.createUploadWidget(
                 {
                     cloudName: uwConfig.cloudName,
@@ -64,7 +64,7 @@ export const CloudinaryProvider = ({ children }) => {
                         return;
                     }
                     if (result.event === 'success') {
-                        console.log('success', result);
+                        // console.log('success', result);
                         const fileMetadata = {
                             publicId: result.info.public_id,
                             url: result.info.secure_url,
@@ -72,9 +72,9 @@ export const CloudinaryProvider = ({ children }) => {
                             filename: result.info.original_filename,
                             isApproved: false,
                         };
-                        console.log(result.info.public_id);
+                        // console.log(result.info.public_id);
                         setPublicId(result.info.public_id);
-                        console.log(fileMetadata);
+                        // console.log(fileMetadata);
 
                         try {
                             const accessToken = await getAccessTokenSilently();
@@ -90,12 +90,10 @@ export const CloudinaryProvider = ({ children }) => {
                                 },
                             );
 
-                          
-
                             if (response.ok) {
                                 console.log(
-                                    'File metadata successfully sent to the server.',
-                                    fileMetadata,
+                                    'File metadata successfully sent to the server.'
+                                    
                                 );
                             } else {
                                 console.error(
@@ -114,14 +112,14 @@ export const CloudinaryProvider = ({ children }) => {
 
             // Open the Cloudinary widget when the button is clicked
             myWidget.open();
-            console.log('Widget button clicked');
+            // console.log('Widget button clicked');
         }
     };
 
     return (
-        <CloudinaryContext.Provider value={{ uwConfig, initializeCloudinaryWidget }}>
-          
-          
+        <CloudinaryContext.Provider
+            value={{ uwConfig, initializeCloudinaryWidget }}
+        >
             {loaded && children}
         </CloudinaryContext.Provider>
     );

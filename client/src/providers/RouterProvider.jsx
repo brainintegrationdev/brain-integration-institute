@@ -4,7 +4,7 @@ import {
 } from "react-router-dom";
 import { Profile } from '../routes/Profile';
 import { Root } from "../routes/Root";
-import { Auth } from '../routes/Auth';
+// import { Auth } from '../routes/Auth';
 import { useAuth0 } from "@auth0/auth0-react";
 import { Home } from "../routes/Home";
 import { AboutUs } from "../routes/AboutUs";

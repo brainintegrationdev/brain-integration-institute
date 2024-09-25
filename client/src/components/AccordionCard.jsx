@@ -20,7 +20,7 @@ import CPR from './CPR';
 import FirstAid from './FirstAid';
 import Video from './Video';
 import StudyGuide from './StudyGuide';
-import UploadWidget from './UploadWidget';
+// import UploadWidget from './UploadWidget';
 // import { CloudinaryProvider } from '../providers/CloudinaryProvider';
 
 import { useAuth0 } from '@auth0/auth0-react';
@@ -32,7 +32,8 @@ import { CloudinaryContext } from '../contexts';
 //mock submission to DB until backend created
 
 const AccordionCard = () => {
-    const { uwConfig, initializeCloudinaryWidget } = useContext(CloudinaryContext)
+    const { uwConfig, initializeCloudinaryWidget } =
+        useContext(CloudinaryContext);
     const [progress, setProgress] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { isAuthenticated, user } = useAuth0();
@@ -87,7 +88,7 @@ const AccordionCard = () => {
                 <div className="flex flex-col justify-center items-center pl-20 gap-4 pb-5">
                     <img src={certProgressImages[progress]} />
                 </div>
-             
+
                 <Accordion
                     allowMultipleExpanded={true}
                     allowZeroExpanded={true}
@@ -176,9 +177,12 @@ const AccordionCard = () => {
 
                             <div className="flex flex-col justify-center items-center gap-10 pt-10 pb-2">
                                 <div className="flex gap-10 pb-5">
-                                <button onClick={initializeCloudinaryWidget}>
-                Upload
-            </button>
+                                    <button>
+                                        <img
+                                            src={UploadBtn}
+                                            onClick={initializeCloudinaryWidget}
+                                        />
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -220,7 +224,7 @@ const AccordionCard = () => {
                                     <button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={submitDocument}
+                                            onClick={initializeCloudinaryWidget}
                                         />
                                     </button>
                                 </div>
@@ -245,7 +249,7 @@ const AccordionCard = () => {
                                     <button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={submitDocument}
+                                            onClick={initializeCloudinaryWidget}
                                         />
                                     </button>
                                 </div>
@@ -286,7 +290,7 @@ const AccordionCard = () => {
                                     <button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={submitDocument}
+                                            onClick={initializeCloudinaryWidget}
                                         />
                                     </button>
                                 </div>
@@ -331,7 +335,7 @@ const AccordionCard = () => {
                                     <button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={submitDocument}
+                                            onClick={initializeCloudinaryWidget}
                                         />
                                     </button>
                                 </div>
@@ -369,7 +373,7 @@ const AccordionCard = () => {
                                     <button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={submitDocument}
+                                            onClick={initializeCloudinaryWidget}
                                         />
                                     </button>
                                 </div>
@@ -497,22 +501,20 @@ const AccordionCard = () => {
                                         $65.00 + tax.{' '}
                                     </p>
                                     <div className="flex items-center">
-                                    <img
+                                        <img
                                             src={StudyGuidePages}
                                             className="h-[50px] w-[50px]"
                                         />
                                         <p className="font-fira font-bold text-blue">
                                             Study Guide
                                         </p>
-                                    <button>
-                                        <img
-                                            className="pl-[100px]"
-                                            src={GetStudyGuideBtn}
-                                            onClick={submitDocument}
-                                        />
-                                    </button>
-                                    
-                                      
+                                        <button>
+                                            <img
+                                                className="pl-[100px]"
+                                                src={GetStudyGuideBtn}
+                                                onClick={submitDocument}
+                                            />
+                                        </button>
                                     </div>
                                 </div>
                             </div>
