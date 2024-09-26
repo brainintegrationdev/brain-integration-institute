@@ -4,29 +4,32 @@ import { CloudinaryContext } from '../contexts';
 import { useEffect, useState } from 'react';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { useAuth0 } from '@auth0/auth0-react';
-import { AdvancedImage, responsive, placeholder } from '@cloudinary/react';
+// import { AdvancedImage, responsive, placeholder } from '@cloudinary/react';
 // import AccordionCard from '../components/AccordionCard';
 
 // Cloudinary Provider Component
 export const CloudinaryProvider = ({ children }) => {
+    // eslint-disable-next-line no-unused-vars
     const [publicId, setPublicId] = useState('');
     const [loaded, setLoaded] = useState(false);
-    const { user } = useAuth0();
+    const { user, getAccessTokenSilently } = useAuth0();
 
     console.log(user)
     // Define the uwConfig object from environment variables
-    
+  
     const uwConfig = {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUDNAME,
         uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-        asset_folder: 'users/ash',
+       
       
         resource_type: 'auto',
         
     };
 
-    console.log(uwConfig)
 
+    // console.log(uwConfig)
+
+    // eslint-disable-next-line no-unused-vars
     const cld = new Cloudinary({
         cloud: {
             cloudName: uwConfig.cloudName,
@@ -37,7 +40,7 @@ export const CloudinaryProvider = ({ children }) => {
     });
 
     //   const myImage = cld.image(publicId);
-    const { getAccessTokenSilently } = useAuth0();
+    // const { getAccessTokenSilently } = useAuth0();
 
     useEffect(() => {
         if (!loaded) {
@@ -64,13 +67,13 @@ export const CloudinaryProvider = ({ children }) => {
 
     const initializeCloudinaryWidget = () => {
      
-        if (loaded) {
+        if (user) {
             // console.log('widget loaded!');
             const myWidget = window.cloudinary.createUploadWidget(
                 {
                     cloudName: uwConfig.cloudName,
                     uploadPreset: uwConfig.uploadPreset,
-                    folder: uwConfig.asset_folder
+                    asset_folder: `users/${user.nickname}`,
                 },
 
                 async (error, result) => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useContext } from 'react';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
@@ -32,6 +33,7 @@ import { CloudinaryContext } from '../contexts';
 //mock submission to DB until backend created
 
 const AccordionCard = () => {
+    // eslint-disable-next-line no-unused-vars
     const { uwConfig, initializeCloudinaryWidget } =
         useContext(CloudinaryContext);
     const [progress, setProgress] = useState(0);

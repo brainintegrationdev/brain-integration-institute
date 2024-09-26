@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Outlet } from "react-router-dom";
 import { useAuth0 } from '@auth0/auth0-react';
 import { Navbar } from "../components/header/Navbar";
