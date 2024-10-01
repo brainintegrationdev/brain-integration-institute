@@ -29,6 +29,8 @@ const allow = (permissions) => (req, res, next) => {
 
 const enableCors = cors({ origin: [...process.env.CORS_WHITELIST.split(','), process.env.AUTH0_ISSUER_BASE_URL] })
 
+//app.use(cors({ origin: 'http://example.com', // Allow only requests from example.com methods: ['GET', 'POST'], // Allow only GET and POST requests allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers credentials: true // Allow cookies to be sent in CORS requests }));
+
 
 module.exports = {
     validateAuthToken,

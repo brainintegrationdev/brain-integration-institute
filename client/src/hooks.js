@@ -10,12 +10,16 @@ import { FileContext } from "./contexts";
  * const { request } = useHttpAuthClient()
  * request('/api/path/to/authorized/resource')
  *  .then(data => {console.log(data)})
+ * 
+ * 
+ * for protected routes that require authentication
  */
 export const useHttpAuthClient = () => {
     const { getAccessTokenSilently } = useAuth0();
 
     const handler = async (url, options) => {
         const accessToken = await getAccessTokenSilently();
+        console.log
         return http.request(accessToken)(url, options)
     };
 
@@ -42,7 +46,7 @@ export const useLoadingApi = () => {
         setError
     ]
 }
-
+//keeps track of file state and performs fetches of files, uploading new files, etc
 export const useFileAPI = () => {
     const { request } = useHttpAuthClient();
     const [files, setFiles] = useState([]);

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
 import ProgressBar0 from '../assets/icons/ProgressBar0.png';
@@ -21,6 +21,8 @@ import CPR from './CPR';
 import FirstAid from './FirstAid';
 import Video from './Video';
 import StudyGuide from './StudyGuide';
+import Certdocs from './Certdocs';
+
 // import UploadWidget from './UploadWidget';
 // import { CloudinaryProvider } from '../providers/CloudinaryProvider';
 
@@ -30,15 +32,17 @@ import { Accordion } from 'react-accessible-accordion';
 import e from 'cors';
 import { CloudinaryContext } from '../contexts';
 
+
 //mock submission to DB until backend created
 
 const AccordionCard = () => {
     // eslint-disable-next-line no-unused-vars
-    const { uwConfig, initializeCloudinaryWidget } =
+    const { uwConfig, initializeCloudinaryWidget, filename, getFilesInFolder, getCloudinaryFiles, getFiles, files } =
         useContext(CloudinaryContext);
     const [progress, setProgress] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { isAuthenticated, user } = useAuth0();
+ 
 
     const certProgressImages = [
         ProgressBar0,
@@ -52,6 +56,9 @@ const AccordionCard = () => {
         ProgressBar8,
     ];
 
+    console.log(filename);
+    console.log(files)
+
     const submitDocument = () => {
         if (progress < 8) {
             setProgress((prevProgress) => prevProgress + 1);
@@ -63,6 +70,20 @@ const AccordionCard = () => {
             return;
         }
     };
+
+    // if (user) {
+    //     console.log(user.nickname)
+    //     const folderName = `users/${user.nickname}`;
+    //     getFilesInFolder(folderName)
+    //         .then((files) => console.log('Files in folder:', files))
+    //         .catch((error) => console.error('Error:', error));
+    // }
+
+    if (user) {
+       
+            getFilesInFolder();
+    }
+        
 
     return (
         <div className="flex justify-start">
@@ -179,12 +200,19 @@ const AccordionCard = () => {
 
                             <div className="flex flex-col justify-center items-center gap-10 pt-10 pb-2">
                                 <div className="flex gap-10 pb-5">
+                                    {filename && (
+                                        <button className="font-fira text-xl text-blue font-bold">
+                                            {filename} X
+                                        </button>
+                                       
+                                    )}
                                     <button>
                                         <img
                                             src={UploadBtn}
                                             onClick={initializeCloudinaryWidget}
                                         />
                                     </button>
+                                    <Certdocs folder="users" />
                                 </div>
                             </div>
                         </div>
