@@ -21,7 +21,7 @@ import CPR from './CPR';
 import FirstAid from './FirstAid';
 import Video from './Video';
 import StudyGuide from './StudyGuide';
-import Certdocs from './Certdocs';
+// import Certdocs from './Certdocs';
 
 // import UploadWidget from './UploadWidget';
 // import { CloudinaryProvider } from '../providers/CloudinaryProvider';
@@ -32,17 +32,22 @@ import { Accordion } from 'react-accessible-accordion';
 import e from 'cors';
 import { CloudinaryContext } from '../contexts';
 
-
 //mock submission to DB until backend created
 
 const AccordionCard = () => {
     // eslint-disable-next-line no-unused-vars
-    const { uwConfig, initializeCloudinaryWidget, filename, getFilesInFolder, getCloudinaryFiles, getFiles, files } =
-        useContext(CloudinaryContext);
+    const {
+        uwConfig,
+        initializeCloudinaryWidget,
+        filename,
+        getFilesInFolder,
+        getCloudinaryFiles,
+        getFiles,
+        files,
+    } = useContext(CloudinaryContext);
     const [progress, setProgress] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { isAuthenticated, user } = useAuth0();
- 
 
     const certProgressImages = [
         ProgressBar0,
@@ -57,7 +62,13 @@ const AccordionCard = () => {
     ];
 
     console.log(filename);
+    // if (files) {
     console.log(files)
+    console.log(typeof files)
+    // const displayName = files.resources[0].display_name
+    // console.log(typeof files)
+    // console.log(displayName)
+    // }
 
     const submitDocument = () => {
         if (progress < 8) {
@@ -78,12 +89,11 @@ const AccordionCard = () => {
     //         .then((files) => console.log('Files in folder:', files))
     //         .catch((error) => console.error('Error:', error));
     // }
-
-    if (user) {
-       
+    useEffect(() => {
+        if (user) {
             getFilesInFolder();
-    }
-        
+        }
+    }, [user]);
 
     return (
         <div className="flex justify-start">
@@ -204,7 +214,6 @@ const AccordionCard = () => {
                                         <button className="font-fira text-xl text-blue font-bold">
                                             {filename} X
                                         </button>
-                                       
                                     )}
                                     <button>
                                         <img
@@ -212,7 +221,7 @@ const AccordionCard = () => {
                                             onClick={initializeCloudinaryWidget}
                                         />
                                     </button>
-                                    <Certdocs folder="users" />
+                                    {/* <Certdocs folder="users" /> */}
                                 </div>
                             </div>
                         </div>

@@ -27,7 +27,14 @@ const allow = (permissions) => (req, res, next) => {
     next(Error(`Access denied: ${permissions}. You don't have permission to access requested resource`))
 }
 
-const enableCors = cors({ origin: [...process.env.CORS_WHITELIST.split(','), process.env.AUTH0_ISSUER_BASE_URL] })
+const enableCors = cors({
+    origin: [
+        ...process.env.CORS_WHITELIST.split(','),
+        process.env.AUTH0_ISSUER_BASE_URL
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+});
+
 
 //app.use(cors({ origin: 'http://example.com', // Allow only requests from example.com methods: ['GET', 'POST'], // Allow only GET and POST requests allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers credentials: true // Allow cookies to be sent in CORS requests }));
 

@@ -57,11 +57,22 @@ export const CloudinaryProvider = ({ children }) => {
     //     }
     // };
 
-    const getFilesInFolder = () => {
-        fetch('http://localhost:8080/api/images/:nickname')
-            .then((response) => response.json())
-            .then((data) => console.log(data))
-            .catch((error) => console.error('Error:', error));
+    const getFilesInFolder = async () => {
+        try {
+            const accessToken = await getAccessTokenSilently();
+            const response = await axios.get(
+                `http://localhost:8080/api/images/${user.nickname}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                },
+            );
+            setFiles(prev => [...prev, ...response.data]);
+            console.log(files);
+        } catch (error) {
+            console.error('Error fetching files:', error);
+        }
     };
 
     const getFiles = async () => {
