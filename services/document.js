@@ -6,40 +6,49 @@ const getImagesFromCloudinary = async (folder) => {
     let nextCursor = null;
 
     try {
-        // Create Basic Auth header
+        const requestURL = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/image/upload`;
+        console.log('Requesting from URL:', requestURL);
+        console.log('Folder path (prefix):', folder);
+
         const authHeader = Buffer.from(
-            `${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}`,
+            `${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}`
         ).toString('base64');
-
+        console.log('Authorization Header:', `Basic ${authHeader}`);
         do {
-            // Make GET request to Cloudinary API to get images in the specified folder
-            const response = await axios.get(
-                `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/image/upload`,
-                {
-                    params: {
-                        prefix: folder, // Folder path to fetch images from
-                        max_results: 100, // Increase to 100 for maximum results per call
-                        next_cursor: nextCursor, // Use next_cursor for pagination if present
-                    },
-                    headers: {
-                        Authorization: `Basic ${authHeader}`,
-                    },
+            console.log('Entering the `do` block');
+
+            const cloudinaryResponse = await axios.get(requestURL, {
+                params: {
+                    asset_folder: folder,
+                    max_results: 100,
+                    ...(nextCursor && { next_cursor: nextCursor })  // Pagination if needed
                 },
-            );
+                headers: {
+                    Authorization: `Basic ${authHeader}`
+                }
+            });
 
-            // Collect the resources returned in this batch
-            allAssets.push(...response.data.resources);
+            console.log('Inside `do` block - Cloudinary Response:', cloudinaryResponse.data);
 
-            // If there's a next_cursor in the response, use it for the next request
-            nextCursor = response.data.next_cursor || null;
-        } while (nextCursor); // Continue fetching while there's a next_cursor
+            const { resources, next_cursor } = cloudinaryResponse.data;
+            console.log('Fetched resources count:', resources ? resources.length : 0);
+            console.log('Next cursor:', next_cursor);  // Log next cursor
 
-        console.log('All assets:', allAssets);
+            allAssets.push(...resources);
+            nextCursor = next_cursor;
+
+        } while (nextCursor);
+
+        console.log('Total assets fetched:', allAssets.length);
         return allAssets;
+
     } catch (error) {
-        console.error('Error fetching assets from Cloudinary:', error);
-        throw error;
+        console.error('Error fetching images from Cloudinary:', error.response?.data || error.message);
+        throw new Error('Failed to fetch images');
     }
 };
+
+  
+
 
 module.exports = { getImagesFromCloudinary };

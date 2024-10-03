@@ -33,17 +33,7 @@ console.log("Cloudinary credentials", {
     }
 });
 
-// ////documentRouter.get('/api/images/:nickname', validateAuthToken, async (req, res) => {
-//     const nickname = req.params.nickname;
-//     console.log('Fetching images from folder:', folder);
-//     try {
-//         const images = await getImagesFromCloudinary(folder);
-//         res.json(images);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: 'Failed to fetch images from Cloudinary' });
-//     }
-// });
+
 
 
 module.exports = {

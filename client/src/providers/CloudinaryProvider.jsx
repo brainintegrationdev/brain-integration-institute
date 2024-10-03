@@ -17,6 +17,9 @@ export const CloudinaryProvider = ({ children }) => {
     const [loaded, setLoaded] = useState(false);
     const { user, getAccessTokenSilently } = useAuth0();
     const [files, setFiles] = useState([]);
+    const [progress, setProgress] = useState(0);
+    const [isSubmitted, setIsSubmitted] = useState(false)
+    const [sectionName, setSectionName] = useState(""); 
 
     // Define the uwConfig object from environment variables
 
@@ -60,6 +63,7 @@ export const CloudinaryProvider = ({ children }) => {
     const getFilesInFolder = async () => {
         try {
             const accessToken = await getAccessTokenSilently();
+           
             const response = await axios.get(
                 `http://localhost:8080/api/images/${user.nickname}`,
                 {
@@ -68,7 +72,7 @@ export const CloudinaryProvider = ({ children }) => {
                     },
                 },
             );
-            setFiles(prev => [...prev, ...response.data]);
+            setFiles(response.data);
             console.log(files);
         } catch (error) {
             console.error('Error fetching files:', error);
@@ -124,7 +128,17 @@ export const CloudinaryProvider = ({ children }) => {
         };
     }, [loaded]);
 
-    const initializeCloudinaryWidget = () => {
+    // // if (progress < 8) {
+    //     setProgress((prevProgress) => prevProgress + 1);
+    //     console.log('document submitted!');
+    //     console.log(progress);
+    //     localStorage.setItem('progress', progress);
+    //     setIsSubmitted(true);
+    // } else {
+    //     return;
+    // }
+
+    const initializeCloudinaryWidget = (section) => {
         if (user) {
             // console.log('widget loaded!');
             console.log(user);
@@ -152,6 +166,7 @@ export const CloudinaryProvider = ({ children }) => {
                             url: result.info.secure_url,
                             uploadDate: result.info.created_at,
                             filename: result.info.original_filename,
+                            sectionName: section,
                             isApproved: false,
                         };
                         // console.log(result.info.public_id);
@@ -177,8 +192,19 @@ export const CloudinaryProvider = ({ children }) => {
 
                             if (response.ok) {
                                 console.log(
-                                    'File metadata successfully sent to the server.',
-                                );
+                                    'File metadata successfully sent to the server.'),
+                                    setFiles((prevFiles) => [...prevFiles, fileMetadata]);
+                                   
+                                
+                                if (progress < 8) {
+                                    setProgress((prevProgress) => prevProgress + 1);
+                                    console.log('Document submitted!');
+                                    console.log(progress);
+                                    localStorage.setItem('progress', progress);
+                                    setIsSubmitted(true);
+                                } else {
+                                    return;
+                                }
                             } else {
                                 console.error(
                                     'Failed to send file metadata to the server.',
@@ -209,6 +235,13 @@ export const CloudinaryProvider = ({ children }) => {
                 getFiles,
                 getFilesInFolder,
                 files,
+                progress,
+                setProgress, 
+                isSubmitted,
+                setIsSubmitted,
+                sectionName,
+                setSectionName
+                
             }}
         >
             {loaded && children}

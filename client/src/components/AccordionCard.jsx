@@ -44,10 +44,15 @@ const AccordionCard = () => {
         getCloudinaryFiles,
         getFiles,
         files,
+        progress,
+        setProgress,
+        isSubmitted,
+        setIsSubmitted,
     } = useContext(CloudinaryContext);
-    const [progress, setProgress] = useState(0);
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    // const [progress, setProgress] = useState(0);
+    // const [isSubmitted, setIsSubmitted] = useState(false);
     const { isAuthenticated, user } = useAuth0();
+    const [sectionName, setSectionName] = useState('');
 
     const certProgressImages = [
         ProgressBar0,
@@ -63,24 +68,41 @@ const AccordionCard = () => {
 
     console.log(filename);
     // if (files) {
-    console.log(files)
-    console.log(typeof files)
+    // console.log(files);
+    // console.log(typeof files);
+
+    const getStudyGuide = () => {
+        console.log('study guide purchased');
+    };
+
+    const confirmationModal = () => {
+        console.log('are you sure you want to delete this file?');
+    };
+
+    const showFile = () => {
+        console.log('file shown');
+    };
+
+    const handleUploadClick = (section) => {
+        setSectionName(section); // Set the section name based on the button clicked
+        initializeCloudinaryWidget(section); // Pass the section name to the context function
+    };
     // const displayName = files.resources[0].display_name
     // console.log(typeof files)
     // console.log(displayName)
     // }
 
-    const submitDocument = () => {
-        if (progress < 8) {
-            setProgress((prevProgress) => prevProgress + 1);
-            console.log('document submitted!');
-            console.log(progress);
-            localStorage.setItem('progress', progress);
-            setIsSubmitted(true);
-        } else {
-            return;
-        }
-    };
+    // const submitDocument = () => {
+    //     if (progress < 8) {
+    //         setProgress((prevProgress) => prevProgress + 1);
+    //         console.log('document submitted!');
+    //         console.log(progress);
+    //         localStorage.setItem('progress', progress);
+    //         setIsSubmitted(true);
+    //     } else {
+    //         return;
+    //     }
+    // };
 
     // if (user) {
     //     console.log(user.nickname)
@@ -94,6 +116,8 @@ const AccordionCard = () => {
             getFilesInFolder();
         }
     }, [user]);
+
+    console.log(files)
 
     return (
         <div className="flex justify-start">
@@ -127,7 +151,10 @@ const AccordionCard = () => {
                     allowZeroExpanded={true}
                     className="w-[826px]"
                 >
-                    <Brain title="Brain Integration Training">
+                    <Brain
+                        title="Brain Integration Training"
+                        sectionName="Brain"
+                    >
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10">
                                 Complete 500 hours of relevant brain integration
@@ -211,14 +238,27 @@ const AccordionCard = () => {
                             <div className="flex flex-col justify-center items-center gap-10 pt-10 pb-2">
                                 <div className="flex gap-10 pb-5">
                                     {filename && (
-                                        <button className="font-fira text-xl text-blue font-bold">
-                                            {filename} X
-                                        </button>
+                                        <div>
+                                            <button
+                                                className="font-fira text-xl text-blue font-bold"
+                                                onClick={showFile}
+                                            >
+                                                {' '}
+                                                {filename}
+                                            </button>
+                                            <button onClick={confirmationModal}>
+                                                {' '}
+                                                X
+                                            </button>
+                                        </div>
                                     )}
                                     <button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={initializeCloudinaryWidget}
+                                            onClick={() =>
+                                                handleUploadClick('Brain')
+                                            } // Pass section name directly
+                                            alt="Upload Brain"
                                         />
                                     </button>
                                     {/* <Certdocs folder="users" /> */}
@@ -226,7 +266,7 @@ const AccordionCard = () => {
                             </div>
                         </div>
                     </Brain>
-                    <Clinical title="Clinical Hours">
+                    <Clinical title="Clinical Hours" sectionName="Clinical">
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <p className="font-fira text-dark-green font-bold text-xl pt-10">
                                 Completion of 200 hours of clinical practice in
@@ -260,10 +300,28 @@ const AccordionCard = () => {
                             </ul>
                             <div className="flex flex-col justify-center items-center gap-10 pt-10 ">
                                 <div className="flex gap-10 pb-5">
+                                    {filename && (
+                                        <div>
+                                            <button
+                                                className="font-fira text-xl text-blue font-bold"
+                                                onClick={showFile}
+                                            >
+                                                {' '}
+                                                {filename}
+                                            </button>
+                                            <button onClick={confirmationModal}>
+                                                {' '}
+                                                X
+                                            </button>
+                                        </div>
+                                    )}
                                     <button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={initializeCloudinaryWidget}
+                                            onClick={() =>
+                                                handleUploadClick('Clinical')
+                                            }
+                                            alt="Upload Clinical"
                                         />
                                     </button>
                                 </div>
@@ -285,10 +343,29 @@ const AccordionCard = () => {
                             </p>
                             <div className="flex flex-col justify-center items-center gap-10 pt-20 ">
                                 <div className="flex gap-10 pb-5">
+                                    {filename && (
+                                        <div>
+                                            <button
+                                                className="font-fira text-xl text-blue font-bold"
+                                                onClick={showFile}
+                                            >
+                                                {' '}
+                                                {filename}
+                                            </button>
+                                            <button onClick={confirmationModal}>
+                                                {' '}
+                                                X
+                                            </button>
+                                        </div>
+                                    )}
+
                                     <button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={initializeCloudinaryWidget}
+                                            onClick={() =>
+                                                handleUploadClick('FirstAid')
+                                            }
+                                            alt="Upload FirstAid"
                                         />
                                     </button>
                                 </div>
@@ -326,10 +403,29 @@ const AccordionCard = () => {
                             </p>
                             <div className="flex flex-col justify-center items-center gap-10 pt-20">
                                 <div className="flex gap-10 pb-5">
-                                    <button>
+                                    {filename && (
+                                        <div>
+                                            <button
+                                                className="font-fira text-xl text-blue font-bold"
+                                                onClick={showFile}
+                                            >
+                                                {' '}
+                                                {filename}
+                                            </button>
+                                            <button onClick={confirmationModal}>
+                                                {' '}
+                                                X
+                                            </button>
+                                        </div>
+                                    )}
+
+<button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={initializeCloudinaryWidget}
+                                            onClick={() =>
+                                                handleUploadClick('CPR')
+                                            }
+                                            alt="Upload CPR"
                                         />
                                     </button>
                                 </div>
@@ -371,10 +467,29 @@ const AccordionCard = () => {
                             </ul>
                             <div className="flex flex-col justify-center items-center gap-10 pt-20">
                                 <div className="flex gap-10 pb-5">
-                                    <button>
+                                    {filename && (
+                                        <div>
+                                            <button
+                                                className="font-fira text-xl text-blue font-bold"
+                                                onClick={showFile}
+                                            >
+                                                {' '}
+                                                {filename}
+                                            </button>
+                                            <button onClick={confirmationModal}>
+                                                {' '}
+                                                X
+                                            </button>
+                                        </div>
+                                    )}
+
+<button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={initializeCloudinaryWidget}
+                                            onClick={() =>
+                                                handleUploadClick('Video')
+                                            }
+                                            alt="Upload Video"
                                         />
                                     </button>
                                 </div>
@@ -409,10 +524,28 @@ const AccordionCard = () => {
                             </ul>
                             <div className="flex flex-col justify-center items-center gap-10 pt-10">
                                 <div className="flex gap-10 pb-5">
-                                    <button>
+                                    {filename && (
+                                        <div>
+                                            <button
+                                                className="font-fira text-xl text-blue font-bold"
+                                                onClick={showFile}
+                                            >
+                                                {' '}
+                                                {filename}
+                                            </button>
+                                            <button onClick={confirmationModal}>
+                                                {' '}
+                                                X
+                                            </button>
+                                        </div>
+                                    )}
+                                     <button>
                                         <img
                                             src={UploadBtn}
-                                            onClick={initializeCloudinaryWidget}
+                                            onClick={() =>
+                                                handleUploadClick('Insurance')
+                                            }
+                                            alt="Upload Insurance"
                                         />
                                     </button>
                                 </div>
@@ -551,7 +684,7 @@ const AccordionCard = () => {
                                             <img
                                                 className="pl-[100px]"
                                                 src={GetStudyGuideBtn}
-                                                onClick={submitDocument}
+                                                onClick={getStudyGuide}
                                             />
                                         </button>
                                     </div>
@@ -642,7 +775,7 @@ const AccordionCard = () => {
                                 <button>
                                     <img
                                         src={PayforandStart}
-                                        onClick={submitDocument}
+                                        onClick={getStudyGuide}
                                     />
                                 </button>
                             </div>

@@ -164,7 +164,7 @@ const fileRouter = ex.Router();
 
 fileRouter.post('/', async (req, res) => {
     try {
-        const { publicId, url, uploadDate, filename, isApproved } = req.body;
+        const { publicId, url, uploadDate, filename, isApproved, sectionName } = req.body;
 
         if (!publicId || !url || !uploadDate || !filename) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -177,6 +177,7 @@ fileRouter.post('/', async (req, res) => {
             url,
             uploadDate,
             isApproved: false,
+            sectionName
         });
 
         res.status(201).json({ success: true, fileMetadata  });
