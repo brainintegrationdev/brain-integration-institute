@@ -7,6 +7,10 @@
     box-sizing: border-box;
 }
 
+.overflow-hidden {
+    overflow: hidden; 
+}
+
 .expanded-accordion {
     display: flex;
     height: 81px;

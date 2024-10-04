@@ -48,6 +48,17 @@ const getImagesFromCloudinary = async (folder) => {
     }
 };
 
+//delete one request 
+//https://api.cloudinary.com/v1_1/:cloud_name/image/destroy endpoint
+const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
+
+function generateSignature(publicId, timestamp) {
+    const paramsToSign = `public_id=${publicId}&timestamp=${timestamp}${CLOUDINARY_API_SECRET}`;
+    return crypto.createHash('sha1').update(paramsToSign).digest('hex');
+  }
+
+
+
   
 
 

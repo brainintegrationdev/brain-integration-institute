@@ -21,6 +21,8 @@ import CPR from './CPR';
 import FirstAid from './FirstAid';
 import Video from './Video';
 import StudyGuide from './StudyGuide';
+import DeleteModal from './DeleteModal';
+import DeleteFileIcon from '../assets/icons/DeleteFileIcon.png';
 // import FileList from './FileList';
 // import Certdocs from './Certdocs';
 
@@ -58,6 +60,8 @@ const AccordionCard = () => {
     // const [isSubmitted, setIsSubmitted] = useState(false);
     const { isAuthenticated, user } = useAuth0();
     const [sectionName, setSectionName] = useState('');
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const certProgressImages = [
         ProgressBar0,
@@ -71,14 +75,21 @@ const AccordionCard = () => {
         ProgressBar8,
     ];
 
-  
-
     const getStudyGuide = () => {
         console.log('study guide purchased');
     };
 
-    const confirmationModal = () => {
+    const confirmationModal = (fileName) => {
+        setSelectedFile(fileName);
+        setDeleteModalOpen(true);
         console.log('are you sure you want to delete this file?');
+    };
+
+    const handleDeleteFile = () => {
+        console.log(`Deleting file: ${selectedFile}`);
+
+        setDeleteModalOpen(false);
+        setSelectedFile(null);
     };
 
     const showFile = () => {
@@ -90,7 +101,7 @@ const AccordionCard = () => {
         initializeCloudinaryWidget(section);
     };
 
-
+    console.log(progress);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -245,32 +256,95 @@ const AccordionCard = () => {
                             </p>
                             <br></br>
 
-                            <div className="flex flex-col justify-center items-center gap-10 pt-10 pb-2">
-                                <div className="flex gap-10 pb-5">
-                                    <div>
-                                        <button
-                                            className="font-fira text-xl text-blue font-bold"
-                                            onClick={showFile}
-                                        >
-                                            {' '}
-                                            {getSectionFileNames('Brain')}
-                                        </button>
-                                        <button onClick={confirmationModal}>
-                                            {' '}
-                                            X
+                            <div className="flex flex-col gap-10 pt-10 pb-2">
+                                <div className="flex justify-center gap-10 pb-5">
+                                    {/* File Names List - Left Justified */}
+                                    <div className="flex flex-col justify-start items-start pl-0">
+                                        <ul>
+                                            {getSectionFileNames('Brain').map(
+                                                (fileName, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className="flex gap-5"
+                                                    >
+                                                        <button
+                                                            className="font-fira text-xl text-blue font-bold text-left "
+                                                            onClick={showFile}
+                                                        >
+                                                            {fileName}
+                                                        </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                confirmationModal(
+                                                                    fileName,
+                                                                )
+                                                            }
+                                                        >
+                                                            X
+                                                        </button>
+                                                    </li>
+                                                ),
+                                            )}
+                                        </ul>
+                                        {deleteModalOpen && (
+                                            <DeleteModal
+                                                open={deleteModalOpen}
+                                                onClose={() =>
+                                                    setDeleteModalOpen(false)
+                                                }
+                                            >
+                                                <div className="text-center w-56 flex flex-col items-center gap-2 mb-10">
+                                                    <img
+                                                        src={DeleteFileIcon}
+                                                        className="w-70px] h-[70px]"
+                                                        alt="Delete File"
+                                                    />
+
+                                                    <h3 className="text-lg text-gray-500 font-bold">
+                                                        Are you sure you want to
+                                                        delete?
+                                                    </h3>
+                                                    <p className="text-sm">
+                                                        This process cannot be
+                                                        undone.
+                                                    </p>
+                                                </div>
+                                                <div className="flex gap-10">
+                                                    <button
+                                                        className="bg-light-gray w-full py-2 rounded text-white"
+                                                        onClick={() =>
+                                                            setDeleteModalOpen(
+                                                                false,
+                                                            )
+                                                        }
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        className="bg-red w-full py-2 rounded text-white"
+                                                        onClick={
+                                                            handleDeleteFile
+                                                        }
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </DeleteModal>
+                                        )}
+                                    </div>
+
+                                    {/* Upload Button - Centered */}
+                                    <div className="flex justify-center items-center">
+                                        <button>
+                                            <img
+                                                src={UploadBtn}
+                                                onClick={() =>
+                                                    handleUploadClick('Brain')
+                                                }
+                                                alt="Upload Brain"
+                                            />
                                         </button>
                                     </div>
-                                    <button>
-                                        <img
-                                            src={UploadBtn}
-                                            onClick={() =>
-                                                handleUploadClick('Brain')
-                                            } // Pass section name directly
-                                            alt="Upload Brain"
-                                        />
-                                    </button>
-
-                                    
                                 </div>
                             </div>
                         </div>
@@ -310,17 +384,32 @@ const AccordionCard = () => {
                             <div className="flex flex-col justify-center items-center gap-10 pt-10 ">
                                 <div className="flex gap-10 pb-5">
                                     <div>
-                                        <button
-                                            className="font-fira text-xl text-blue font-bold"
-                                            onClick={showFile}
-                                        >
-                                            {' '}
-                                            {getSectionFileNames('Clinical')}
-                                        </button>
-                                        <button onClick={confirmationModal}>
-                                            {' '}
-                                            X
-                                        </button>
+                                        <ul>
+                                            {getSectionFileNames(
+                                                'Clinical',
+                                            ).map((fileName, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="flex gap-5"
+                                                >
+                                                    <button
+                                                        className="font-fira text-xl text-blue font-bold"
+                                                        onClick={showFile}
+                                                    >
+                                                        {fileName}
+                                                    </button>
+                                                    <button
+                                                        onClick={() =>
+                                                            confirmationModal(
+                                                                fileName,
+                                                            )
+                                                        }
+                                                    >
+                                                        X
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
                                     </div>
 
                                     <button>
@@ -355,17 +444,32 @@ const AccordionCard = () => {
                             <div className="flex flex-col justify-center items-center gap-10 pt-20 ">
                                 <div className="flex gap-10 pb-5">
                                     <div>
-                                        <button
-                                            className="font-fira text-xl text-blue font-bold"
-                                            onClick={showFile}
-                                        >
-                                            {' '}
-                                            {getSectionFileNames('FirstAid')}
-                                        </button>
-                                        <button onClick={confirmationModal}>
-                                            {' '}
-                                            X
-                                        </button>
+                                        <ul>
+                                            {getSectionFileNames(
+                                                'FirstAid',
+                                            ).map((fileName, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="flex gap-5"
+                                                >
+                                                    <button
+                                                        className="font-fira text-xl text-blue font-bold"
+                                                        onClick={showFile}
+                                                    >
+                                                        {fileName}
+                                                    </button>
+                                                    <button
+                                                        onClick={() =>
+                                                            confirmationModal(
+                                                                fileName,
+                                                            )
+                                                        }
+                                                    >
+                                                        X
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
                                     </div>
 
                                     <button>
@@ -413,19 +517,33 @@ const AccordionCard = () => {
                             <div className="flex flex-col justify-center items-center gap-10 pt-20">
                                 <div className="flex gap-10 pb-5">
                                     <div>
-                                        <button
-                                            className="font-fira text-xl text-blue font-bold"
-                                            onClick={showFile}
-                                        >
-                                            {' '}
-                                            {getSectionFileNames('CPR')}
-                                        </button>
-                                        <button onClick={confirmationModal}>
-                                            {' '}
-                                            X
-                                        </button>
+                                        <ul>
+                                            {getSectionFileNames('CPR').map(
+                                                (fileName, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className="flex gap-5"
+                                                    >
+                                                        <button
+                                                            className="font-fira text-xl text-blue font-bold"
+                                                            onClick={showFile}
+                                                        >
+                                                            {fileName}
+                                                        </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                confirmationModal(
+                                                                    fileName,
+                                                                )
+                                                            }
+                                                        >
+                                                            X
+                                                        </button>
+                                                    </li>
+                                                ),
+                                            )}
+                                        </ul>
                                     </div>
-
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -475,17 +593,32 @@ const AccordionCard = () => {
                             <div className="flex flex-col justify-center items-center gap-10 pt-20">
                                 <div className="flex gap-10 pb-5">
                                     <div>
-                                        <button
-                                            className="font-fira text-xl text-blue font-bold"
-                                            onClick={showFile}
-                                        >
-                                            {' '}
-                                            {getSectionFileNames('Video')}
-                                        </button>
-                                        <button onClick={confirmationModal}>
-                                            {' '}
-                                            X
-                                        </button>
+                                        <ul>
+                                            {getSectionFileNames('Video').map(
+                                                (fileName, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className="flex gap-5"
+                                                    >
+                                                        <button
+                                                            className="font-fira text-xl text-blue font-bold"
+                                                            onClick={showFile}
+                                                        >
+                                                            {fileName}
+                                                        </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                confirmationModal(
+                                                                    fileName,
+                                                                )
+                                                            }
+                                                        >
+                                                            X
+                                                        </button>
+                                                    </li>
+                                                ),
+                                            )}
+                                        </ul>
                                     </div>
 
                                     <button>
@@ -530,17 +663,32 @@ const AccordionCard = () => {
                             <div className="flex flex-col justify-center items-center gap-10 pt-10">
                                 <div className="flex gap-10 pb-5">
                                     <div>
-                                        <button
-                                            className="font-fira text-xl text-blue font-bold"
-                                            onClick={showFile}
-                                        >
-                                            {' '}
-                                            {getSectionFileNames('Insurance')}
-                                        </button>
-                                        <button onClick={confirmationModal}>
-                                            {' '}
-                                            X
-                                        </button>
+                                        <ul>
+                                            {getSectionFileNames(
+                                                'Insurance',
+                                            ).map((fileName, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="flex gap-5"
+                                                >
+                                                    <button
+                                                        className="font-fira text-xl text-blue font-bold"
+                                                        onClick={showFile}
+                                                    >
+                                                        {fileName}
+                                                    </button>
+                                                    <button
+                                                        onClick={() =>
+                                                            confirmationModal(
+                                                                fileName,
+                                                            )
+                                                        }
+                                                    >
+                                                        X
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
                                     </div>
                                     <button>
                                         <img

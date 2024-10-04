@@ -200,6 +200,7 @@ export const CloudinaryProvider = ({ children }) => {
                         setFilename(result.info.original_filename);
                         console.log(publicId);
                         console.log(filename);
+                        setFileMetaData((prevMetaData) => [...prevMetaData, fileMetaData]);
                         // console.log(fileMetadata);
 
                         try {

@@ -5,7 +5,7 @@ const UserSchema = new mg.Schema({
     // User's Email
     userEmail: {
         type: String,
-        require: true
+        required: true
     },
     // User Profile Picture which a custom hook on the profile side will
     // use the userId to pull the user's file from Cloudinary in a generated
@@ -17,7 +17,7 @@ const UserSchema = new mg.Schema({
     // User's username
     userName: {
         type: String,
-        require: true,
+        required: true,
         unique: true,
         default: ''// userEmail
     },
@@ -25,8 +25,14 @@ const UserSchema = new mg.Schema({
     userPassword: {
         type: String,
         require: true,
-        unique: true
+        uniqued: true
     },
+
+    userUploadProgress: {
+        type: Number,
+        required: true,
+        default: 0
+    }
     // List of predetermined booleans for each user's certification upload status
     //  - When each document is uploaded to Cloudinary the Admin will see a status that their document is uploaded
     //      - If the Admin clicks on the pass radio check box then the child boolean will switch from 'false' to 'true'
@@ -73,7 +79,7 @@ const UserSchema = new mg.Schema({
     // a pre-determined timeframe. 
     subscriptionActiveStatus: {
         type: Boolean,
-        require: false
+        required: false
     },
 });
 
