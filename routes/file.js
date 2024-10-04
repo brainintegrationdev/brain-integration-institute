@@ -5,6 +5,33 @@ const { File } = require('../models/file');
 
 const fileRouter = ex.Router();
 
+// fileRouter.get('/health', (req, res) => {
+//     res.status(200).json({ message: 'API is working!' });
+// });
+
+fileRouter.get('/files/:user', async (req, res) => {
+    try {
+        const { user } = req.params; // Expecting the userId to be passed as a route parameter
+        const files = await getAllFilesByOwner(user); // Call the modified function
+        res.json(files);
+    } catch (error) {
+        console.error('Error fetching files:', error);
+        res.status(500).json({ error: 'Failed to fetch files' });
+    }
+});
+
+fileRouter.get('/', async (req, res, next) => {
+    try {
+        const files = await getAllFilesByOwner(req.auth.payload.sub);
+        res.status(200).send({ success: true, files });
+    } catch (err) {
+        console.error(err);
+        res.status(500);
+        next(err);
+    }
+ });
+ 
+
 //fetches user's file metadata collection:
 // fileRouter.get('/', async (req, res, next) => {
 //     try {

@@ -1,8 +1,8 @@
 const  File  = require("../models/file");
 const { upload } = require("./cdn");
 
-const getAllFilesByOwner = async (owner) => await File.find({
-    owner
+const getAllFilesByOwner = async (user) => await File.find({
+    user
 });
 
 /**
@@ -17,4 +17,5 @@ const createFile = async (metadata) => {
 
 module.exports = {
     createFile,
+    getAllFilesByOwner
 };

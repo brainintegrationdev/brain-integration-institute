@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { CloudinaryContext } from '../contexts';
 /* eslint-disable react/prop-types */
@@ -6,7 +7,7 @@ import { Cloudinary } from '@cloudinary/url-gen';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 
-import { AdvancedImage, responsive, placeholder } from '@cloudinary/react';
+// import { AdvancedImage, responsive, placeholder } from '@cloudinary/react';
 // import AccordionCard from '../components/AccordionCard';
 
 // Cloudinary Provider Component
@@ -20,8 +21,10 @@ export const CloudinaryProvider = ({ children }) => {
     const [progress, setProgress] = useState(0);
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [sectionName, setSectionName] = useState(""); 
+    const [fileMetaData, setFileMetaData] = useState([])
+    const [isLoading, setIsLoading] = useState(true); 
+    // const [error, setError] = useState(null); 
 
-    // Define the uwConfig object from environment variables
 
     const uwConfig = {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUDNAME,
@@ -59,7 +62,32 @@ export const CloudinaryProvider = ({ children }) => {
     //         }
     //     }
     // };
+    //gets file metadata
+    const getFiles = async () => {
+        try {
+              const accessToken = await getAccessTokenSilently();
+            
+              const response = await axios.get(
+                  `http://localhost:8080/api/files`,
+                  {
+                      headers: {
+                          Authorization: `Bearer ${accessToken}`,
+                      },
+                  },
+              );
+              
+                return response.data.files
+           
+          } catch (error) {
+              console.error('Error fetching files:', error);
+          
+      
+      };
+    }
 
+    
+   
+    //gets files from Cloudinary via callback/cors proxy
     const getFilesInFolder = async () => {
         try {
             const accessToken = await getAccessTokenSilently();
@@ -72,21 +100,20 @@ export const CloudinaryProvider = ({ children }) => {
                     },
                 },
             );
-            setFiles(response.data);
-            console.log(files);
+            return response.data
         } catch (error) {
             console.error('Error fetching files:', error);
         }
     };
 
-    const getFiles = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/api/files');
-            setFiles(response.data);
-        } catch (error) {
-            console.error('Error fetching files:', error);
-        }
-    };
+    // const getFiles = async () => {
+    //     try {
+    //         const response = await axios.get('http://localhost:8080/api/files');
+    //         setFiles(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching files:', error);
+    //     }
+    // };
 
     // getFilesInFolder(folderName)
     //     .then(files => console.log('Files in folder:', files))
@@ -102,8 +129,7 @@ export const CloudinaryProvider = ({ children }) => {
         },
     });
 
-    //   const myImage = cld.image(publicId);
-    // const { getAccessTokenSilently } = useAuth0();
+
 
     useEffect(() => {
         if (!loaded) {
@@ -240,7 +266,11 @@ export const CloudinaryProvider = ({ children }) => {
                 isSubmitted,
                 setIsSubmitted,
                 sectionName,
-                setSectionName
+                setSectionName,
+                fileMetaData,
+                setFileMetaData,
+                setFiles,
+                isLoading,
                 
             }}
         >

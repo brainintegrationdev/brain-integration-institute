@@ -21,6 +21,7 @@ import CPR from './CPR';
 import FirstAid from './FirstAid';
 import Video from './Video';
 import StudyGuide from './StudyGuide';
+// import FileList from './FileList';
 // import Certdocs from './Certdocs';
 
 // import UploadWidget from './UploadWidget';
@@ -48,6 +49,10 @@ const AccordionCard = () => {
         setProgress,
         isSubmitted,
         setIsSubmitted,
+        fileMetaData,
+        setFileMetaData,
+        isLoading,
+        setIsLoading,
     } = useContext(CloudinaryContext);
     // const [progress, setProgress] = useState(0);
     // const [isSubmitted, setIsSubmitted] = useState(false);
@@ -66,10 +71,7 @@ const AccordionCard = () => {
         ProgressBar8,
     ];
 
-    console.log(filename);
-    // if (files) {
-    // console.log(files);
-    // console.log(typeof files);
+  
 
     const getStudyGuide = () => {
         console.log('study guide purchased');
@@ -84,40 +86,46 @@ const AccordionCard = () => {
     };
 
     const handleUploadClick = (section) => {
-        setSectionName(section); // Set the section name based on the button clicked
-        initializeCloudinaryWidget(section); // Pass the section name to the context function
+        setSectionName(section);
+        initializeCloudinaryWidget(section);
     };
-    // const displayName = files.resources[0].display_name
-    // console.log(typeof files)
-    // console.log(displayName)
-    // }
 
-    // const submitDocument = () => {
-    //     if (progress < 8) {
-    //         setProgress((prevProgress) => prevProgress + 1);
-    //         console.log('document submitted!');
-    //         console.log(progress);
-    //         localStorage.setItem('progress', progress);
-    //         setIsSubmitted(true);
-    //     } else {
-    //         return;
-    //     }
-    // };
 
-    // if (user) {
-    //     console.log(user.nickname)
-    //     const folderName = `users/${user.nickname}`;
-    //     getFilesInFolder(folderName)
-    //         .then((files) => console.log('Files in folder:', files))
-    //         .catch((error) => console.error('Error:', error));
-    // }
+
     useEffect(() => {
-        if (user) {
-            getFilesInFolder();
-        }
+        const fetchData = async () => {
+            if (user) {
+                const token = localStorage.getItem('token');
+                try {
+                    const folderFiles = await getFilesInFolder(token); //docs themselves
+                    const metadataFiles = await getFiles(token); //metadata
+
+                    console.log('Files in folder:', folderFiles);
+                    console.log('File metadata:', metadataFiles);
+                    setFileMetaData(metadataFiles);
+                } catch (error) {
+                    console.error(
+                        'Error fetching files:',
+                        error.response?.data || error.message,
+                    );
+                }
+            }
+        };
+
+        fetchData();
     }, [user]);
 
-    console.log(files)
+    console.log(fileMetaData);
+
+    const getSectionFileNames = (sectionName) => {
+        const filteredFiles = fileMetaData.filter(
+            (file) => file.sectionName === sectionName,
+        );
+        const fileNames = filteredFiles.map((file) => {
+            return file.filename;
+        });
+        return fileNames;
+    };
 
     return (
         <div className="flex justify-start">
@@ -154,12 +162,14 @@ const AccordionCard = () => {
                     <Brain
                         title="Brain Integration Training"
                         sectionName="Brain"
+                        fileMetadata={fileMetaData}
                     >
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10">
                                 Complete 500 hours of relevant brain integration
                                 training.
                             </h1>
+                            <h2>{sectionName}</h2>
                             <br></br>
                             <p className="font-fira text-black text-base font-normal">
                                 The Brain Integration Training program requires
@@ -237,21 +247,19 @@ const AccordionCard = () => {
 
                             <div className="flex flex-col justify-center items-center gap-10 pt-10 pb-2">
                                 <div className="flex gap-10 pb-5">
-                                    {filename && (
-                                        <div>
-                                            <button
-                                                className="font-fira text-xl text-blue font-bold"
-                                                onClick={showFile}
-                                            >
-                                                {' '}
-                                                {filename}
-                                            </button>
-                                            <button onClick={confirmationModal}>
-                                                {' '}
-                                                X
-                                            </button>
-                                        </div>
-                                    )}
+                                    <div>
+                                        <button
+                                            className="font-fira text-xl text-blue font-bold"
+                                            onClick={showFile}
+                                        >
+                                            {' '}
+                                            {getSectionFileNames('Brain')}
+                                        </button>
+                                        <button onClick={confirmationModal}>
+                                            {' '}
+                                            X
+                                        </button>
+                                    </div>
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -261,7 +269,8 @@ const AccordionCard = () => {
                                             alt="Upload Brain"
                                         />
                                     </button>
-                                    {/* <Certdocs folder="users" /> */}
+
+                                    
                                 </div>
                             </div>
                         </div>
@@ -300,21 +309,20 @@ const AccordionCard = () => {
                             </ul>
                             <div className="flex flex-col justify-center items-center gap-10 pt-10 ">
                                 <div className="flex gap-10 pb-5">
-                                    {filename && (
-                                        <div>
-                                            <button
-                                                className="font-fira text-xl text-blue font-bold"
-                                                onClick={showFile}
-                                            >
-                                                {' '}
-                                                {filename}
-                                            </button>
-                                            <button onClick={confirmationModal}>
-                                                {' '}
-                                                X
-                                            </button>
-                                        </div>
-                                    )}
+                                    <div>
+                                        <button
+                                            className="font-fira text-xl text-blue font-bold"
+                                            onClick={showFile}
+                                        >
+                                            {' '}
+                                            {getSectionFileNames('Clinical')}
+                                        </button>
+                                        <button onClick={confirmationModal}>
+                                            {' '}
+                                            X
+                                        </button>
+                                    </div>
+
                                     <button>
                                         <img
                                             src={UploadBtn}
@@ -328,7 +336,10 @@ const AccordionCard = () => {
                             </div>
                         </div>
                     </Clinical>
-                    <FirstAid title="First Aid Certification">
+                    <FirstAid
+                        title="First Aid Certification"
+                        sectionName="FirstAid"
+                    >
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 {' '}
@@ -343,21 +354,19 @@ const AccordionCard = () => {
                             </p>
                             <div className="flex flex-col justify-center items-center gap-10 pt-20 ">
                                 <div className="flex gap-10 pb-5">
-                                    {filename && (
-                                        <div>
-                                            <button
-                                                className="font-fira text-xl text-blue font-bold"
-                                                onClick={showFile}
-                                            >
-                                                {' '}
-                                                {filename}
-                                            </button>
-                                            <button onClick={confirmationModal}>
-                                                {' '}
-                                                X
-                                            </button>
-                                        </div>
-                                    )}
+                                    <div>
+                                        <button
+                                            className="font-fira text-xl text-blue font-bold"
+                                            onClick={showFile}
+                                        >
+                                            {' '}
+                                            {getSectionFileNames('FirstAid')}
+                                        </button>
+                                        <button onClick={confirmationModal}>
+                                            {' '}
+                                            X
+                                        </button>
+                                    </div>
 
                                     <button>
                                         <img
@@ -372,7 +381,7 @@ const AccordionCard = () => {
                             </div>
                         </div>
                     </FirstAid>
-                    <CPR title="CPR Certification">
+                    <CPR title="CPR Certification" sectionName="CPR">
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 {' '}
@@ -403,23 +412,21 @@ const AccordionCard = () => {
                             </p>
                             <div className="flex flex-col justify-center items-center gap-10 pt-20">
                                 <div className="flex gap-10 pb-5">
-                                    {filename && (
-                                        <div>
-                                            <button
-                                                className="font-fira text-xl text-blue font-bold"
-                                                onClick={showFile}
-                                            >
-                                                {' '}
-                                                {filename}
-                                            </button>
-                                            <button onClick={confirmationModal}>
-                                                {' '}
-                                                X
-                                            </button>
-                                        </div>
-                                    )}
+                                    <div>
+                                        <button
+                                            className="font-fira text-xl text-blue font-bold"
+                                            onClick={showFile}
+                                        >
+                                            {' '}
+                                            {getSectionFileNames('CPR')}
+                                        </button>
+                                        <button onClick={confirmationModal}>
+                                            {' '}
+                                            X
+                                        </button>
+                                    </div>
 
-<button>
+                                    <button>
                                         <img
                                             src={UploadBtn}
                                             onClick={() =>
@@ -432,7 +439,7 @@ const AccordionCard = () => {
                             </div>
                         </div>
                     </CPR>
-                    <Video title="Video Presentation">
+                    <Video title="Video Presentation" sectionName="Video">
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 Submit video recording of a documented Brain
@@ -467,23 +474,21 @@ const AccordionCard = () => {
                             </ul>
                             <div className="flex flex-col justify-center items-center gap-10 pt-20">
                                 <div className="flex gap-10 pb-5">
-                                    {filename && (
-                                        <div>
-                                            <button
-                                                className="font-fira text-xl text-blue font-bold"
-                                                onClick={showFile}
-                                            >
-                                                {' '}
-                                                {filename}
-                                            </button>
-                                            <button onClick={confirmationModal}>
-                                                {' '}
-                                                X
-                                            </button>
-                                        </div>
-                                    )}
+                                    <div>
+                                        <button
+                                            className="font-fira text-xl text-blue font-bold"
+                                            onClick={showFile}
+                                        >
+                                            {' '}
+                                            {getSectionFileNames('Video')}
+                                        </button>
+                                        <button onClick={confirmationModal}>
+                                            {' '}
+                                            X
+                                        </button>
+                                    </div>
 
-<button>
+                                    <button>
                                         <img
                                             src={UploadBtn}
                                             onClick={() =>
@@ -497,7 +502,7 @@ const AccordionCard = () => {
                         </div>
                     </Video>
 
-                    <Insurance title="Insurance">
+                    <Insurance title="Insurance" sectionName="Insurance">
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 Show proof of professional and liability
@@ -524,22 +529,20 @@ const AccordionCard = () => {
                             </ul>
                             <div className="flex flex-col justify-center items-center gap-10 pt-10">
                                 <div className="flex gap-10 pb-5">
-                                    {filename && (
-                                        <div>
-                                            <button
-                                                className="font-fira text-xl text-blue font-bold"
-                                                onClick={showFile}
-                                            >
-                                                {' '}
-                                                {filename}
-                                            </button>
-                                            <button onClick={confirmationModal}>
-                                                {' '}
-                                                X
-                                            </button>
-                                        </div>
-                                    )}
-                                     <button>
+                                    <div>
+                                        <button
+                                            className="font-fira text-xl text-blue font-bold"
+                                            onClick={showFile}
+                                        >
+                                            {' '}
+                                            {getSectionFileNames('Insurance')}
+                                        </button>
+                                        <button onClick={confirmationModal}>
+                                            {' '}
+                                            X
+                                        </button>
+                                    </div>
+                                    <button>
                                         <img
                                             src={UploadBtn}
                                             onClick={() =>
