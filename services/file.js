@@ -1,5 +1,5 @@
 const  File  = require("../models/file");
-const { upload } = require("./cdn");
+// const { upload } = require("./cdn");
 
 const getAllFilesByOwner = async (user) => await File.find({
     user

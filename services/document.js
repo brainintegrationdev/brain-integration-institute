@@ -6,16 +6,16 @@ const getImagesFromCloudinary = async (folder) => {
     let nextCursor = null;
 
     try {
-        const requestURL = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/image/upload`;
+        const requestURL = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/image/`;
         console.log('Requesting from URL:', requestURL);
         console.log('Folder path (prefix):', folder);
 
         const authHeader = Buffer.from(
             `${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}`
         ).toString('base64');
-        console.log('Authorization Header:', `Basic ${authHeader}`);
+        // console.log('Authorization Header:', `Basic ${authHeader}`);
         do {
-            console.log('Entering the `do` block');
+            // console.log('Entering the `do` block');
 
             const cloudinaryResponse = await axios.get(requestURL, {
                 params: {
@@ -27,19 +27,21 @@ const getImagesFromCloudinary = async (folder) => {
                     Authorization: `Basic ${authHeader}`
                 }
             });
+            // console.log(folder, 'asset folder')
 
-            console.log('Inside `do` block - Cloudinary Response:', cloudinaryResponse.data);
+            // console.log('Inside `do` block - Cloudinary Response:', cloudinaryResponse.data);
 
             const { resources, next_cursor } = cloudinaryResponse.data;
             console.log('Fetched resources count:', resources ? resources.length : 0);
-            console.log('Next cursor:', next_cursor);  // Log next cursor
+            console.log('Next cursor:', next_cursor); 
+            // console.log(resources)
 
             allAssets.push(...resources);
             nextCursor = next_cursor;
 
         } while (nextCursor);
 
-        console.log('Total assets fetched:', allAssets.length);
+        // console.log('Total assets fetched:', allAssets.length);
         return allAssets;
 
     } catch (error) {

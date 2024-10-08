@@ -1,4 +1,6 @@
 import { useEffect } from "react"
+import { Auth0Provider } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const Auth = () => {
     const initValues = {
@@ -7,6 +9,37 @@ const Auth = () => {
     } 
     const [user, setUser] = useState(initValues)
     const [newUser, setNewUser] = useState(true)
+    const {  getAccessTokenSilently } = useAuth0();
+
+    const createUserMetadata = async (user) => {
+        const { email, name, picture } = user;
+        
+    
+        try {
+            const response = await fetch('http://localhost:8080/api/user/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`, // Use if you have authentication
+                },
+                body: JSON.stringify({
+                    userEmail: email,
+                    userName: name,
+                    userProfilePicture: picture, 
+                }),
+            });
+    
+            const data = await response.json();
+    
+            if (!response.ok) {
+                console.error('Error creating or checking user metadata:', data.error);
+            } else {
+                console.log('User metadata:', data);
+            }
+        } catch (error) {
+            console.error('Error during check or create user metadata request:', error);
+        }
+    };
     
     const toggle = () => {
         setNewUser(prevStatus => !prevStatus)
@@ -21,6 +54,8 @@ const Auth = () => {
     }
     const handleLogin = (e) => {
         e.preventDefault()
+        createUserMetadata()
+        console.log('user created!')
         // login
     }
     

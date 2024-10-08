@@ -35,6 +35,7 @@ import { Accordion } from 'react-accessible-accordion';
 import e from 'cors';
 import { CloudinaryContext } from '../contexts';
 
+
 //mock submission to DB until backend created
 
 const AccordionCard = () => {
@@ -49,12 +50,14 @@ const AccordionCard = () => {
         files,
         progress,
         setProgress,
+        updateUserProgress,
         isSubmitted,
         setIsSubmitted,
         fileMetaData,
         setFileMetaData,
         isLoading,
         setIsLoading,
+        getUserMetaData
     } = useContext(CloudinaryContext);
     // const [progress, setProgress] = useState(0);
     // const [isSubmitted, setIsSubmitted] = useState(false);
@@ -62,6 +65,8 @@ const AccordionCard = () => {
     const [sectionName, setSectionName] = useState('');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [userMetaData, setUserMetaData] = useState({})
+
 
     const certProgressImages = [
         ProgressBar0,
@@ -90,6 +95,13 @@ const AccordionCard = () => {
 
         setDeleteModalOpen(false);
         setSelectedFile(null);
+        const newProgress = Math.max(0, progress - 1); 
+
+        
+        setProgress(newProgress);
+    
+  
+        updateUserProgress(newProgress);
     };
 
     const showFile = () => {
@@ -99,9 +111,15 @@ const AccordionCard = () => {
     const handleUploadClick = (section) => {
         setSectionName(section);
         initializeCloudinaryWidget(section);
+        console.log('Calling updateUserProgress with value:', 1);
+        
     };
 
     console.log(progress);
+
+    if (isAuthenticated) {
+        console.log("User Data:", user); // Inspect the user object
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -110,10 +128,14 @@ const AccordionCard = () => {
                 try {
                     const folderFiles = await getFilesInFolder(token); //docs themselves
                     const metadataFiles = await getFiles(token); //metadata
+                    const userMetaData = await getUserMetaData(token)
 
                     console.log('Files in folder:', folderFiles);
                     console.log('File metadata:', metadataFiles);
+                    console.log('User metadata', userMetaData)
                     setFileMetaData(metadataFiles);
+                    setUserMetaData(userMetaData)
+                    setProgress(userMetaData.userUploadProgress)
                 } catch (error) {
                     console.error(
                         'Error fetching files:',
@@ -124,9 +146,10 @@ const AccordionCard = () => {
         };
 
         fetchData();
-    }, [user]);
+    }, [user, userMetaData.userUploadProgress]);
 
     console.log(fileMetaData);
+    console.log(progress)
 
     const getSectionFileNames = (sectionName) => {
         const filteredFiles = fileMetaData.filter(

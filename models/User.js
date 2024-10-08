@@ -22,17 +22,13 @@ const UserSchema = new mg.Schema({
         default: ''// userEmail
     },
     // User's password
-    userPassword: {
-        type: String,
-        require: true,
-        uniqued: true
-    },
+
 
     userUploadProgress: {
         type: Number,
         required: true,
         default: 0
-    }
+    },
     // List of predetermined booleans for each user's certification upload status
     //  - When each document is uploaded to Cloudinary the Admin will see a status that their document is uploaded
     //      - If the Admin clicks on the pass radio check box then the child boolean will switch from 'false' to 'true'

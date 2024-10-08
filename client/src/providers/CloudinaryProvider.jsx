@@ -16,15 +16,15 @@ export const CloudinaryProvider = ({ children }) => {
     const [publicId, setPublicId] = useState('');
     const [filename, setFilename] = useState('');
     const [loaded, setLoaded] = useState(false);
-    const { user, getAccessTokenSilently } = useAuth0();
+    const { user, getAccessTokenSilently, isAuthenticated } = useAuth0();
     const [files, setFiles] = useState([]);
-    const [progress, setProgress] = useState(0);
-    const [isSubmitted, setIsSubmitted] = useState(false)
-    const [sectionName, setSectionName] = useState(""); 
-    const [fileMetaData, setFileMetaData] = useState([])
-    const [isLoading, setIsLoading] = useState(true); 
-    // const [error, setError] = useState(null); 
 
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [sectionName, setSectionName] = useState('');
+    const [fileMetaData, setFileMetaData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [progress, setProgress] = useState(0);
+    // const [error, setError] = useState(null);
 
     const uwConfig = {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUDNAME,
@@ -37,61 +37,33 @@ export const CloudinaryProvider = ({ children }) => {
     const apiSecret = import.meta.env.VITE_CLOUDINARY_API_SECRET;
     const apiKey = import.meta.VITE_CLOUDINARY_API_KEY;
 
-    // const getFilesInFolder = async (folderName) => {
-    //     if (user) {
-    //         console.log(user.nickname);
-    //         try {
-    //             const accessToken = await getAccessTokenSilently();
-    //             const response = await fetch(cloudinaryUrl, {
-    //                 params: {
-    //                     type: 'upload',
-    //                     prefix: folderName,
-    //                     max_results: 500,
-    //                     resource_type: 'image',
-    //                 },
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     Authorization: `Bearer ${accessToken}`,
-    //                 },
-    //             });
+    console.log(isAuthenticated)
 
-    //             return response.data.resources;
-    //         } catch (error) {
-    //             console.error('Error fetching files from Cloudinary:', error);
-    //             throw error;
-    //         }
-    //     }
-    // };
     //gets file metadata
     const getFiles = async () => {
         try {
-              const accessToken = await getAccessTokenSilently();
-            
-              const response = await axios.get(
-                  `http://localhost:8080/api/files`,
-                  {
-                      headers: {
-                          Authorization: `Bearer ${accessToken}`,
-                      },
-                  },
-              );
-              
-                return response.data.files
-           
-          } catch (error) {
-              console.error('Error fetching files:', error);
-          
-      
-      };
-    }
+            const accessToken = await getAccessTokenSilently();
 
-    
-   
+            const response = await axios.get(
+                `http://localhost:8080/api/files`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                },
+            );
+
+            return response.data.files;
+        } catch (error) {
+            console.error('Error fetching files:', error);
+        }
+    };
+
     //gets files from Cloudinary via callback/cors proxy
     const getFilesInFolder = async () => {
         try {
             const accessToken = await getAccessTokenSilently();
-           
+
             const response = await axios.get(
                 `http://localhost:8080/api/images/${user.nickname}`,
                 {
@@ -100,25 +72,31 @@ export const CloudinaryProvider = ({ children }) => {
                     },
                 },
             );
-            return response.data
+            return response.data;
         } catch (error) {
             console.error('Error fetching files:', error);
         }
     };
 
-    // const getFiles = async () => {
-    //     try {
-    //         const response = await axios.get('http://localhost:8080/api/files');
-    //         setFiles(response.data);
-    //     } catch (error) {
-    //         console.error('Error fetching files:', error);
-    //     }
-    // };
+    const getUserMetaData = async (email) => {
+        try {
+            const accessToken = await getAccessTokenSilently();
 
-    // getFilesInFolder(folderName)
-    //     .then(files => console.log('Files in folder:', files))
-    //     .catch(error => console.error('Error:', error));
-    //     // console.log(uwConfig)
+            const response = await axios.get(
+                `http://localhost:8080/api/user/${user.email}`, // Email as path param, no need for query params
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                },
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching user metadata:', error);
+        }
+    };
+
+
 
     // eslint-disable-next-line no-unused-vars
     const cld = new Cloudinary({
@@ -128,8 +106,6 @@ export const CloudinaryProvider = ({ children }) => {
             asset_folder: uwConfig.asset_folder,
         },
     });
-
-
 
     useEffect(() => {
         if (!loaded) {
@@ -154,39 +130,66 @@ export const CloudinaryProvider = ({ children }) => {
         };
     }, [loaded]);
 
-    // // if (progress < 8) {
-    //     setProgress((prevProgress) => prevProgress + 1);
-    //     console.log('document submitted!');
-    //     console.log(progress);
-    //     localStorage.setItem('progress', progress);
-    //     setIsSubmitted(true);
-    // } else {
-    //     return;
-    // }
+
+
+    const updateUserProgress = async (newProgress) => {
+        if (user) {
+            try {
+                const accessToken = await getAccessTokenSilently();
+                console.log('Updating user progress:', { userUploadProgress: newProgress });
+                console.log('User email:', user.email); 
+                console.log('User object:', user); // Check if the user object is correctly logged
+    
+                const response = await fetch(`http://localhost:8080/api/user/${user.email}/progress`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    body: JSON.stringify({ userUploadProgress: newProgress }),
+                });
+    
+                // Log response status and text
+                console.log('Response Status:', response.status);
+                console.log('Response Status Text:', response.statusText);
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Failed to update user progress:', errorData);
+                    throw new Error('Failed to update user progress');
+                }
+    
+                const data = await response.json();
+                console.log('User progress updated on the server:', data);
+            } catch (error) {
+                console.error('Error updating user progress:', error);
+            }
+        } else {
+            console.error('User is not defined');
+        }
+    };
+    
+    
 
     const initializeCloudinaryWidget = (section) => {
         if (user) {
-            // console.log('widget loaded!');
-            console.log(user);
             const myWidget = window.cloudinary.createUploadWidget(
                 {
                     cloudName: uwConfig.cloudName,
                     uploadPreset: uwConfig.uploadPreset,
                     asset_folder: `users/${user.nickname}`,
                 },
-
                 async (error, result) => {
                     if (error) {
                         console.error('Upload error:', error);
                         return;
                     }
                     if (result.event === 'success') {
-                        // console.log('success', result);
-                        console.log(
-                            'Public ID sent to Cloudinary:',
-                            result.info.public_id,
-                        ); // Log public_id
-                        console.log('Upload Result:', result.info);
+                        console.log('Upload successful:', result.info);
+
+                       
+                        updateUserProgress(Math.min(progress + 1, 8));
+
                         const fileMetadata = {
                             publicId: result.info.public_id,
                             url: result.info.secure_url,
@@ -195,14 +198,15 @@ export const CloudinaryProvider = ({ children }) => {
                             sectionName: section,
                             isApproved: false,
                         };
-                        // console.log(result.info.public_id);
+
                         setPublicId(result.info.public_id);
                         setFilename(result.info.original_filename);
-                        console.log(publicId);
-                        console.log(filename);
-                        setFileMetaData((prevMetaData) => [...prevMetaData, fileMetaData]);
-                        // console.log(fileMetadata);
+                        setFileMetaData((prevMetaData) => [
+                            ...prevMetaData,
+                            fileMetadata,
+                        ]);
 
+                        // Send metadata to the server
                         try {
                             const accessToken = await getAccessTokenSilently();
                             const response = await fetch(
@@ -219,19 +223,17 @@ export const CloudinaryProvider = ({ children }) => {
 
                             if (response.ok) {
                                 console.log(
-                                    'File metadata successfully sent to the server.'),
-                                    setFiles((prevFiles) => [...prevFiles, fileMetadata]);
-                                   
-                                
-                                if (progress < 8) {
-                                    setProgress((prevProgress) => prevProgress + 1);
-                                    console.log('Document submitted!');
-                                    console.log(progress);
-                                    localStorage.setItem('progress', progress);
-                                    setIsSubmitted(true);
-                                } else {
-                                    return;
-                                }
+                                    'File metadata successfully sent to the server.',
+                                );
+                                setFiles((prevFiles) => [
+                                    ...prevFiles,
+                                    fileMetadata,
+                                ]);
+
+                                await updateUserProgress(
+                                    user.email,
+                                    newProgress,
+                                );
                             } else {
                                 console.error(
                                     'Failed to send file metadata to the server.',
@@ -247,9 +249,7 @@ export const CloudinaryProvider = ({ children }) => {
                 },
             );
 
-            // Open the Cloudinary widget when the button is clicked
-            myWidget.open();
-            // console.log('Widget button clicked');
+            myWidget.open(); // Ensure you call this to open the widget
         }
     };
 
@@ -263,7 +263,7 @@ export const CloudinaryProvider = ({ children }) => {
                 getFilesInFolder,
                 files,
                 progress,
-                setProgress, 
+                setProgress,
                 isSubmitted,
                 setIsSubmitted,
                 sectionName,
@@ -272,7 +272,8 @@ export const CloudinaryProvider = ({ children }) => {
                 setFileMetaData,
                 setFiles,
                 isLoading,
-                
+                getUserMetaData,
+                updateUserProgress,
             }}
         >
             {loaded && children}
