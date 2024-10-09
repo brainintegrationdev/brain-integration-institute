@@ -13,7 +13,7 @@ const fileSchema = new Schema({
 
 const File = mongoose.model('File', fileSchema);
 
-module.exports = File;
+module.exports =  File ;
 
 // // filename,
 // owner: req.auth.payload.sub,

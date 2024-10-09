@@ -66,6 +66,7 @@ export const useHttpAuthClient = () => {
 
     const handler = async (url, options) => {
         const accessToken = await getAccessTokenSilently();
+        console.log(accessToken)
         return http.request(accessToken)(url, options);
     };
 

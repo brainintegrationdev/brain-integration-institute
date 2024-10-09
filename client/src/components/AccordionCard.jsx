@@ -50,13 +50,17 @@ const AccordionCard = () => {
         isLoading,
         setIsLoading,
         getUserMetaData,
+        deleteFile,
+        deleteModalOpen,
+        setDeleteModalOpen,
     } = useContext(CloudinaryContext);
 
     const { isAuthenticated, user } = useAuth0();
     const [sectionName, setSectionName] = useState('');
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    // const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [userMetaData, setUserMetaData] = useState({});
+    const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
 
     const certProgressImages = [
         ProgressBar0,
@@ -148,6 +152,14 @@ const AccordionCard = () => {
         return fileNames;
     };
 
+    const getPublicId = (fileName) => {
+        const foundFile = fileMetaData.find(
+            (file) => file.filename === fileName,
+        );
+
+        return foundFile ? foundFile.publicId : null;
+    };
+
     const clinicalMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Clinical';
     });
@@ -172,6 +184,8 @@ const AccordionCard = () => {
         return metadata.sectionName === 'Insurance';
     });
     console.log(insuranceMetaData[0]);
+
+    console.log(currentFileToDelete);
 
     return (
         <div className="flex justify-start">
@@ -215,7 +229,7 @@ const AccordionCard = () => {
                                 Complete 500 hours of relevant brain integration
                                 training.
                             </h1>
-                            <h2>{sectionName}</h2>
+
                             <br></br>
                             <p className="font-fira text-black text-base font-normal">
                                 The Brain Integration Training program requires
@@ -296,23 +310,26 @@ const AccordionCard = () => {
                                     <div className="flex flex-col justify-start items-start pl-0">
                                         <ul>
                                             {getSectionFileNames('Brain').map(
-                                                (fileName, index) => (
+                                                (file, index) => (
                                                     <li
                                                         key={index}
                                                         className="flex gap-5"
                                                     >
                                                         <button
-                                                            className="font-fira text-xl text-blue font-bold text-left "
+                                                            className="font-fira text-xl text-blue font-bold text-left"
                                                             onClick={showFile}
                                                         >
-                                                            {fileName}
+                                                            {file}{' '}
                                                         </button>
                                                         <button
-                                                            onClick={() =>
-                                                                confirmationModal(
-                                                                    fileName,
-                                                                )
-                                                            }
+                                                            onClick={() => {
+                                                                setCurrentFileToDelete(
+                                                                    file,
+                                                                );
+                                                                setDeleteModalOpen(
+                                                                    true,
+                                                                );
+                                                            }}
                                                         >
                                                             X
                                                         </button>
@@ -330,7 +347,7 @@ const AccordionCard = () => {
                                                 <div className="text-center w-56 flex flex-col items-center gap-2 mb-10">
                                                     <img
                                                         src={DeleteFileIcon}
-                                                        className="w-70px] h-[70px]"
+                                                        className="w-70px h-[70px]"
                                                         alt="Delete File"
                                                     />
 
@@ -356,9 +373,22 @@ const AccordionCard = () => {
                                                     </button>
                                                     <button
                                                         className="bg-red w-full py-2 rounded text-white"
-                                                        onClick={
-                                                            handleDeleteFile
-                                                        }
+                                                        onClick={() => {
+                                                            const publicId =
+                                                                getPublicId(
+                                                                    currentFileToDelete,
+                                                                );
+                                                            if (publicId) {
+                                                                deleteFile(
+                                                                    publicId,
+                                                                );
+                                                            } else {
+                                                                console.error(
+                                                                    'Public ID not found for file:',
+                                                                    currentFileToDelete,
+                                                                );
+                                                            }
+                                                        }}
                                                     >
                                                         Delete
                                                     </button>
@@ -418,7 +448,7 @@ const AccordionCard = () => {
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('Clinical').map(
-                                            (fileName, index) => (
+                                            (file, index) => (
                                                 <li
                                                     key={index}
                                                     className="flex gap-5 mb-2"
@@ -427,14 +457,18 @@ const AccordionCard = () => {
                                                         className="font-fira text-xl text-blue font-bold"
                                                         onClick={showFile}
                                                     >
-                                                        {fileName}
+                                                        {file}
+                                                        {''}
                                                     </button>
                                                     <button
-                                                        onClick={() =>
-                                                            confirmationModal(
-                                                                fileName,
-                                                            )
-                                                        }
+                                                        onClick={() => {
+                                                            setCurrentFileToDelete(
+                                                                file,
+                                                            );
+                                                            setDeleteModalOpen(
+                                                                true,
+                                                            );
+                                                        }}
                                                     >
                                                         X
                                                     </button>
@@ -442,6 +476,64 @@ const AccordionCard = () => {
                                             ),
                                         )}
                                     </ul>
+                                    {deleteModalOpen && (
+                                        <DeleteModal
+                                            open={deleteModalOpen}
+                                            onClose={() =>
+                                                setDeleteModalOpen(false)
+                                            }
+                                        >
+                                            <div className="text-center w-56 flex flex-col items-center gap-2 mb-10">
+                                                <img
+                                                    src={DeleteFileIcon}
+                                                    className="w-70px h-[70px]"
+                                                    alt="Delete File"
+                                                />
+
+                                                <h3 className="text-lg text-gray-500 font-bold">
+                                                    Are you sure you want to
+                                                    delete?
+                                                </h3>
+                                                <p className="text-sm">
+                                                    This process cannot be
+                                                    undone.
+                                                </p>
+                                            </div>
+                                            <div className="flex flex-col gap-10">
+                                                <button
+                                                    className="bg-light-gray w-full py-2 rounded text-white"
+                                                    onClick={() =>
+                                                        setDeleteModalOpen(
+                                                            false,
+                                                        )
+                                                    }
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    className="bg-red w-full py-2 rounded text-white"
+                                                    onClick={() => {
+                                                        const publicId =
+                                                            getPublicId(
+                                                                currentFileToDelete,
+                                                            );
+                                                        if (publicId) {
+                                                            deleteFile(
+                                                                publicId,
+                                                            );
+                                                        } else {
+                                                            console.error(
+                                                                'Public ID not found for file:',
+                                                                currentFileToDelete,
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </DeleteModal>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col items-center w-1/3 pt-20">
@@ -492,7 +584,7 @@ const AccordionCard = () => {
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('FirstAid').map(
-                                            (fileName, index) => (
+                                            (file, index) => (
                                                 <li
                                                     key={index}
                                                     className="flex gap-5 mb-2"
@@ -501,14 +593,17 @@ const AccordionCard = () => {
                                                         className="font-fira text-xl text-blue font-bold"
                                                         onClick={showFile}
                                                     >
-                                                        {fileName}
+                                                        {file}{' '}
                                                     </button>
                                                     <button
-                                                        onClick={() =>
-                                                            confirmationModal(
-                                                                fileName,
-                                                            )
-                                                        }
+                                                        onClick={() => {
+                                                            setCurrentFileToDelete(
+                                                                file,
+                                                            );
+                                                            setDeleteModalOpen(
+                                                                true,
+                                                            );
+                                                        }}
                                                     >
                                                         X
                                                     </button>
@@ -516,6 +611,64 @@ const AccordionCard = () => {
                                             ),
                                         )}
                                     </ul>
+                                    {deleteModalOpen && (
+                                        <DeleteModal
+                                            open={deleteModalOpen}
+                                            onClose={() =>
+                                                setDeleteModalOpen(false)
+                                            }
+                                        >
+                                            <div className="text-center w-56 flex flex-col items-center gap-2 mb-10">
+                                                <img
+                                                    src={DeleteFileIcon}
+                                                    className="w-70px h-[70px]"
+                                                    alt="Delete File"
+                                                />
+
+                                                <h3 className="text-lg text-gray-500 font-bold">
+                                                    Are you sure you want to
+                                                    delete?
+                                                </h3>
+                                                <p className="text-sm">
+                                                    This process cannot be
+                                                    undone.
+                                                </p>
+                                            </div>
+                                            <div className="flex flex-col gap-10">
+                                                <button
+                                                    className="bg-light-gray w-full py-2 rounded text-white"
+                                                    onClick={() =>
+                                                        setDeleteModalOpen(
+                                                            false,
+                                                        )
+                                                    }
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    className="bg-red w-full py-2 rounded text-white"
+                                                    onClick={() => {
+                                                        const publicId =
+                                                            getPublicId(
+                                                                currentFileToDelete,
+                                                            );
+                                                        if (publicId) {
+                                                            deleteFile(
+                                                                publicId,
+                                                            );
+                                                        } else {
+                                                            console.error(
+                                                                'Public ID not found for file:',
+                                                                currentFileToDelete,
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </DeleteModal>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col items-center w-1/3 pt-20">
@@ -575,7 +728,7 @@ const AccordionCard = () => {
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('CPR').map(
-                                            (fileName, index) => (
+                                            (file, index) => (
                                                 <li
                                                     key={index}
                                                     className="flex gap-5 mb-2"
@@ -584,14 +737,18 @@ const AccordionCard = () => {
                                                         className="font-fira text-xl text-blue font-bold"
                                                         onClick={showFile}
                                                     >
-                                                        {fileName}
+                                                        {file}
+                                                        {''}
                                                     </button>
                                                     <button
-                                                        onClick={() =>
-                                                            confirmationModal(
-                                                                fileName,
-                                                            )
-                                                        }
+                                                        onClick={() => {
+                                                            setCurrentFileToDelete(
+                                                                file,
+                                                            );
+                                                            setDeleteModalOpen(
+                                                                true,
+                                                            );
+                                                        }}
                                                     >
                                                         X
                                                     </button>
@@ -599,6 +756,64 @@ const AccordionCard = () => {
                                             ),
                                         )}
                                     </ul>
+                                    {deleteModalOpen && (
+                                        <DeleteModal
+                                            open={deleteModalOpen}
+                                            onClose={() =>
+                                                setDeleteModalOpen(false)
+                                            }
+                                        >
+                                            <div className="text-center w-56 flex flex-col items-center gap-2 mb-10">
+                                                <img
+                                                    src={DeleteFileIcon}
+                                                    className="w-70px h-[70px]"
+                                                    alt="Delete File"
+                                                />
+
+                                                <h3 className="text-lg text-gray-500 font-bold">
+                                                    Are you sure you want to
+                                                    delete?
+                                                </h3>
+                                                <p className="text-sm">
+                                                    This process cannot be
+                                                    undone.
+                                                </p>
+                                            </div>
+                                            <div className="flex flex-col gap-10">
+                                                <button
+                                                    className="bg-light-gray w-full py-2 rounded text-white"
+                                                    onClick={() =>
+                                                        setDeleteModalOpen(
+                                                            false,
+                                                        )
+                                                    }
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    className="bg-red w-full py-2 rounded text-white"
+                                                    onClick={() => {
+                                                        const publicId =
+                                                            getPublicId(
+                                                                currentFileToDelete,
+                                                            );
+                                                        if (publicId) {
+                                                            deleteFile(
+                                                                publicId,
+                                                            );
+                                                        } else {
+                                                            console.error(
+                                                                'Public ID not found for file:',
+                                                                currentFileToDelete,
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </DeleteModal>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col items-center w-1/3 pt-20">
@@ -666,7 +881,7 @@ const AccordionCard = () => {
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('Video').map(
-                                            (fileName, index) => (
+                                            (file, index) => (
                                                 <li
                                                     key={index}
                                                     className="flex gap-5 mb-2"
@@ -675,14 +890,18 @@ const AccordionCard = () => {
                                                         className="font-fira text-xl text-blue font-bold"
                                                         onClick={showFile}
                                                     >
-                                                        {fileName}
+                                                        {file}
+                                                        {''}
                                                     </button>
                                                     <button
-                                                        onClick={() =>
-                                                            confirmationModal(
-                                                                fileName,
-                                                            )
-                                                        }
+                                                        onClick={() => {
+                                                            setCurrentFileToDelete(
+                                                                file,
+                                                            );
+                                                            setDeleteModalOpen(
+                                                                true,
+                                                            );
+                                                        }}
                                                     >
                                                         X
                                                     </button>
@@ -690,6 +909,64 @@ const AccordionCard = () => {
                                             ),
                                         )}
                                     </ul>
+                                    {deleteModalOpen && (
+                                        <DeleteModal
+                                            open={deleteModalOpen}
+                                            onClose={() =>
+                                                setDeleteModalOpen(false)
+                                            }
+                                        >
+                                            <div className="text-center w-56 flex flex-col items-center gap-2 mb-10">
+                                                <img
+                                                    src={DeleteFileIcon}
+                                                    className="w-70px h-[70px]"
+                                                    alt="Delete File"
+                                                />
+
+                                                <h3 className="text-lg text-gray-500 font-bold">
+                                                    Are you sure you want to
+                                                    delete?
+                                                </h3>
+                                                <p className="text-sm">
+                                                    This process cannot be
+                                                    undone.
+                                                </p>
+                                            </div>
+                                            <div className="flex flex-col gap-10">
+                                                <button
+                                                    className="bg-light-gray w-full py-2 rounded text-white"
+                                                    onClick={() =>
+                                                        setDeleteModalOpen(
+                                                            false,
+                                                        )
+                                                    }
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    className="bg-red w-full py-2 rounded text-white"
+                                                    onClick={() => {
+                                                        const publicId =
+                                                            getPublicId(
+                                                                currentFileToDelete,
+                                                            );
+                                                        if (publicId) {
+                                                            deleteFile(
+                                                                publicId,
+                                                            );
+                                                        } else {
+                                                            console.error(
+                                                                'Public ID not found for file:',
+                                                                currentFileToDelete,
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </DeleteModal>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col items-center w-1/3 pt-20">
@@ -751,7 +1028,7 @@ const AccordionCard = () => {
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('Insurance').map(
-                                            (fileName, index) => (
+                                            (file, index) => (
                                                 <li
                                                     key={index}
                                                     className="flex gap-5 mb-2"
@@ -760,14 +1037,18 @@ const AccordionCard = () => {
                                                         className="font-fira text-xl text-blue font-bold"
                                                         onClick={showFile}
                                                     >
-                                                        {fileName}
+                                                        {file}
+                                                        {''}
                                                     </button>
                                                     <button
-                                                        onClick={() =>
-                                                            confirmationModal(
-                                                                fileName,
-                                                            )
-                                                        }
+                                                        onClick={() => {
+                                                            setCurrentFileToDelete(
+                                                                file,
+                                                            );
+                                                            setDeleteModalOpen(
+                                                                true,
+                                                            );
+                                                        }}
                                                     >
                                                         X
                                                     </button>
@@ -775,6 +1056,64 @@ const AccordionCard = () => {
                                             ),
                                         )}
                                     </ul>
+                                    {deleteModalOpen && (
+                                        <DeleteModal
+                                            open={deleteModalOpen}
+                                            onClose={() =>
+                                                setDeleteModalOpen(false)
+                                            }
+                                        >
+                                            <div className="text-center w-56 flex flex-col items-center gap-2 mb-10">
+                                                <img
+                                                    src={DeleteFileIcon}
+                                                    className="w-70px h-[70px]"
+                                                    alt="Delete File"
+                                                />
+
+                                                <h3 className="text-lg text-gray-500 font-bold">
+                                                    Are you sure you want to
+                                                    delete?
+                                                </h3>
+                                                <p className="text-sm">
+                                                    This process cannot be
+                                                    undone.
+                                                </p>
+                                            </div>
+                                            <div className="flex flex-col gap-10">
+                                                <button
+                                                    className="bg-light-gray w-full py-2 rounded text-white"
+                                                    onClick={() =>
+                                                        setDeleteModalOpen(
+                                                            false,
+                                                        )
+                                                    }
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    className="bg-red w-full py-2 rounded text-white"
+                                                    onClick={() => {
+                                                        const publicId =
+                                                            getPublicId(
+                                                                currentFileToDelete,
+                                                            );
+                                                        if (publicId) {
+                                                            deleteFile(
+                                                                publicId,
+                                                            );
+                                                        } else {
+                                                            console.error(
+                                                                'Public ID not found for file:',
+                                                                currentFileToDelete,
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </DeleteModal>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col items-center w-1/3 pt10 pb-10">

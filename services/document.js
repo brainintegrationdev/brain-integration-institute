@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-// Function to get images from Cloudinary
+// Function to get user specific images from Cloudinary
 const getImagesFromCloudinary = async (folder) => {
     const allAssets = [];
 
@@ -13,7 +13,7 @@ const getImagesFromCloudinary = async (folder) => {
             `${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}`,
         ).toString('base64');
 
-        // Search parameters to only get images from the specific folder
+      
         const searchParams = {
             expression: `folder=${folder} AND resource_type:image`,
         };
@@ -39,14 +39,6 @@ const getImagesFromCloudinary = async (folder) => {
     }
 };
 
-//delete one request
-//https://api.cloudinary.com/v1_1/:cloud_name/image/destroy endpoint
-const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
-    process.env;
 
-function generateSignature(publicId, timestamp) {
-    const paramsToSign = `public_id=${publicId}&timestamp=${timestamp}${CLOUDINARY_API_SECRET}`;
-    return crypto.createHash('sha1').update(paramsToSign).digest('hex');
-}
 
 module.exports = { getImagesFromCloudinary };

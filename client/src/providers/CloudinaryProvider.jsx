@@ -15,6 +15,7 @@ export const CloudinaryProvider = ({ children }) => {
     const [loaded, setLoaded] = useState(false);
     const { user, getAccessTokenSilently, isAuthenticated } = useAuth0();
     const [files, setFiles] = useState([]);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [sectionName, setSectionName] = useState('');
@@ -54,6 +55,8 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('Error fetching files:', error);
         }
     };
+
+    
 
     //gets files from Cloudinary via callback/cors proxy
     const getFilesInFolder = async () => {
@@ -248,6 +251,37 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
+    const deleteFile = async (publicId) => {
+        try {
+            const accessToken = await getAccessTokenSilently();
+            const response = await fetch(
+                `http://localhost:8080/api/files/${publicId}`,
+                {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                }
+            );
+    
+            if (response.ok) {
+                console.log('File and metadata deleted successfully.');
+                setFileMetaData((prevMetaData) =>
+                    prevMetaData.filter((file) => file.publicId !== publicId)
+                );
+                setDeleteModalOpen(false)
+                setFiles((prevFiles) =>
+                    prevFiles.filter((file) => file.publicId !== publicId)
+                );
+            } else {
+                console.error('Failed to delete file.');
+            }
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+    };
+    
+
     return (
         <CloudinaryContext.Provider
             value={{
@@ -269,6 +303,9 @@ export const CloudinaryProvider = ({ children }) => {
                 isLoading,
                 getUserMetaData,
                 updateUserProgress,
+                deleteFile,
+                deleteModalOpen,
+                setDeleteModalOpen
             }}
         >
             {loaded && children}

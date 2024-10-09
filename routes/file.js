@@ -1,9 +1,16 @@
 const ex = require('express');
 // const { processFile } = require('../middleware/cdn');
 const { getAllFilesByOwner, createFile } = require('../services/file');
-const { File } = require('../models/file');
+const File  = require('../models/file');
+const cloudinary = require('cloudinary').v2; 
 
 const fileRouter = ex.Router();
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // fileRouter.get('/health', (req, res) => {
 //     res.status(200).json({ message: 'API is working!' });
@@ -34,11 +41,6 @@ fileRouter.get('/', async (req, res, next) => {
  
 
 
-
-
-
-
-
 // //creates metadata upon successful cloudinary upload
 
 fileRouter.post('/', async (req, res) => {
@@ -63,6 +65,42 @@ fileRouter.post('/', async (req, res) => {
     } catch (error) {
         console.error('Error processing request:', error);
         res.status(500).json({ error: 'Server error' });
+    }
+});
+
+console.log('File model:', File);
+
+fileRouter.delete('/:publicId', async (req, res) => {
+    const publicId = req.params.publicId;
+    
+    try {
+        console.log('Attempting to delete file with publicId:', publicId);
+        const result = await cloudinary.uploader.destroy(publicId);
+        if (result.result === 'ok') {
+            await File.findOneAndDelete({ publicId: publicId }); 
+            res.status(200).json({ message: 'File deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'File not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting file from Cloudinary:', error);
+        res.status(500).json({ message: 'Error deleting file', error });
+    }
+});
+
+fileRouter.get('/test-delete/:publicId', async (req, res) => {
+    const publicId = req.params.publicId;
+
+    try {
+        const result = await File.deleteOne({ publicId: publicId });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ success: false, message: 'File metadata not found' });
+        }
+        res.status(200).json({ success: true, result });
+    } catch (error) {
+        console.error('Error during delete test:', error.message);
+        console.error(error.stack); // Log the stack for more details
+        res.status(500).json({ message: 'Error during delete test', error: error.message });
     }
 });
 
