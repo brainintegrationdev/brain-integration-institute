@@ -35,7 +35,6 @@ import { Accordion } from 'react-accessible-accordion';
 import e from 'cors';
 import { CloudinaryContext } from '../contexts';
 
-
 //mock submission to DB until backend created
 
 const AccordionCard = () => {
@@ -57,7 +56,7 @@ const AccordionCard = () => {
         setFileMetaData,
         isLoading,
         setIsLoading,
-        getUserMetaData
+        getUserMetaData,
     } = useContext(CloudinaryContext);
     // const [progress, setProgress] = useState(0);
     // const [isSubmitted, setIsSubmitted] = useState(false);
@@ -65,8 +64,7 @@ const AccordionCard = () => {
     const [sectionName, setSectionName] = useState('');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [userMetaData, setUserMetaData] = useState({})
-
+    const [userMetaData, setUserMetaData] = useState({});
 
     const certProgressImages = [
         ProgressBar0,
@@ -95,12 +93,10 @@ const AccordionCard = () => {
 
         setDeleteModalOpen(false);
         setSelectedFile(null);
-        const newProgress = Math.max(0, progress - 1); 
+        const newProgress = Math.max(0, progress - 1);
 
-        
         setProgress(newProgress);
-    
-  
+
         updateUserProgress(newProgress);
     };
 
@@ -112,13 +108,12 @@ const AccordionCard = () => {
         setSectionName(section);
         initializeCloudinaryWidget(section);
         console.log('Calling updateUserProgress with value:', 1);
-        
     };
 
     console.log(progress);
 
     if (isAuthenticated) {
-        console.log("User Data:", user); // Inspect the user object
+        console.log('User Data:', user); // Inspect the user object
     }
 
     useEffect(() => {
@@ -128,14 +123,14 @@ const AccordionCard = () => {
                 try {
                     const folderFiles = await getFilesInFolder(token); //docs themselves
                     const metadataFiles = await getFiles(token); //metadata
-                    const userMetaData = await getUserMetaData(token)
+                    const userMetaData = await getUserMetaData(token);
 
                     console.log('Files in folder:', folderFiles);
                     console.log('File metadata:', metadataFiles);
-                    console.log('User metadata', userMetaData)
+                    console.log('User metadata', userMetaData);
                     setFileMetaData(metadataFiles);
-                    setUserMetaData(userMetaData)
-                    setProgress(userMetaData.userUploadProgress)
+                    setUserMetaData(userMetaData);
+                    setProgress(userMetaData.userUploadProgress);
                 } catch (error) {
                     console.error(
                         'Error fetching files:',
@@ -149,7 +144,7 @@ const AccordionCard = () => {
     }, [user, userMetaData.userUploadProgress]);
 
     console.log(fileMetaData);
-    console.log(progress)
+    console.log(progress);
 
     const getSectionFileNames = (sectionName) => {
         const filteredFiles = fileMetaData.filter(
@@ -160,6 +155,31 @@ const AccordionCard = () => {
         });
         return fileNames;
     };
+
+    const clinicalMetaData = fileMetaData.filter((metadata) => {
+        return metadata.sectionName === 'Clinical';
+    });
+    console.log(clinicalMetaData[0]);
+
+    const firstAidMetaData = fileMetaData.filter((metadata) => {
+        return metadata.sectionName === 'FirstAid';
+    });
+    console.log(firstAidMetaData[0]);
+
+    const cPRMetaData = fileMetaData.filter((metadata) => {
+        return metadata.sectionName === 'CPR';
+    });
+    console.log(cPRMetaData[0]);
+
+    const videoMetaData = fileMetaData.filter((metadata) => {
+        return metadata.sectionName === 'Video';
+    });
+    console.log(videoMetaData[0]);
+
+    const insuranceMetaData = fileMetaData.filter((metadata) => {
+        return metadata.sectionName === 'Insurance';
+    });
+    console.log(insuranceMetaData[0]);
 
     return (
         <div className="flex justify-start">
@@ -281,7 +301,6 @@ const AccordionCard = () => {
 
                             <div className="flex flex-col gap-10 pt-10 pb-2">
                                 <div className="flex justify-center gap-10 pb-5">
-                                    {/* File Names List - Left Justified */}
                                     <div className="flex flex-col justify-start items-start pl-0">
                                         <ul>
                                             {getSectionFileNames('Brain').map(
@@ -332,7 +351,7 @@ const AccordionCard = () => {
                                                         undone.
                                                     </p>
                                                 </div>
-                                                <div className="flex gap-10">
+                                                <div className="flex flex-col gap-10">
                                                     <button
                                                         className="bg-light-gray w-full py-2 rounded text-white"
                                                         onClick={() =>
@@ -377,43 +396,42 @@ const AccordionCard = () => {
                             <p className="font-fira text-dark-green font-bold text-xl pt-10">
                                 Completion of 200 hours of clinical practice in
                                 brain integration or kinesiology including
-                                various populations and settings.{' '}
+                                various populations and settings.
                             </p>
-                            <br></br>
-                            <ul className="font-fira text-black text-base font-normal list-disc list-inside">
+
+                            <ul className="font-fira text-black text-base font-normal list-disc list-inside pl-0">
                                 We encourage the following:
-                                <li className="pt-3 ">
-                                    Practicum with the public{' '}
+                                <li className="pt-3">
+                                    Practicum with the public
                                 </li>
-                                <li className="">
-                                    Practicums in a lab setting with oversight{' '}
+                                <li>
+                                    Practicums in a lab setting with oversight
                                 </li>
                                 <li className="pl-4 -ml-4">
                                     SOAP notes, or subjective, objective,
                                     assessment, and plan notes, are a
-                                    standardized method used by{' '}
+                                    standardized method used by
                                     <span className="pl-5">
                                         professionals to document client
-                                        interacations
+                                        interactions
                                     </span>
                                 </li>
                                 <li className="list-disc list-inside">
-                                    {' '}
                                     Experience brain integration with children,
                                     teenagers, adults, and individuals with
-                                    special needs{' '}
+                                    special needs
                                 </li>
                             </ul>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-10 ">
-                                <div className="flex gap-10 pb-5">
-                                    <div>
-                                        <ul>
-                                            {getSectionFileNames(
-                                                'Clinical',
-                                            ).map((fileName, index) => (
+
+                            <div className="flex justify-center items-start pt-10">
+                                {/* File List on the Left */}
+                                <div className="w-1/3">
+                                    <ul className="pl-0">
+                                        {getSectionFileNames('Clinical').map(
+                                            (fileName, index) => (
                                                 <li
                                                     key={index}
-                                                    className="flex gap-5"
+                                                    className="flex gap-5 mb-2"
                                                 >
                                                     <button
                                                         className="font-fira text-xl text-blue font-bold"
@@ -431,11 +449,21 @@ const AccordionCard = () => {
                                                         X
                                                     </button>
                                                 </li>
-                                            ))}
-                                        </ul>
-                                    </div>
+                                            ),
+                                        )}
+                                    </ul>
+                                </div>
 
-                                    <button>
+                                {/* Upload Button in the Center */}
+                                <div className="flex flex-col items-center w-1/3 pt-20">
+                                    <button
+                                        disabled={clinicalMetaData.length > 0}
+                                        className={`${
+                                            clinicalMetaData.length > 0
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
+                                        }`}
+                                    >
                                         <img
                                             src={UploadBtn}
                                             onClick={() =>
@@ -444,6 +472,14 @@ const AccordionCard = () => {
                                             alt="Upload Clinical"
                                         />
                                     </button>
+
+                                    {/* Please delete message under the upload button */}
+                                    {clinicalMetaData.length > 0 && (
+                                        <p className="text-red mt-4 text-center">
+                                            Please delete the current file
+                                            before uploading a new one.
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -454,7 +490,6 @@ const AccordionCard = () => {
                     >
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
-                                {' '}
                                 Show proof of First Aid certification.
                             </h1>
                             <p className="font-fira text-black text-base font-normal">
@@ -464,16 +499,17 @@ const AccordionCard = () => {
                                 JPEG. Click the “Upload” button and select your
                                 files.
                             </p>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-20 ">
-                                <div className="flex gap-10 pb-5">
-                                    <div>
-                                        <ul>
-                                            {getSectionFileNames(
-                                                'FirstAid',
-                                            ).map((fileName, index) => (
+
+                            {/* Content layout with file list, upload button, and message */}
+                            <div className="flex justify-center items-start pt-20">
+                                {/* File List on the Left */}
+                                <div className="w-1/3">
+                                    <ul className="pl-0">
+                                        {getSectionFileNames('FirstAid').map(
+                                            (fileName, index) => (
                                                 <li
                                                     key={index}
-                                                    className="flex gap-5"
+                                                    className="flex gap-5 mb-2"
                                                 >
                                                     <button
                                                         className="font-fira text-xl text-blue font-bold"
@@ -491,11 +527,21 @@ const AccordionCard = () => {
                                                         X
                                                     </button>
                                                 </li>
-                                            ))}
-                                        </ul>
-                                    </div>
+                                            ),
+                                        )}
+                                    </ul>
+                                </div>
 
-                                    <button>
+                                {/* Upload Button in the Center */}
+                                <div className="flex flex-col items-center w-1/3 pt-20">
+                                    <button
+                                        disabled={firstAidMetaData.length > 0}
+                                        className={`${
+                                            firstAidMetaData.length > 0
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
+                                        }`}
+                                    >
                                         <img
                                             src={UploadBtn}
                                             onClick={() =>
@@ -504,6 +550,14 @@ const AccordionCard = () => {
                                             alt="Upload FirstAid"
                                         />
                                     </button>
+
+                                    {/* Please delete message under the upload button */}
+                                    {firstAidMetaData.length > 0 && (
+                                        <p className="text-red mt-4 text-center">
+                                            Please delete the current file
+                                            before uploading a new one.
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -511,63 +565,69 @@ const AccordionCard = () => {
                     <CPR title="CPR Certification" sectionName="CPR">
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
-                                {' '}
                                 Show proof of CPR certification
                             </h1>
                             <p className="pb-5">
                                 Upload your current CPR certification. Scan or
                                 photograph both sides of your certification
                                 card. Save the files as PDF or JPEG. Click the
-                                &quot; Upload&quot; button and select your
-                                files.
+                                &quot;Upload&quot; button and select your files.
                             </p>
-
                             <p className="pb-5">
                                 Here is a suggested location to complete this
                                 requirement by using your smartphone:
                                 <span>
-                                    {' '}
                                     <a href="https://resuscitech.io/smart-certification">
                                         https://resuscitech.io/smart-certification
-                                    </a>{' '}
+                                    </a>
                                 </span>
                             </p>
-
                             <p>
                                 Once completed, copy the certificate and upload
                                 the documents.
                             </p>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-20">
-                                <div className="flex gap-10 pb-5">
-                                    <div>
-                                        <ul>
-                                            {getSectionFileNames('CPR').map(
-                                                (fileName, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className="flex gap-5"
+
+                            <div className="flex justify-center items-start pt-20">
+                                {/* File List on the Left */}
+                                <div className="w-1/3">
+                                    <ul className="pl-0">
+                                        {getSectionFileNames('CPR').map(
+                                            (fileName, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="flex gap-5 mb-2"
+                                                >
+                                                    <button
+                                                        className="font-fira text-xl text-blue font-bold"
+                                                        onClick={showFile}
                                                     >
-                                                        <button
-                                                            className="font-fira text-xl text-blue font-bold"
-                                                            onClick={showFile}
-                                                        >
-                                                            {fileName}
-                                                        </button>
-                                                        <button
-                                                            onClick={() =>
-                                                                confirmationModal(
-                                                                    fileName,
-                                                                )
-                                                            }
-                                                        >
-                                                            X
-                                                        </button>
-                                                    </li>
-                                                ),
-                                            )}
-                                        </ul>
-                                    </div>
-                                    <button>
+                                                        {fileName}
+                                                    </button>
+                                                    <button
+                                                        onClick={() =>
+                                                            confirmationModal(
+                                                                fileName,
+                                                            )
+                                                        }
+                                                    >
+                                                        X
+                                                    </button>
+                                                </li>
+                                            ),
+                                        )}
+                                    </ul>
+                                </div>
+
+                                {/* Upload Button in the Center */}
+                                <div className="flex flex-col items-center w-1/3 pt-20">
+                                    <button
+                                        disabled={cPRMetaData.length > 0}
+                                        className={`${
+                                            cPRMetaData.length > 0
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
+                                        }`}
+                                    >
                                         <img
                                             src={UploadBtn}
                                             onClick={() =>
@@ -576,6 +636,14 @@ const AccordionCard = () => {
                                             alt="Upload CPR"
                                         />
                                     </button>
+
+                                    {/* Please delete message under the upload button */}
+                                    {cPRMetaData.length > 0 && (
+                                        <p className="text-red mt-4 text-center">
+                                            Please delete the current file
+                                            before uploading a new one.
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -584,21 +652,20 @@ const AccordionCard = () => {
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 Submit video recording of a documented Brain
-                                Integration session.{' '}
+                                Integration session.
                             </h1>
-                            <ul>
+                            <ul className="font-fira text-black text-base font-normal list-disc list-inside">
                                 Video must not exceed 30 minutes in length and
                                 must include the following knowledge and skills:
                                 <li className="list-disc list-inside">
-                                    {' '}
-                                    Physical demonstration of knowledge{' '}
+                                    Physical demonstration of knowledge
                                 </li>
                                 <li className="list-disc list-inside">
-                                    Explaining the process of Brain Integration{' '}
+                                    Explaining the process of Brain Integration
                                 </li>
                                 <li className="list-disc list-inside">
                                     Express knowledge of appropriate reasoning
-                                    of the procedure{' '}
+                                    of the procedure
                                 </li>
                                 <li className="list-disc list-inside">
                                     Demonstrate balance process
@@ -613,38 +680,48 @@ const AccordionCard = () => {
                                     Pause-lock procedure
                                 </li>
                             </ul>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-20">
-                                <div className="flex gap-10 pb-5">
-                                    <div>
-                                        <ul>
-                                            {getSectionFileNames('Video').map(
-                                                (fileName, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className="flex gap-5"
-                                                    >
-                                                        <button
-                                                            className="font-fira text-xl text-blue font-bold"
-                                                            onClick={showFile}
-                                                        >
-                                                            {fileName}
-                                                        </button>
-                                                        <button
-                                                            onClick={() =>
-                                                                confirmationModal(
-                                                                    fileName,
-                                                                )
-                                                            }
-                                                        >
-                                                            X
-                                                        </button>
-                                                    </li>
-                                                ),
-                                            )}
-                                        </ul>
-                                    </div>
 
-                                    <button>
+                            <div className="flex justify-center items-start pt-20">
+                                {/* File List on the Left */}
+                                <div className="w-1/3">
+                                    <ul className="pl-0">
+                                        {getSectionFileNames('Video').map(
+                                            (fileName, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="flex gap-5 mb-2"
+                                                >
+                                                    <button
+                                                        className="font-fira text-xl text-blue font-bold"
+                                                        onClick={showFile}
+                                                    >
+                                                        {fileName}
+                                                    </button>
+                                                    <button
+                                                        onClick={() =>
+                                                            confirmationModal(
+                                                                fileName,
+                                                            )
+                                                        }
+                                                    >
+                                                        X
+                                                    </button>
+                                                </li>
+                                            ),
+                                        )}
+                                    </ul>
+                                </div>
+
+                                {/* Upload Button in the Center */}
+                                <div className="flex flex-col items-center w-1/3 pt-20">
+                                    <button
+                                        disabled={videoMetaData.length > 0}
+                                        className={`${
+                                            videoMetaData.length > 0
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
+                                        }`}
+                                    >
                                         <img
                                             src={UploadBtn}
                                             onClick={() =>
@@ -653,6 +730,14 @@ const AccordionCard = () => {
                                             alt="Upload Video"
                                         />
                                     </button>
+
+                                    {/* Please delete message under the upload button */}
+                                    {videoMetaData.length > 0 && (
+                                        <p className="text-red mt-4 text-center">
+                                            Please delete the current file
+                                            before uploading a new one.
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -662,7 +747,7 @@ const AccordionCard = () => {
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 Show proof of professional and liability
-                                insurance{' '}
+                                insurance
                             </h1>
                             <p className="pb-8 text-base">
                                 Show proof of professional and liability
@@ -683,16 +768,16 @@ const AccordionCard = () => {
                                     button below and select your file.
                                 </li>
                             </ul>
-                            <div className="flex flex-col justify-center items-center gap-10 pt-10">
-                                <div className="flex gap-10 pb-5">
-                                    <div>
-                                        <ul>
-                                            {getSectionFileNames(
-                                                'Insurance',
-                                            ).map((fileName, index) => (
+
+                            <div className="flex justify-center items-start pt-10">
+                                {/* File List on the Left */}
+                                <div className="w-1/3">
+                                    <ul className="pl-0">
+                                        {getSectionFileNames('Insurance').map(
+                                            (fileName, index) => (
                                                 <li
                                                     key={index}
-                                                    className="flex gap-5"
+                                                    className="flex gap-5 mb-2"
                                                 >
                                                     <button
                                                         className="font-fira text-xl text-blue font-bold"
@@ -710,10 +795,21 @@ const AccordionCard = () => {
                                                         X
                                                     </button>
                                                 </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <button>
+                                            ),
+                                        )}
+                                    </ul>
+                                </div>
+
+                                {/* Upload Button in the Center */}
+                                <div className="flex flex-col items-center w-1/3 pt10 pb-10">
+                                    <button
+                                        disabled={insuranceMetaData.length > 0}
+                                        className={`${
+                                            insuranceMetaData.length > 0
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
+                                        }`}
+                                    >
                                         <img
                                             src={UploadBtn}
                                             onClick={() =>
@@ -722,6 +818,14 @@ const AccordionCard = () => {
                                             alt="Upload Insurance"
                                         />
                                     </button>
+
+                                    {/* Please delete message under the upload button */}
+                                    {insuranceMetaData.length > 0 && (
+                                        <p className="text-red mt-4 text-center">
+                                            Please delete the current file
+                                            before uploading a new one.
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
