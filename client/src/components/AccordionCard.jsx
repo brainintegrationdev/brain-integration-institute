@@ -22,6 +22,7 @@ import FirstAid from './FirstAid';
 import Video from './Video';
 import StudyGuide from './StudyGuide';
 import DeleteModal from './DeleteModal';
+import DeleteTooltip from './DeleteTooltip';
 import DeleteFileIcon from '../assets/icons/DeleteFileIcon.png';
 
 import { useAuth0 } from '@auth0/auth0-react';
@@ -337,6 +338,7 @@ const AccordionCard = () => {
                                                 ),
                                             )}
                                         </ul>
+                                        <div></div>
                                         {deleteModalOpen && (
                                             <DeleteModal
                                                 open={deleteModalOpen}
@@ -537,29 +539,31 @@ const AccordionCard = () => {
                                 </div>
 
                                 <div className="flex flex-col items-center w-1/3 pt-20">
-                                    <button
+                                    <DeleteTooltip
+                                        text="Delete current file to upload new one"
                                         disabled={clinicalMetaData.length > 0}
-                                        className={`${
-                                            clinicalMetaData.length > 0
-                                                ? 'opacity-50 cursor-not-allowed'
-                                                : ''
-                                        }`}
                                     >
-                                        <img
-                                            src={UploadBtn}
-                                            onClick={() =>
-                                                handleUploadClick('Clinical')
+                                        <button
+                                            disabled={
+                                                clinicalMetaData.length > 0
                                             }
-                                            alt="Upload Clinical"
-                                        />
-                                    </button>
-
-                                    {clinicalMetaData.length > 0 && (
-                                        <p className="text-red mt-4 text-center">
-                                            Please delete the current file
-                                            before uploading a new one.
-                                        </p>
-                                    )}
+                                            className={`${
+                                                clinicalMetaData.length > 0
+                                                    ? 'opacity-50 cursor-not-allowed'
+                                                    : ''
+                                            }`}
+                                        >
+                                            <img
+                                                src={UploadBtn}
+                                                onClick={() =>
+                                                    handleUploadClick(
+                                                        'Clinical',
+                                                    )
+                                                }
+                                                alt="Upload Clinical"
+                                            />
+                                        </button>
+                                    </DeleteTooltip>
                                 </div>
                             </div>
                         </div>
@@ -672,29 +676,31 @@ const AccordionCard = () => {
                                 </div>
 
                                 <div className="flex flex-col items-center w-1/3 pt-20">
-                                    <button
+                                    <DeleteTooltip
+                                        text="Delete current file to upload new one"
                                         disabled={firstAidMetaData.length > 0}
-                                        className={`${
-                                            firstAidMetaData.length > 0
-                                                ? 'opacity-50 cursor-not-allowed'
-                                                : ''
-                                        }`}
                                     >
-                                        <img
-                                            src={UploadBtn}
-                                            onClick={() =>
-                                                handleUploadClick('FirstAid')
+                                        <button
+                                            disabled={
+                                                firstAidMetaData.length > 0
                                             }
-                                            alt="Upload FirstAid"
-                                        />
-                                    </button>
-
-                                    {firstAidMetaData.length > 0 && (
-                                        <p className="text-red mt-4 text-center">
-                                            Please delete the current file
-                                            before uploading a new one.
-                                        </p>
-                                    )}
+                                            className={`${
+                                                firstAidMetaData.length > 0
+                                                    ? 'opacity-50 cursor-not-allowed'
+                                                    : ''
+                                            }`}
+                                        >
+                                            <img
+                                                src={UploadBtn}
+                                                onClick={() =>
+                                                    handleUploadClick(
+                                                        'FirstAid',
+                                                    )
+                                                }
+                                                alt="Upload FirstAid"
+                                            />
+                                        </button>
+                                    </DeleteTooltip>
                                 </div>
                             </div>
                         </div>
@@ -817,29 +823,27 @@ const AccordionCard = () => {
                                 </div>
 
                                 <div className="flex flex-col items-center w-1/3 pt-20">
-                                    <button
+                                    <DeleteTooltip
+                                        text="Delete current file to upload new one"
                                         disabled={cPRMetaData.length > 0}
-                                        className={`${
-                                            cPRMetaData.length > 0
-                                                ? 'opacity-50 cursor-not-allowed'
-                                                : ''
-                                        }`}
                                     >
-                                        <img
-                                            src={UploadBtn}
-                                            onClick={() =>
-                                                handleUploadClick('CPR')
-                                            }
-                                            alt="Upload CPR"
-                                        />
-                                    </button>
-
-                                    {cPRMetaData.length > 0 && (
-                                        <p className="text-red mt-4 text-center">
-                                            Please delete the current file
-                                            before uploading a new one.
-                                        </p>
-                                    )}
+                                        <button
+                                            disabled={cPRMetaData.length > 0}
+                                            className={`${
+                                                cPRMetaData.length > 0
+                                                    ? 'opacity-50 cursor-not-allowed'
+                                                    : ''
+                                            }`}
+                                        >
+                                            <img
+                                                src={UploadBtn}
+                                                onClick={() =>
+                                                    handleUploadClick('CPR')
+                                                }
+                                                alt="Upload CPR"
+                                            />
+                                        </button>
+                                    </DeleteTooltip>
                                 </div>
                             </div>
                         </div>
@@ -970,29 +974,27 @@ const AccordionCard = () => {
                                 </div>
 
                                 <div className="flex flex-col items-center w-1/3 pt-20">
-                                    <button
+                                    <DeleteTooltip
+                                        text="Delete current file to upload new one"
                                         disabled={videoMetaData.length > 0}
-                                        className={`${
-                                            videoMetaData.length > 0
-                                                ? 'opacity-50 cursor-not-allowed'
-                                                : ''
-                                        }`}
                                     >
-                                        <img
-                                            src={UploadBtn}
-                                            onClick={() =>
-                                                handleUploadClick('Video')
-                                            }
-                                            alt="Upload Video"
-                                        />
-                                    </button>
-
-                                    {videoMetaData.length > 0 && (
-                                        <p className="text-red mt-4 text-center">
-                                            Please delete the current file
-                                            before uploading a new one.
-                                        </p>
-                                    )}
+                                        <button
+                                            disabled={videoMetaData.length > 0}
+                                            className={`${
+                                                videoMetaData.length > 0
+                                                    ? 'opacity-50 cursor-not-allowed'
+                                                    : ''
+                                            }`}
+                                        >
+                                            <img
+                                                src={UploadBtn}
+                                                onClick={() =>
+                                                    handleUploadClick('Video')
+                                                }
+                                                alt="Upload Video"
+                                            />
+                                        </button>
+                                    </DeleteTooltip>
                                 </div>
                             </div>
                         </div>
@@ -1117,29 +1119,31 @@ const AccordionCard = () => {
                                 </div>
 
                                 <div className="flex flex-col items-center w-1/3 pt10 pb-10">
-                                    <button
+                                    <DeleteTooltip
+                                        text="Delete current file to upload new one"
                                         disabled={insuranceMetaData.length > 0}
-                                        className={`${
-                                            insuranceMetaData.length > 0
-                                                ? 'opacity-50 cursor-not-allowed'
-                                                : ''
-                                        }`}
                                     >
-                                        <img
-                                            src={UploadBtn}
-                                            onClick={() =>
-                                                handleUploadClick('Insurance')
+                                        <button
+                                            disabled={
+                                                insuranceMetaData.length > 0
                                             }
-                                            alt="Upload Insurance"
-                                        />
-                                    </button>
-
-                                    {insuranceMetaData.length > 0 && (
-                                        <p className="text-red mt-4 text-center">
-                                            Please delete the current file
-                                            before uploading a new one.
-                                        </p>
-                                    )}
+                                            className={`${
+                                                insuranceMetaData.length > 0
+                                                    ? 'opacity-50 cursor-not-allowed'
+                                                    : ''
+                                            }`}
+                                        >
+                                            <img
+                                                src={UploadBtn}
+                                                onClick={() =>
+                                                    handleUploadClick(
+                                                        'Insurance',
+                                                    )
+                                                }
+                                                alt="Upload Insurance"
+                                            />
+                                        </button>
+                                    </DeleteTooltip>
                                 </div>
                             </div>
                         </div>
