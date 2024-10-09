@@ -60,9 +60,9 @@ export const useHttpAuthClient = () => {
 
     useEffect(() => {
         if (user && !metadataCreated) {
-            createUserMetadata(user); // Call the function only once when the user object is available
+            createUserMetadata(user); 
         }
-    }, [user, metadataCreated, getAccessTokenSilently]); // Dependency array
+    }, [user, metadataCreated, getAccessTokenSilently]); 
 
     const handler = async (url, options) => {
         const accessToken = await getAccessTokenSilently();

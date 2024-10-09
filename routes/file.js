@@ -9,6 +9,7 @@ const fileRouter = ex.Router();
 //     res.status(200).json({ message: 'API is working!' });
 // });
 
+//gets user specific file metadata
 fileRouter.get('/files/:user', async (req, res) => {
     try {
         const { user } = req.params; // Expecting the userId to be passed as a route parameter

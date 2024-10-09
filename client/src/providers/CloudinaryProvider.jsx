@@ -7,9 +7,6 @@ import { Cloudinary } from '@cloudinary/url-gen';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 
-// import { AdvancedImage, responsive, placeholder } from '@cloudinary/react';
-// import AccordionCard from '../components/AccordionCard';
-
 // Cloudinary Provider Component
 export const CloudinaryProvider = ({ children }) => {
     // eslint-disable-next-line no-unused-vars
@@ -24,7 +21,6 @@ export const CloudinaryProvider = ({ children }) => {
     const [fileMetaData, setFileMetaData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
-    // const [error, setError] = useState(null);
 
     const uwConfig = {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUDNAME,
@@ -37,7 +33,7 @@ export const CloudinaryProvider = ({ children }) => {
     const apiSecret = import.meta.env.VITE_CLOUDINARY_API_SECRET;
     const apiKey = import.meta.VITE_CLOUDINARY_API_KEY;
 
-    console.log(isAuthenticated)
+    console.log(isAuthenticated);
 
     //gets file metadata
     const getFiles = async () => {
@@ -83,7 +79,7 @@ export const CloudinaryProvider = ({ children }) => {
             const accessToken = await getAccessTokenSilently();
 
             const response = await axios.get(
-                `http://localhost:8080/api/user/${user.email}`, // Email as path param, no need for query params
+                `http://localhost:8080/api/user/${user.email}`,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
@@ -95,8 +91,6 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('Error fetching user metadata:', error);
         }
     };
-
-
 
     // eslint-disable-next-line no-unused-vars
     const cld = new Cloudinary({
@@ -130,35 +124,39 @@ export const CloudinaryProvider = ({ children }) => {
         };
     }, [loaded]);
 
-
-
     const updateUserProgress = async (newProgress) => {
         if (user) {
             try {
                 const accessToken = await getAccessTokenSilently();
-                console.log('Updating user progress:', { userUploadProgress: newProgress });
-                console.log('User email:', user.email); 
-                console.log('User object:', user); // Check if the user object is correctly logged
-    
-                const response = await fetch(`http://localhost:8080/api/user/${user.email}/progress`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                    body: JSON.stringify({ userUploadProgress: newProgress }),
+                console.log('Updating user progress:', {
+                    userUploadProgress: newProgress,
                 });
-    
-                // Log response status and text
+                console.log('User email:', user.email);
+                console.log('User object:', user);
+
+                const response = await fetch(
+                    `http://localhost:8080/api/user/${user.email}/progress`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                        body: JSON.stringify({
+                            userUploadProgress: newProgress,
+                        }),
+                    },
+                );
+
                 console.log('Response Status:', response.status);
                 console.log('Response Status Text:', response.statusText);
-    
+
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error('Failed to update user progress:', errorData);
                     throw new Error('Failed to update user progress');
                 }
-    
+
                 const data = await response.json();
                 console.log('User progress updated on the server:', data);
             } catch (error) {
@@ -168,8 +166,6 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('User is not defined');
         }
     };
-    
-    
 
     const initializeCloudinaryWidget = (section) => {
         if (user) {
@@ -187,7 +183,6 @@ export const CloudinaryProvider = ({ children }) => {
                     if (result.event === 'success') {
                         console.log('Upload successful:', result.info);
 
-                       
                         updateUserProgress(Math.min(progress + 1, 8));
 
                         const fileMetadata = {
@@ -249,7 +244,7 @@ export const CloudinaryProvider = ({ children }) => {
                 },
             );
 
-            myWidget.open(); // Ensure you call this to open the widget
+            myWidget.open();
         }
     };
 

@@ -19,6 +19,8 @@ cloudinary.config({
 //     api_secret: process.env.CLOUDINARY_API_SECRET ? 'Present' : 'Missing',
 //   });
 
+
+//this should return only user specific files, but returns all files instead
   documentRouter.get('/:nickname', validateAuthToken, async (req, res) => {
     const nickname = req.params.nickname;
     const folder = `users/${nickname}`;

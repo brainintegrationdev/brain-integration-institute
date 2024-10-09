@@ -23,19 +23,12 @@ import Video from './Video';
 import StudyGuide from './StudyGuide';
 import DeleteModal from './DeleteModal';
 import DeleteFileIcon from '../assets/icons/DeleteFileIcon.png';
-// import FileList from './FileList';
-// import Certdocs from './Certdocs';
-
-// import UploadWidget from './UploadWidget';
-// import { CloudinaryProvider } from '../providers/CloudinaryProvider';
 
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { Accordion } from 'react-accessible-accordion';
 import e from 'cors';
 import { CloudinaryContext } from '../contexts';
-
-//mock submission to DB until backend created
 
 const AccordionCard = () => {
     // eslint-disable-next-line no-unused-vars
@@ -58,8 +51,7 @@ const AccordionCard = () => {
         setIsLoading,
         getUserMetaData,
     } = useContext(CloudinaryContext);
-    // const [progress, setProgress] = useState(0);
-    // const [isSubmitted, setIsSubmitted] = useState(false);
+
     const { isAuthenticated, user } = useAuth0();
     const [sectionName, setSectionName] = useState('');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -110,10 +102,10 @@ const AccordionCard = () => {
         console.log('Calling updateUserProgress with value:', 1);
     };
 
-    console.log(progress);
+    // console.log(progress);
 
     if (isAuthenticated) {
-        console.log('User Data:', user); // Inspect the user object
+        console.log('User Data:', user);
     }
 
     useEffect(() => {
@@ -375,7 +367,6 @@ const AccordionCard = () => {
                                         )}
                                     </div>
 
-                                    {/* Upload Button - Centered */}
                                     <div className="flex justify-center items-center">
                                         <button>
                                             <img
@@ -424,7 +415,6 @@ const AccordionCard = () => {
                             </ul>
 
                             <div className="flex justify-center items-start pt-10">
-                                {/* File List on the Left */}
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('Clinical').map(
@@ -454,7 +444,6 @@ const AccordionCard = () => {
                                     </ul>
                                 </div>
 
-                                {/* Upload Button in the Center */}
                                 <div className="flex flex-col items-center w-1/3 pt-20">
                                     <button
                                         disabled={clinicalMetaData.length > 0}
@@ -473,7 +462,6 @@ const AccordionCard = () => {
                                         />
                                     </button>
 
-                                    {/* Please delete message under the upload button */}
                                     {clinicalMetaData.length > 0 && (
                                         <p className="text-red mt-4 text-center">
                                             Please delete the current file
@@ -500,9 +488,7 @@ const AccordionCard = () => {
                                 files.
                             </p>
 
-                            {/* Content layout with file list, upload button, and message */}
                             <div className="flex justify-center items-start pt-20">
-                                {/* File List on the Left */}
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('FirstAid').map(
@@ -532,7 +518,6 @@ const AccordionCard = () => {
                                     </ul>
                                 </div>
 
-                                {/* Upload Button in the Center */}
                                 <div className="flex flex-col items-center w-1/3 pt-20">
                                     <button
                                         disabled={firstAidMetaData.length > 0}
@@ -551,7 +536,6 @@ const AccordionCard = () => {
                                         />
                                     </button>
 
-                                    {/* Please delete message under the upload button */}
                                     {firstAidMetaData.length > 0 && (
                                         <p className="text-red mt-4 text-center">
                                             Please delete the current file
@@ -588,7 +572,6 @@ const AccordionCard = () => {
                             </p>
 
                             <div className="flex justify-center items-start pt-20">
-                                {/* File List on the Left */}
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('CPR').map(
@@ -618,7 +601,6 @@ const AccordionCard = () => {
                                     </ul>
                                 </div>
 
-                                {/* Upload Button in the Center */}
                                 <div className="flex flex-col items-center w-1/3 pt-20">
                                     <button
                                         disabled={cPRMetaData.length > 0}
@@ -637,7 +619,6 @@ const AccordionCard = () => {
                                         />
                                     </button>
 
-                                    {/* Please delete message under the upload button */}
                                     {cPRMetaData.length > 0 && (
                                         <p className="text-red mt-4 text-center">
                                             Please delete the current file
@@ -682,7 +663,6 @@ const AccordionCard = () => {
                             </ul>
 
                             <div className="flex justify-center items-start pt-20">
-                                {/* File List on the Left */}
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('Video').map(
@@ -712,7 +692,6 @@ const AccordionCard = () => {
                                     </ul>
                                 </div>
 
-                                {/* Upload Button in the Center */}
                                 <div className="flex flex-col items-center w-1/3 pt-20">
                                     <button
                                         disabled={videoMetaData.length > 0}
@@ -731,7 +710,6 @@ const AccordionCard = () => {
                                         />
                                     </button>
 
-                                    {/* Please delete message under the upload button */}
                                     {videoMetaData.length > 0 && (
                                         <p className="text-red mt-4 text-center">
                                             Please delete the current file
@@ -770,7 +748,6 @@ const AccordionCard = () => {
                             </ul>
 
                             <div className="flex justify-center items-start pt-10">
-                                {/* File List on the Left */}
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('Insurance').map(
@@ -800,7 +777,6 @@ const AccordionCard = () => {
                                     </ul>
                                 </div>
 
-                                {/* Upload Button in the Center */}
                                 <div className="flex flex-col items-center w-1/3 pt10 pb-10">
                                     <button
                                         disabled={insuranceMetaData.length > 0}
@@ -819,7 +795,6 @@ const AccordionCard = () => {
                                         />
                                     </button>
 
-                                    {/* Please delete message under the upload button */}
                                     {insuranceMetaData.length > 0 && (
                                         <p className="text-red mt-4 text-center">
                                             Please delete the current file
