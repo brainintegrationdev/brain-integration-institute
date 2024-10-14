@@ -93,9 +93,14 @@ const AccordionCard = () => {
         const newProgress = Math.max(0, progress - 1);
 
         setProgress(newProgress);
+        console.log(newProgress)
 
         updateUserProgress(newProgress);
     };
+
+    console.log(progress)
+
+   
 
     const showFile = () => {
         console.log('file shown');
@@ -122,9 +127,9 @@ const AccordionCard = () => {
                     const metadataFiles = await getFiles(token); //metadata
                     const userMetaData = await getUserMetaData(token);
 
-                    console.log('Files in folder:', folderFiles);
-                    console.log('File metadata:', metadataFiles);
-                    console.log('User metadata', userMetaData);
+                    // console.log('Files in folder:', folderFiles);
+                    // console.log('File metadata:', metadataFiles);
+                    // console.log('User metadata', userMetaData);
                     setFileMetaData(metadataFiles);
                     setUserMetaData(userMetaData);
                     setProgress(userMetaData.userUploadProgress);
@@ -138,7 +143,7 @@ const AccordionCard = () => {
         };
 
         fetchData();
-    }, [user, userMetaData.userUploadProgress]);
+    }, [user, progress]);
 
     console.log(fileMetaData);
     console.log(progress);
@@ -164,27 +169,27 @@ const AccordionCard = () => {
     const clinicalMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Clinical';
     });
-    console.log(clinicalMetaData[0]);
+   
 
     const firstAidMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'FirstAid';
     });
-    console.log(firstAidMetaData[0]);
+    
 
     const cPRMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'CPR';
     });
-    console.log(cPRMetaData[0]);
+   
 
     const videoMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Video';
     });
-    console.log(videoMetaData[0]);
+
 
     const insuranceMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Insurance';
     });
-    console.log(insuranceMetaData[0]);
+
 
     console.log(currentFileToDelete);
 

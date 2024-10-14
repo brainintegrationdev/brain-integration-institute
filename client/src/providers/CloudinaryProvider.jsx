@@ -186,7 +186,11 @@ export const CloudinaryProvider = ({ children }) => {
                     if (result.event === 'success') {
                         console.log('Upload successful:', result.info);
 
-                        updateUserProgress(Math.min(progress + 1, 8));
+                        setProgress(prevProgress => {
+                            const newProgress = (Math.min(progress + 1, 8));
+                            updateUserProgress(newProgress);
+                            return newProgress; 
+                        })
 
                         const fileMetadata = {
                             publicId: result.info.public_id,
@@ -273,6 +277,11 @@ export const CloudinaryProvider = ({ children }) => {
                 setFiles((prevFiles) =>
                     prevFiles.filter((file) => file.publicId !== publicId)
                 );
+                setProgress(prevProgress => {
+                    const newProgress = Math.max(0, prevProgress - 1);
+                    updateUserProgress(newProgress);
+                    return newProgress; 
+                })
             } else {
                 console.error('Failed to delete file.');
             }
