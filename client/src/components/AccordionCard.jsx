@@ -71,6 +71,7 @@ const AccordionCard = () => {
 
     //checks to see if every section has an uploaded file, if so returns true
     const [isUploaded, setIsUploaded] = useState(false);
+    const [isAssessmentPaid, setIsAssessmentPaid] = useState(false)
     const navigate = useNavigate();
 
     const certProgressImages = [
@@ -113,6 +114,41 @@ const AccordionCard = () => {
             console.error('Error creating checkout session:', error);
         }
     };
+
+    const getAssessment = async () => {
+        try {
+            const accessToken = await getAccessTokenSilently();
+            const stripe = await stripePromise
+            const response = await fetch('/api/create-assessment-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({}),
+            });
+
+            const session = await response.json();
+            if (session.id) {
+                
+               
+                const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+    
+                if (!result.error) {
+                    // If payment is successful, update the state and navigate
+                    setIsAssessmentPaid(true);
+                    navigate('/certification#assessment');
+            
+        } else {
+            console.error('Error redirecting to Stripe Checkout:', result.error.message);
+        }
+    }
+} catch (error) {
+    console.error('Error creating checkout session:', error);
+}
+};
+
 
     //https://buy.stripe.com/test_fZecOw4cKckM5nG3cc
 
@@ -1358,7 +1394,7 @@ const AccordionCard = () => {
                             </div>
                         </div>
                     </StudyGuide>
-                    <Assessment title={'Assessment'}>
+                    <Assessment title={'Assessment'} id='assessment'>
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10">
                                 Complete 500 hours of relevant brain integration
@@ -1449,7 +1485,7 @@ const AccordionCard = () => {
                                     <img
                                         src={PayforandStart}
                                         onClick={
-                                            isUploaded ? getStudyGuide : null
+                                            isUploaded ? getAssessment : null
                                         }
                                     />
                                 </button>

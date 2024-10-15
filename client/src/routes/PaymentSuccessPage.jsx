@@ -4,7 +4,9 @@ export const PaymentSuccessPage = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const cloudinaryUrl = queryParams.get('cloudinaryUrl'); 
+    const assessmentUrl = queryParams.get('assessmentUrl')
     console.log(cloudinaryUrl);
+    console.log(assessmentUrl)
 
     return (
         <div className='flex gap-10 items-center justify-center'>
@@ -20,6 +22,7 @@ export const PaymentSuccessPage = () => {
                     Download your Study Guide
                 </a>
             )}
+      
         </div>
     );
 };

@@ -1,4 +1,4 @@
-//routes for docs on cloudinary (not metadata)
+
 const ex = require('express');
 require('dotenv').config();
 const { validateAuthToken } = require('../middleware/auth.js')
@@ -6,6 +6,8 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const checkoutRouter = ex.Router();
 
+
+//study guide checkout
 checkoutRouter.post('/create-checkout-session', async (req, res) => {
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -24,6 +26,28 @@ checkoutRouter.post('/create-checkout-session', async (req, res) => {
         cancel_url: 'http://localhost:5173/profile',
     })
     res.json({ id: session.id });
+})
+
+checkoutRouter.post('/create-assessment-checkout-session', async (req, res) => {
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [{
+            price_data: {
+                currency: 'usd',
+                product_data: {
+                    name: "Brain Integration Exam",
+                },
+                unit_amount: 25000
+            }, 
+            quantity: 1,
+        }],
+        mode: 'payment',
+        success_url: 'http://localhost:5173/certification#assessment?expand=true',
+        cancel_url: 'http://localhost:5173/profile',
+    })
+    res.json({ id: session.id });
+
+    //'/certification#assessment')
 })
 
 module.exports = { checkoutRouter}
