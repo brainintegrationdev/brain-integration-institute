@@ -167,6 +167,10 @@ const AccordionCard = () => {
         return foundFile ? foundFile.publicId : null;
     };
 
+    const brainMetaData = fileMetaData.filter((metadata) => {
+        return metadata.sectionName === 'Brain';
+    });
+
     const clinicalMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Clinical';
     });
@@ -232,6 +236,7 @@ const AccordionCard = () => {
                         title="Brain Integration Training"
                         sectionName="Brain"
                         fileMetadata={fileMetaData}
+                        brainMetaData={brainMetaData}
                     >
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10">
