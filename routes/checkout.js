@@ -42,12 +42,12 @@ checkoutRouter.post('/create-assessment-checkout-session', async (req, res) => {
             quantity: 1,
         }],
         mode: 'payment',
-        success_url: 'http://localhost:5173/certification#assessment?expand=true',
+        success_url: 'http://localhost:5173/success?assessmentUrl=https://ashleymckellar.com',
         cancel_url: 'http://localhost:5173/profile',
     })
     res.json({ id: session.id });
 
-    //'/certification#assessment')
+    //
 })
 
 module.exports = { checkoutRouter}

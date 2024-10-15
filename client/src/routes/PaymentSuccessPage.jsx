@@ -22,7 +22,15 @@ export const PaymentSuccessPage = () => {
                     Download your Study Guide
                 </a>
             )}
-      
+            {assessmentUrl && (
+                   <a
+                   href={assessmentUrl}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="inline-block px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
+               >
+                Take the Assessment</a>
+            )}
         </div>
     );
 };
