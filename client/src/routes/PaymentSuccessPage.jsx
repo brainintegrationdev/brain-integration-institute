@@ -19,7 +19,7 @@ export const PaymentSuccessPage = () => {
                     rel="noopener noreferrer"
                     className="inline-block px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
                 >
-                    Download your Study Guide
+                    Download Study Guide
                 </a>
             )}
             {assessmentUrl && (
