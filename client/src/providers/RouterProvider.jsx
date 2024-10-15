@@ -10,6 +10,8 @@ import { Home } from "../routes/Home";
 import { AboutUs } from "../routes/AboutUs";
 import { Certification } from "../routes/Certification";
 import { Practitioner } from "../routes/Practitioner"
+import { PaymentSuccessPage } from '../routes/PaymentSuccessPage'
+
  
 const router = createBrowserRouter([
   {
@@ -39,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: '/practitioner',
         element: <Practitioner />
+      },
+      {
+        path: '/success',
+        element: <PaymentSuccessPage />
       }
     ]
   },

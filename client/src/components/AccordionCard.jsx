@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
 import ProgressBar0 from '../assets/icons/ProgressBar0.png';
@@ -59,12 +60,14 @@ const AccordionCard = () => {
         setDeleteModalOpen,
     } = useContext(CloudinaryContext);
 
-    const { isAuthenticated, user } = useAuth0();
+    const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+
     const [sectionName, setSectionName] = useState('');
     // const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [userMetaData, setUserMetaData] = useState({});
     const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
+    const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY); 
 
     //checks to see if every section has an uploaded file, if so returns true
     const [isUploaded, setIsUploaded] = useState(false);
@@ -82,28 +85,40 @@ const AccordionCard = () => {
         ProgressBar8,
     ];
 
-    const getStudyGuide = () => {
-        window.location.href = 'https://buy.stripe.com/test_fZecOw4cKckM5nG3cc';
+    const getStudyGuide = async () => {
+        try {
+            const accessToken = await getAccessTokenSilently();
+            const stripe = await stripePromise
+            const response = await fetch('/api/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({}),
+            });
+
+            const session = await response.json();
+            if (session.id) {
+                // Redirect to Stripe Checkout
+               
+                const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+    
+                if (result.error) {
+                    console.error('Error redirecting to Stripe Checkout:', result.error.message);
+                }
+            }
+        } catch (error) {
+            console.error('Error creating checkout session:', error);
+        }
     };
 
-    const confirmationModal = (fileName) => {
-        setSelectedFile(fileName);
-        setDeleteModalOpen(true);
-        console.log('are you sure you want to delete this file?');
-    };
+    //https://buy.stripe.com/test_fZecOw4cKckM5nG3cc
 
-    const handleDeleteFile = () => {
-        console.log(`Deleting file: ${selectedFile}`);
 
-        setDeleteModalOpen(false);
-        setSelectedFile(null);
-        const newProgress = Math.max(0, progress - 1);
 
-        setProgress(newProgress);
-        console.log(newProgress);
 
-        updateUserProgress(newProgress);
-    };
 
     console.log(progress);
 
@@ -1423,15 +1438,21 @@ const AccordionCard = () => {
                             <br></br>
 
                             <div className="form-flex gap-10 pt-20 pb-5">
-                            
-                                    <button disabled={!isUploaded}  className={`${!isUploaded ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                                        <img
-                                            src={PayforandStart}
-                                            onClick={isUploaded ? getStudyGuide : null}
-                                            
-                                        />
-                                    </button>
-                                
+                                <button
+                                    disabled={!isUploaded}
+                                    className={`${
+                                        !isUploaded
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : ''
+                                    }`}
+                                >
+                                    <img
+                                        src={PayforandStart}
+                                        onClick={
+                                            isUploaded ? getStudyGuide : null
+                                        }
+                                    />
+                                </button>
                             </div>
                         </div>
                     </Assessment>

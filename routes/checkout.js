@@ -20,7 +20,7 @@ checkoutRouter.post('/create-checkout-session', async (req, res) => {
             quantity: 1,
         }],
         mode: 'payment',
-        success_url: "https://asset.cloudinary.com/dpbf9gwjq/6e850ac9df785e0d7f89593699f0ac0f",
+        success_url: 'http://localhost:5173/success?cloudinaryUrl=https://asset.cloudinary.com/dpbf9gwjq/6e850ac9df785e0d7f89593699f0ac0f',
         cancel_url: 'http://localhost:5173/profile',
     })
     res.json({ id: session.id });
