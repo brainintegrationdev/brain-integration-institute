@@ -1,7 +1,8 @@
 const ex = require('express');
 const { fileRouter } = require('./file');
 const { documentRouter } = require('./document');
-const { userRouter } = require('./user')
+const { userRouter } = require('./user');
+const { checkoutRouter } = require('./checkout');
 // const { exampleRouter } = require('./example');
 
 
@@ -11,7 +12,8 @@ apiRouter.use('/files', fileRouter);
 apiRouter.use('/files/:user', fileRouter);
 apiRouter.use('/images', documentRouter)
 apiRouter.use('/user', userRouter)
-// apiRouter.use('/examples', exampleRouter);
+apiRouter.use('/', checkoutRouter)
+
 
 
 module.exports = {
