@@ -8,6 +8,7 @@ import {
 import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
 import AccordionUpArrow from '../assets/icons/AccordionUpArrow.png';
 import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
+import checkedRadio from '../assets/icons/checked-radio.png'
 import UploadBtn from '../assets/icons/UploadBtn.png';
 
 import { useState } from 'react';

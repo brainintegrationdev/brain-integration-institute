@@ -13,6 +13,8 @@ import ProgressBar7 from '../assets/icons/ProgressBar7.png';
 import ProgressBar8 from '../assets/icons/ProgressBar8.png';
 import StudyGuidePages from '../assets/icons/StudyGuidePages.png';
 import PayforandStart from '../assets/icons/PayforandStart.png';
+import ProfileEditIcon from '../assets/icons/profileEditIcon.png';
+
 import Assessment from './Assessment';
 import Insurance from './Insurance';
 import Brain from './Brain';
@@ -62,6 +64,7 @@ const AccordionCard = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [userMetaData, setUserMetaData] = useState({});
     const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
+    const [isUploaded, setIsUploaded] = useState(false);
 
     const certProgressImages = [
         ProgressBar0,
@@ -93,14 +96,12 @@ const AccordionCard = () => {
         const newProgress = Math.max(0, progress - 1);
 
         setProgress(newProgress);
-        console.log(newProgress)
+        console.log(newProgress);
 
         updateUserProgress(newProgress);
     };
 
-    console.log(progress)
-
-   
+    console.log(progress);
 
     const showFile = () => {
         console.log('file shown');
@@ -169,41 +170,43 @@ const AccordionCard = () => {
     const clinicalMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Clinical';
     });
-   
+    console.log(clinicalMetaData);
 
     const firstAidMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'FirstAid';
     });
-    
 
     const cPRMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'CPR';
     });
-   
 
     const videoMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Video';
     });
 
-
     const insuranceMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Insurance';
     });
-
 
     console.log(currentFileToDelete);
 
     return (
         <div className="flex justify-start">
             {isAuthenticated && (
-                <div>
+                <div className="relative">
                     <img
                         className="h-[200px] w-[200px] ml-20 mr-[80px] rounded-full"
                         src={user.picture}
                         alt="avatar"
                     />
+                    <img
+                        className="h-[40px] w-[40px] absolute  bottom-30 right-10"
+                        src={ProfileEditIcon}
+                        alt="Edit Icon"
+                    />
                 </div>
             )}
+
             <div className="flex flex-col justify-center gap-4  w-[832px] pl-10 ">
                 <p className="font-fira text-xl font-light pt-20 pb-10 pl-5">
                     Follow these steps to submit your documentation for
@@ -419,7 +422,11 @@ const AccordionCard = () => {
                             </div>
                         </div>
                     </Brain>
-                    <Clinical title="Clinical Hours" sectionName="Clinical">
+                    <Clinical
+                        title="Clinical Hours"
+                        sectionName="Clinical"
+                        clinicalMetaData={clinicalMetaData}
+                    >
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <p className="font-fira text-dark-green font-bold text-xl pt-10">
                                 Completion of 200 hours of clinical practice in
@@ -576,6 +583,7 @@ const AccordionCard = () => {
                     <FirstAid
                         title="First Aid Certification"
                         sectionName="FirstAid"
+                        firstAidMetaData={firstAidMetaData}
                     >
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
@@ -710,7 +718,11 @@ const AccordionCard = () => {
                             </div>
                         </div>
                     </FirstAid>
-                    <CPR title="CPR Certification" sectionName="CPR">
+                    <CPR
+                        title="CPR Certification"
+                        sectionName="CPR"
+                        cPRMetaData={cPRMetaData}
+                    >
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 Show proof of CPR certification
@@ -853,7 +865,11 @@ const AccordionCard = () => {
                             </div>
                         </div>
                     </CPR>
-                    <Video title="Video Presentation" sectionName="Video">
+                    <Video
+                        title="Video Presentation"
+                        sectionName="Video"
+                        videoMetaData={videoMetaData}
+                    >
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 Submit video recording of a documented Brain
@@ -1005,7 +1021,11 @@ const AccordionCard = () => {
                         </div>
                     </Video>
 
-                    <Insurance title="Insurance" sectionName="Insurance">
+                    <Insurance
+                        title="Insurance"
+                        sectionName="Insurance"
+                        insuranceMetaData={insuranceMetaData}
+                    >
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
                                 Show proof of professional and liability

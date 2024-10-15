@@ -9,6 +9,7 @@ import {
 import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
 import AccordionUpArrow from '../assets/icons/AccordionUpArrow.png';
 import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
+import CheckedRadio from '../assets/icons/checkedRadio.png';
 import { useState } from 'react';
 
 export default function Clinical(props) {
@@ -17,6 +18,12 @@ export default function Clinical(props) {
     function toggleExpand() {
         setIsExpanded(!isExpanded);
     }
+
+    console.log(props.clinicalMetaData);
+
+    const { clinicalMetaData } = props;
+
+    console.log(clinicalMetaData.length);
     return (
         <AccordionItem>
             <AccordionItemHeading>
@@ -30,21 +37,33 @@ export default function Clinical(props) {
                         }
                     >
                         <div className="flex items-center gap-2 pl-9">
-                            {!isExpanded ? (
+                            {!isExpanded && clinicalMetaData.length === 0 ? (
                                 <>
                                     <img src={AccordionRadioUnfilled} />
                                     <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">
                                         {props.title}
-                                    </h1>{' '}
+                                    </h1>
+                                </>
+                            ) : !isExpanded && clinicalMetaData.length > 0 ? (
+                                <>
+                                    <img
+                                        className="h-[45px] w-[50px]"
+                                        src={CheckedRadio}
+                                    />
+                                    <h1 className="font-fira text-xl text-black font-bold tracking-tight">
+                                        {props.title}
+                                    </h1>
                                 </>
                             ) : (
-                                <h1 className="font-fira text-xl text-black font-bold tracking-tight ">
-                                    {props.title}
-                                </h1>
+                                <>
+                                    <h1 className="font-fira text-xl text-black font-bold tracking-tight">
+                                        {props.title}
+                                    </h1>
+                                </>
                             )}
                         </div>
                         {isExpanded ? (
-                            <button className="pr-5">
+                            <button className="pr-5" onClick={toggleExpand}>
                                 <img
                                     src={AccordionUpArrow}
                                     alt="Dropdown Arrow"
