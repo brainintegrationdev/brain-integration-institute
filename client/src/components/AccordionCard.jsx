@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
 import ProgressBar0 from '../assets/icons/ProgressBar0.png';
@@ -64,7 +65,10 @@ const AccordionCard = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [userMetaData, setUserMetaData] = useState({});
     const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
+
+    //checks to see if every section has an uploaded file, if so returns true
     const [isUploaded, setIsUploaded] = useState(false);
+    const navigate = useNavigate();
 
     const certProgressImages = [
         ProgressBar0,
@@ -79,7 +83,7 @@ const AccordionCard = () => {
     ];
 
     const getStudyGuide = () => {
-        console.log('study guide purchased');
+        window.location.href = 'https://buy.stripe.com/test_fZecOw4cKckM5nG3cc';
     };
 
     const confirmationModal = (fileName) => {
@@ -119,6 +123,21 @@ const AccordionCard = () => {
         console.log('User Data:', user);
     }
 
+    const checkAllSectionsUploaded = () => {
+        const sections = [
+            brainMetaData,
+            clinicalMetaData,
+            firstAidMetaData,
+            cPRMetaData,
+            videoMetaData,
+            insuranceMetaData,
+        ];
+
+        const allUploaded = sections.every((section) => section.length > 0);
+
+        setIsUploaded(allUploaded);
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             if (user) {
@@ -146,8 +165,14 @@ const AccordionCard = () => {
         fetchData();
     }, [user, progress]);
 
+    useEffect(() => {
+        checkAllSectionsUploaded();
+    }, [fileMetaData]);
+
     console.log(fileMetaData);
     console.log(progress);
+
+    console.log(isUploaded);
 
     const getSectionFileNames = (sectionName) => {
         const filteredFiles = fileMetaData.filter(
@@ -1398,12 +1423,15 @@ const AccordionCard = () => {
                             <br></br>
 
                             <div className="form-flex gap-10 pt-20 pb-5">
-                                <button>
-                                    <img
-                                        src={PayforandStart}
-                                        onClick={getStudyGuide}
-                                    />
-                                </button>
+                            
+                                    <button disabled={!isUploaded}  className={`${!isUploaded ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                        <img
+                                            src={PayforandStart}
+                                            onClick={isUploaded ? getStudyGuide : null}
+                                            
+                                        />
+                                    </button>
+                                
                             </div>
                         </div>
                     </Assessment>

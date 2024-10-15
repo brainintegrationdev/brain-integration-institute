@@ -19,11 +19,11 @@ export default function Clinical(props) {
         setIsExpanded(!isExpanded);
     }
 
-    console.log(props.clinicalMetaData);
+  
 
     const { clinicalMetaData } = props;
 
-    console.log(clinicalMetaData.length);
+  
     return (
         <AccordionItem>
             <AccordionItemHeading>
