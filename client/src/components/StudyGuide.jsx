@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
 import {
-    Accordion,
     AccordionItem,
     AccordionItemHeading,
     AccordionItemButton,
     AccordionItemPanel,
 } from 'react-accessible-accordion';
-import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
+
 import AccordionUpArrow from '../assets/icons/AccordionUpArrow.png';
 import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
 

@@ -13,14 +13,9 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// console.log("Cloudinary credentials", {
-//     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//     api_key: process.env.CLOUDINARY_API_KEY,
-//     api_secret: process.env.CLOUDINARY_API_SECRET ? 'Present' : 'Missing',
-//   });
+//will need get route for user profile pic
 
 
-//this should return only user specific files, but returns all files instead
   documentRouter.get('/:nickname', validateAuthToken, async (req, res) => {
     const nickname = req.params.nickname;
     const folder = `users/${nickname}`;

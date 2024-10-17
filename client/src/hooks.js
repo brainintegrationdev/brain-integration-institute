@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useContext, useState, useEffect } from 'react';
 import { http } from './http';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -40,7 +41,7 @@ export const useHttpAuthClient = () => {
             );
 
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
 
             if (!response.ok) {
                 console.error(
@@ -66,7 +67,7 @@ export const useHttpAuthClient = () => {
 
     const handler = async (url, options) => {
         const accessToken = await getAccessTokenSilently();
-        console.log(accessToken)
+        
         return http.request(accessToken)(url, options);
     };
 

@@ -34,6 +34,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Accordion } from 'react-accessible-accordion';
 import e from 'cors';
 import { CloudinaryContext } from '../contexts';
+import Payment from './Payment.jsx';
 
 const AccordionCard = () => {
     // eslint-disable-next-line no-unused-vars
@@ -58,6 +59,10 @@ const AccordionCard = () => {
         deleteFile,
         deleteModalOpen,
         setDeleteModalOpen,
+        updateUserStudyGuide,
+        studyGuideAccess,
+        setStudyGuideAccess,
+        email,
     } = useContext(CloudinaryContext);
 
     const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
@@ -67,11 +72,12 @@ const AccordionCard = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [userMetaData, setUserMetaData] = useState({});
     const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
-    const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY); 
+    const [stripePromise, setStripePromise] = useState(null);
 
     //checks to see if every section has an uploaded file, if so returns true
     const [isUploaded, setIsUploaded] = useState(false);
-    const [isAssessmentPaid, setIsAssessmentPaid] = useState(false)
+    const [isAssessmentPaid, setIsAssessmentPaid] = useState(false);
+    const [showPayment, setShowPayment] = useState(false);
     const navigate = useNavigate();
 
     const certProgressImages = [
@@ -86,11 +92,18 @@ const AccordionCard = () => {
         ProgressBar8,
     ];
 
+    console.log(studyGuideAccess);
+    console.log(showPayment);
+    // console.log(stripePromise);
+
+    //will need to add put request to user metadata route to change studyGuideAccess to true, just saving in state for now
     const getStudyGuide = async () => {
+        console.log('getStudyGuide function invoked');
         try {
             const accessToken = await getAccessTokenSilently();
-            const stripe = await stripePromise
-            const response = await fetch('/api/create-checkout-session', {
+            console.log('Access token retrieved:', accessToken);
+            const stripe = await stripePromise;
+            const response = await fetch('/api/create-payment-intent', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,14 +113,30 @@ const AccordionCard = () => {
             });
 
             const session = await response.json();
-            if (session.id) {
-                // Redirect to Stripe Checkout
-               
-                const result = await stripe.redirectToCheckout({ sessionId: session.id });
+            console.log('Session retrieved:', session);
+            if (session.clientSecret) {
+                console.log(
+                    'Payment intent created successfully',
+                    session.clientSecret,
+                );
+                //this part still works
+                setShowPayment(true);
+                
 
-    
-                if (result.error) {
-                    console.error('Error redirecting to Stripe Checkout:', result.error.message);
+                try {
+                    await updateUserProgress(progress + 1);
+                    console.log('User progress update');
+                    setProgress((prevProgress) => {
+                        const newProgress = Math.min(prevProgress + 1, 8);
+                        console.log(
+                            'Progress successfully updated:',
+                            newProgress,
+                        );
+
+                        return newProgress;
+                    });
+                } catch (error) {
+                    console.error('Error updating progress:', error);
                 }
             }
         } catch (error) {
@@ -115,48 +144,70 @@ const AccordionCard = () => {
         }
     };
 
+    console.log(progress);
+
+    const getPublishableKey = async () => {
+        const accessToken = await getAccessTokenSilently();
+        fetch('/api/publishable-key', {
+            method: 'GET',
+            cache: 'no-store', 
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+        .then(async (response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const { publishableKey } = await response.json();
+            setStripePromise(loadStripe(publishableKey));
+            console.log("Stripe promise set successfully");
+        })
+        .catch((error) => {
+            console.error("Error fetching publishable key:", error);
+        });
+    }
+
     const getAssessment = async () => {
         try {
             const accessToken = await getAccessTokenSilently();
-            const stripe = await stripePromise
-            const response = await fetch('/api/create-assessment-checkout-session', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
+            const stripe = await stripePromise;
+            const response = await fetch(
+                '/api/create-assessment-checkout-session',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    body: JSON.stringify({}),
                 },
-                body: JSON.stringify({}),
-            });
+            );
 
             const session = await response.json();
             if (session.id) {
-                
-               
-                const result = await stripe.redirectToCheckout({ sessionId: session.id });
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id,
+                });
 
-    
                 if (!result.error) {
                     // If payment is successful, update the state and navigate
                     setIsAssessmentPaid(true);
                     navigate('/certification#assessment');
-            
-        } else {
-            console.error('Error redirecting to Stripe Checkout:', result.error.message);
+                } else {
+                    console.error(
+                        'Error redirecting to Stripe Checkout:',
+                        result.error.message,
+                    );
+                }
+            }
+        } catch (error) {
+            console.error('Error creating checkout session:', error);
         }
-    }
-} catch (error) {
-    console.error('Error creating checkout session:', error);
-}
-};
+    };
 
-
-    //https://buy.stripe.com/test_fZecOw4cKckM5nG3cc
-
-
-
-
-
-    console.log(progress);
+    // console.log(progress);
 
     const showFile = () => {
         console.log('file shown');
@@ -168,11 +219,9 @@ const AccordionCard = () => {
         console.log('Calling updateUserProgress with value:', 1);
     };
 
-    // console.log(progress);
-
-    if (isAuthenticated) {
-        console.log('User Data:', user);
-    }
+    // if (isAuthenticated) {
+    //     console.log('User Data:', user);
+    // }
 
     const checkAllSectionsUploaded = () => {
         const sections = [
@@ -188,6 +237,13 @@ const AccordionCard = () => {
 
         setIsUploaded(allUploaded);
     };
+
+    useEffect(() => {
+        console.log("Fetching publishable key...");
+        // Fetch the publishable key and set the stripePromise
+        
+     getPublishableKey()
+    }, [])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -220,10 +276,10 @@ const AccordionCard = () => {
         checkAllSectionsUploaded();
     }, [fileMetaData]);
 
-    console.log(fileMetaData);
-    console.log(progress);
+    // console.log(fileMetaData);
+    // console.log(progress);
 
-    console.log(isUploaded);
+    // console.log(isUploaded);
 
     const getSectionFileNames = (sectionName) => {
         const filteredFiles = fileMetaData.filter(
@@ -250,7 +306,7 @@ const AccordionCard = () => {
     const clinicalMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Clinical';
     });
-    console.log(clinicalMetaData);
+    // console.log(clinicalMetaData);
 
     const firstAidMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'FirstAid';
@@ -268,7 +324,9 @@ const AccordionCard = () => {
         return metadata.sectionName === 'Insurance';
     });
 
-    console.log(currentFileToDelete);
+    // console.log(user);
+
+    // console.log(currentFileToDelete);
 
     return (
         <div className="flex justify-start">
@@ -1374,7 +1432,7 @@ const AccordionCard = () => {
                                         Purchase the Comprehensive Study guide:
                                         $65.00 + tax.{' '}
                                     </p>
-                                    <div className="flex items-center">
+                                    <div className="flex flex-col items-center">
                                         <img
                                             src={StudyGuidePages}
                                             className="h-[50px] w-[50px]"
@@ -1386,15 +1444,34 @@ const AccordionCard = () => {
                                             <img
                                                 className="pl-[100px]"
                                                 src={GetStudyGuideBtn}
-                                                onClick={getStudyGuide}
+                                                onClick={() => {
+                                                    console.log(
+                                                        'Button clicked',
+                                                    );
+                                                    getStudyGuide();
+                                                }}
                                             />
                                         </button>
+                                        {showPayment && (
+                                            <div className='flex flex-col'>
+                                            <Payment
+                                                stripePromise={stripePromise}
+                                                showPayment={showPayment}
+                                                studyGuideAccess={
+                                                    studyGuideAccess
+                                                }
+                                                setStudyGuideAccess={
+                                                    setStudyGuideAccess
+                                                }
+                                            />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </StudyGuide>
-                    <Assessment title={'Assessment'} id='assessment'>
+                    <Assessment title={'Assessment'} id="assessment">
                         <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-xl pt-10">
                                 Complete 500 hours of relevant brain integration

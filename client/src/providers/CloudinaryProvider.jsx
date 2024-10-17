@@ -22,6 +22,8 @@ export const CloudinaryProvider = ({ children }) => {
     const [fileMetaData, setFileMetaData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
+    const [studyGuideAccess, setStudyGuideAccess] = useState(false)
+    const [email, setEmail] = useState('')
 
     const uwConfig = {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUDNAME,
@@ -34,7 +36,7 @@ export const CloudinaryProvider = ({ children }) => {
     const apiSecret = import.meta.env.VITE_CLOUDINARY_API_SECRET;
     const apiKey = import.meta.VITE_CLOUDINARY_API_KEY;
 
-    console.log(isAuthenticated);
+    // console.log(isAuthenticated);
 
     //gets file metadata
     const getFiles = async () => {
@@ -55,8 +57,6 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('Error fetching files:', error);
         }
     };
-
-    
 
     //gets files from Cloudinary via callback/cors proxy
     const getFilesInFolder = async () => {
@@ -95,6 +95,8 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
+
+
     // eslint-disable-next-line no-unused-vars
     const cld = new Cloudinary({
         cloud: {
@@ -127,7 +129,17 @@ export const CloudinaryProvider = ({ children }) => {
         };
     }, [loaded]);
 
+    useEffect(() => {
+        if (user) {
+            setEmail(user.email);
+        }
+    }, [user]);
+
+    //this whole function is being called inside getStudyGuide in accordioncard
+
     const updateUserProgress = async (newProgress) => {
+        console.log('updateUserProgress called with:', newProgress);
+        //this works
         if (user) {
             try {
                 const accessToken = await getAccessTokenSilently();
@@ -170,6 +182,51 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
+    // console.log(email)
+    // console.log(user)
+
+    const updateUserStudyGuide = async (email) => {
+        console.log('updateUserStudyGuide called')
+        if (!email) {
+            console.error("Email is required to update the study guide.");
+            return;
+        }
+    
+        try {
+            const accessToken = await getAccessTokenSilently();
+            console.log("Access Token:", accessToken);
+            console.log("Updating study guide for:", email);
+    
+            const response = await fetch(
+                `http://localhost:8080/api/user/${email}/study-guide`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    body: JSON.stringify({ studyGuideAccess: true }),
+                }
+            );
+    
+            console.log('Response Status:', response.status);
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Failed to update user study guide:', errorData);
+                throw new Error('Failed to update user study guide');
+            }
+    
+            const data = await response.json();
+            console.log('User study guide updated on the server:', data);
+            setStudyGuideAccess(true);
+        } catch (error) {
+            console.error('Error updating user study guide:', error);
+        }
+    };
+    
+      
+
     const initializeCloudinaryWidget = (section) => {
         if (user) {
             const myWidget = window.cloudinary.createUploadWidget(
@@ -185,12 +242,10 @@ export const CloudinaryProvider = ({ children }) => {
                     }
                     if (result.event === 'success') {
                         console.log('Upload successful:', result.info);
+                        const newProgress = Math.max(progress + 1, 8);
 
-                        setProgress(prevProgress => {
-                            const newProgress = (Math.min(progress + 1, 8));
-                            updateUserProgress(newProgress);
-                            return newProgress; 
-                        })
+                        setProgress(newProgress);
+                        await updateUserProgress(newProgress);
 
                         const fileMetadata = {
                             publicId: result.info.public_id,
@@ -231,11 +286,6 @@ export const CloudinaryProvider = ({ children }) => {
                                     ...prevFiles,
                                     fileMetadata,
                                 ]);
-
-                                await updateUserProgress(
-                                    user.email,
-                                    newProgress,
-                                );
                             } else {
                                 console.error(
                                     'Failed to send file metadata to the server.',
@@ -265,23 +315,23 @@ export const CloudinaryProvider = ({ children }) => {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
-                }
+                },
             );
-    
+
             if (response.ok) {
                 console.log('File and metadata deleted successfully.');
                 setFileMetaData((prevMetaData) =>
-                    prevMetaData.filter((file) => file.publicId !== publicId)
+                    prevMetaData.filter((file) => file.publicId !== publicId),
                 );
-                setDeleteModalOpen(false)
+                setDeleteModalOpen(false);
                 setFiles((prevFiles) =>
-                    prevFiles.filter((file) => file.publicId !== publicId)
+                    prevFiles.filter((file) => file.publicId !== publicId),
                 );
-                setProgress(prevProgress => {
+                setProgress((prevProgress) => {
                     const newProgress = Math.max(0, prevProgress - 1);
                     updateUserProgress(newProgress);
-                    return newProgress; 
-                })
+                    return newProgress;
+                });
             } else {
                 console.error('Failed to delete file.');
             }
@@ -289,7 +339,6 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('Error deleting file:', error);
         }
     };
-    
 
     return (
         <CloudinaryContext.Provider
@@ -314,7 +363,11 @@ export const CloudinaryProvider = ({ children }) => {
                 updateUserProgress,
                 deleteFile,
                 deleteModalOpen,
-                setDeleteModalOpen
+                setDeleteModalOpen,
+                updateUserStudyGuide,
+                studyGuideAccess,
+                setStudyGuideAccess,
+                email
             }}
         >
             {loaded && children}

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import {
     AccordionItem,
@@ -5,11 +6,9 @@ import {
     AccordionItemButton,
     AccordionItemPanel,
 } from 'react-accessible-accordion';
-import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
 import AccordionUpArrow from '../assets/icons/AccordionUpArrow.png';
 import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
-import checkedRadio from '../assets/icons/checked-radio.png'
-import UploadBtn from '../assets/icons/UploadBtn.png';
+
 import CheckedRadio from '../assets/icons/checkedRadio.png';
 
 import { useState } from 'react';
@@ -17,7 +16,7 @@ import { useState } from 'react';
 export default function Brain(props) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const {brainMetaData} = props
+    const { brainMetaData } = props;
 
     function toggleExpand() {
         setIsExpanded(!isExpanded);
@@ -40,7 +39,7 @@ export default function Brain(props) {
                         }
                     >
                         <div className="flex items-center gap-2 pl-9">
-                        {!isExpanded && brainMetaData.length === 0 ? (
+                            {!isExpanded && brainMetaData.length === 0 ? (
                                 <>
                                     <img src={AccordionRadioUnfilled} />
                                     <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">

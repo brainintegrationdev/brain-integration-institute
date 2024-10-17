@@ -1,22 +1,21 @@
 /* eslint-disable react/prop-types */
 import {
-    Accordion,
     AccordionItem,
     AccordionItemHeading,
     AccordionItemButton,
     AccordionItemPanel,
 } from 'react-accessible-accordion';
-import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
+
 import AccordionUpArrow from '../assets/icons/AccordionUpArrow.png';
 import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
 import CheckedRadio from '../assets/icons/checkedRadio.png';
 
 import { useState } from 'react';
-import { video } from '@cloudinary/url-gen/qualifiers/source';
+// import { video } from '@cloudinary/url-gen/qualifiers/source';
 
 export default function Video(props) {
     const [isExpanded, setIsExpanded] = useState(false);
-    const {videoMetaData} = props
+    const { videoMetaData } = props;
 
     function toggleExpand() {
         setIsExpanded(!isExpanded);
@@ -34,7 +33,7 @@ export default function Video(props) {
                         }
                     >
                         <div className="flex items-center gap-2 pl-9">
-                        {!isExpanded && videoMetaData.length === 0 ? (
+                            {!isExpanded && videoMetaData.length === 0 ? (
                                 <>
                                     <img src={AccordionRadioUnfilled} />
                                     <h1 className="font-fira text-xl text-black font-bold tracking-tight pl-12">

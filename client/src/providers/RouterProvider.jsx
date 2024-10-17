@@ -11,6 +11,7 @@ import { AboutUs } from "../routes/AboutUs";
 import { Certification } from "../routes/Certification";
 import { Practitioner } from "../routes/Practitioner"
 import { PaymentSuccessPage } from '../routes/PaymentSuccessPage'
+import { Payment } from '../components/Payment'
 
  
 const router = createBrowserRouter([
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: '/success',
         element: <PaymentSuccessPage />
+      },
+      {
+        path: '/payment',
+        element: <Payment />
       }
     ]
   },

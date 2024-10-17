@@ -5,29 +5,58 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const checkoutRouter = ex.Router();
 
-//study guide checkout
-checkoutRouter.post('/create-checkout-session', async (req, res) => {
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: [
-            {
-                price_data: {
-                    currency: 'usd',
-                    product_data: {
-                        name: 'Study Guide',
-                    },
-                    unit_amount: 6500,
-                },
-                quantity: 1,
-            },
-        ],
-        mode: 'payment',
-        success_url:
-            'http://localhost:5173/success?cloudinaryUrl=https://asset.cloudinary.com/dpbf9gwjq/6e850ac9df785e0d7f89593699f0ac0f',
-        cancel_url: 'http://localhost:5173/profile',
-    });
-    res.json({ id: session.id });
+//route to get stripe publishable key
+checkoutRouter.get('/publishable-key', (req, res) => {
+    try {
+        res.json({ publishableKey: process.env.STRIPE_PUBLISHABLE_KEY });
+    } catch (error) {
+        console.error("Error fetching publishable key:", error);
+        res.status(500).send("Server error");
+    }
 });
+
+checkoutRouter.post('/secret', async (req, res) => {
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: 6500,
+        currency: 'usd',
+        payment_method_types: ['card'],
+    });
+    res.json({ clientSecret: paymentIntent.client_secret });
+});
+
+//study guide checkout
+checkoutRouter.post('/create-payment-intent', async (req, res) => {
+    try {
+        const paymentIntent = await stripe.paymentIntents.create({
+            currency: 'usd',
+
+            amount: 6500,
+            automatic_payment_methods: {
+                enabled: true,
+            },
+        });
+
+        res.send({ clientSecret: paymentIntent.client_secret });
+    } catch (e) {
+        return res.status(400).send({
+            error: {
+                message: e.message,
+            },
+        });
+    }
+});
+
+// checkoutRouter.post('/webhook', express.json(), async (req, res) => {
+//     const event = req.body;
+//     if (event.type === 'checkout.session.completed') {
+//         const session = event.data.object;
+//         const email = session.customer_email;
+
+//         res.status(200).send('Webhook received!');
+//     } else {
+//         res.status(400).end();
+//     }
+// });
 
 checkoutRouter.post('/create-assessment-checkout-session', async (req, res) => {
     const session = await stripe.checkout.sessions.create({

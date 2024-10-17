@@ -20,7 +20,7 @@ export const Navbar = () => {
         console.log("logged out")
     };
 
-    console.log(isAuthenticated)
+    // console.log(isAuthenticated)
 
     const links = isAuthenticated ? (
         <div className='flex font-libre text-dark-gray items-center text-center text-base justify-center gap-10 pl-[356px]'>

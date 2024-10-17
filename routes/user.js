@@ -9,7 +9,6 @@ const { UserModel } = require('../models/User');
 
 const userRouter = ex.Router();
 
-
 //route which creates user metadata post request on first sign in by new user
 userRouter.post('/createuser', async (req, res) => {
     const { userEmail, userName, userProfilePicture } = req.body;
@@ -23,7 +22,6 @@ userRouter.post('/createuser', async (req, res) => {
                 userName,
                 userProfilePicture: userProfilePicture || '',
                 userUploadProgress: 0,
-            
             });
 
             await userMetaData.save();
@@ -35,7 +33,7 @@ userRouter.post('/createuser', async (req, res) => {
 
         return res
             .status(200)
-            .json({ message: 'User metadata exists', userMetaData });
+            .json({ userMetaData });
     } catch (error) {
         console.error('Error checking or creating user metadata:', error);
         return res.status(500).json({ error: 'Server error' });
@@ -60,9 +58,9 @@ userRouter.get('/:email', async (req, res) => {
 // Route to update user progress
 userRouter.put('/:email/progress', async (req, res) => {
     const { userUploadProgress } = req.body;
-    const { email } = req.params; // Extracting email from request parameters
+    const { email } = req.params;
     console.log('Request body:', req.body);
-    console.log('Email to find:', email); // Log the email being searched
+    console.log('Email to find:', email);
 
     if (
         userUploadProgress === undefined ||
@@ -76,7 +74,7 @@ userRouter.put('/:email/progress', async (req, res) => {
     try {
         const user = await UserModel.findOneAndUpdate(
             { userEmail: email }, // Updated to match the correct field name
-            {  userUploadProgress  }, // Increment the userUploadProgress field
+            { userUploadProgress }, // Increment the userUploadProgress field
             { new: true, runValidators: true },
         );
 
@@ -88,7 +86,32 @@ userRouter.put('/:email/progress', async (req, res) => {
 
         res.json(user);
     } catch (error) {
-        console.error('Error updating user:', error); // Log error details
+        console.error('Error updating user:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+//create put route to update user study guide status
+userRouter.put('/:email/study-guide', async (req, res) => {
+    const { studyGuideAccess } = req.body;
+    const { email } = req.params;
+    if (typeof studyGuideAccess !== 'boolean') {
+        return res.status(400).json({
+            error: 'studyGuideAccess is required and must be a boolean',
+        });
+    }
+    try {
+        const user = await UserModel.findOneAndUpdate(
+            { userEmail: email },
+            { studyGuideAccess },
+            { new: true, runValidators: true },
+        );
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.json(user);
+    } catch (error) {
+        console.error('Error updating study guide access:', error);
         res.status(500).json({ error: error.message });
     }
 });

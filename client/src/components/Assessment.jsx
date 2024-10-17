@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
 import {
-    Accordion,
     AccordionItem,
     AccordionItemHeading,
     AccordionItemButton,
     AccordionItemPanel,
 } from 'react-accessible-accordion';
-import AccordionDropDown from '../assets/icons/AccordionDropdown.png';
+
 import AccordionUpArrow from '../assets/icons/AccordionUpArrow.png';
 import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
 import { useState, useEffect } from 'react';
@@ -23,10 +22,10 @@ function Assessment(props) {
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
         const shouldExpand = urlParams.get('expand') === 'true';
-    
+
         if (location.hash === '#assessment' && shouldExpand) {
             setIsExpanded(true);
-    
+
             // Delay the scrolling slightly to ensure the DOM is fully updated
             setTimeout(() => {
                 const assessmentElement = document.getElementById('assessment');
@@ -36,15 +35,14 @@ function Assessment(props) {
             }, 100); // 100ms delay
         }
     }, [location]);
-    
 
-    console.log(isExpanded)
+    // console.log(isExpanded);
     return (
         <AccordionItem>
             <AccordionItemHeading>
                 <AccordionItemButton>
                     <div
-                    id="assessment"
+                        id="assessment"
                         onClick={toggleExpand}
                         className={
                             isExpanded

@@ -3,6 +3,7 @@ const { fileRouter } = require('./file');
 const { documentRouter } = require('./document');
 const { userRouter } = require('./user');
 const { checkoutRouter } = require('./checkout');
+const signedUrlRouter = require('./signedUrl');
 // const { exampleRouter } = require('./example');
 
 
@@ -13,6 +14,8 @@ apiRouter.use('/files/:user', fileRouter);
 apiRouter.use('/images', documentRouter)
 apiRouter.use('/user', userRouter)
 apiRouter.use('/', checkoutRouter)
+apiRouter.use('/', signedUrlRouter)
+
 
 
 
