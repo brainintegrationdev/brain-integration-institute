@@ -27,7 +27,9 @@ import Video from './Video';
 import StudyGuide from './StudyGuide';
 import DeleteModal from './DeleteModal';
 import DeleteTooltip from './DeleteTooltip';
+import AssessmentPayment from './AssessmentPayment.jsx';
 import DeleteFileIcon from '../assets/icons/DeleteFileIcon.png';
+import { PaymentSuccessPage } from '../routes/PaymentSuccessPage.jsx';
 
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -78,6 +80,7 @@ const AccordionCard = () => {
     const [isUploaded, setIsUploaded] = useState(false);
     const [isAssessmentPaid, setIsAssessmentPaid] = useState(false);
     const [showPayment, setShowPayment] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
     const certProgressImages = [
@@ -97,6 +100,15 @@ const AccordionCard = () => {
     // console.log(stripePromise);
 
     //will need to add put request to user metadata route to change studyGuideAccess to true, just saving in state for now
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
+
+    const redirectToAssessment = () => {
+        window.open('https://forms.gle/uL6ySYPDuwuXQj487', '_blank');
+    };
+
     const getStudyGuide = async () => {
         console.log('getStudyGuide function invoked');
         try {
@@ -121,7 +133,6 @@ const AccordionCard = () => {
                 );
                 //this part still works
                 setShowPayment(true);
-                
 
                 try {
                     await updateUserProgress(progress + 1);
@@ -150,31 +161,32 @@ const AccordionCard = () => {
         const accessToken = await getAccessTokenSilently();
         fetch('/api/publishable-key', {
             method: 'GET',
-            cache: 'no-store', 
+            cache: 'no-store',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${accessToken}`,
             },
         })
-        .then(async (response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const { publishableKey } = await response.json();
-            setStripePromise(loadStripe(publishableKey));
-            console.log("Stripe promise set successfully");
-        })
-        .catch((error) => {
-            console.error("Error fetching publishable key:", error);
-        });
-    }
+            .then(async (response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const { publishableKey } = await response.json();
+                setStripePromise(loadStripe(publishableKey));
+                console.log('Stripe promise set successfully');
+            })
+            .catch((error) => {
+                console.error('Error fetching publishable key:', error);
+            });
+    };
 
     const getAssessment = async () => {
+        console.log('assessment button clicked');
         try {
             const accessToken = await getAccessTokenSilently();
             const stripe = await stripePromise;
             const response = await fetch(
-                '/api/create-assessment-checkout-session',
+                '/api/create-assessment-payment-intent',
                 {
                     method: 'POST',
                     headers: {
@@ -186,20 +198,28 @@ const AccordionCard = () => {
             );
 
             const session = await response.json();
-            if (session.id) {
-                const result = await stripe.redirectToCheckout({
-                    sessionId: session.id,
-                });
+            if (session.clientSecret) {
+                console.log(
+                    'Payment intent created successfully',
+                    session.clientSecret,
+                );
+                setShowPayment(true);
+                setShowModal(true);
 
-                if (!result.error) {
-                    // If payment is successful, update the state and navigate
-                    setIsAssessmentPaid(true);
-                    navigate('/certification#assessment');
-                } else {
-                    console.error(
-                        'Error redirecting to Stripe Checkout:',
-                        result.error.message,
-                    );
+                try {
+                    await updateUserProgress(progress + 1);
+                    console.log('User progress update');
+                    setProgress((prevProgress) => {
+                        const newProgress = Math.min(prevProgress + 1, 8);
+                        console.log(
+                            'Progress successfully updated:',
+                            newProgress,
+                        );
+
+                        return newProgress;
+                    });
+                } catch (error) {
+                    console.error('Error updating user progress:', error);
                 }
             }
         } catch (error) {
@@ -239,11 +259,11 @@ const AccordionCard = () => {
     };
 
     useEffect(() => {
-        console.log("Fetching publishable key...");
+        console.log('Fetching publishable key...');
         // Fetch the publishable key and set the stripePromise
-        
-     getPublishableKey()
-    }, [])
+
+        getPublishableKey();
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -1453,18 +1473,19 @@ const AccordionCard = () => {
                                             />
                                         </button>
                                         {showPayment && (
-                                            <div className='flex flex-col'>
-                                            <Payment
-                                                stripePromise={stripePromise}
-                                                showPayment={showPayment}
-                                                studyGuideAccess={
-                                                    studyGuideAccess
-                                                }
-                                                setStudyGuideAccess={
-                                                    setStudyGuideAccess
-                                                }
-                                            />
-                                            
+                                            <div className="flex flex-col">
+                                                <Payment
+                                                    stripePromise={
+                                                        stripePromise
+                                                    }
+                                                    showPayment={showPayment}
+                                                    studyGuideAccess={
+                                                        studyGuideAccess
+                                                    }
+                                                    setStudyGuideAccess={
+                                                        setStudyGuideAccess
+                                                    }
+                                                />
                                             </div>
                                         )}
                                     </div>
@@ -1567,6 +1588,15 @@ const AccordionCard = () => {
                                         }
                                     />
                                 </button>
+                                {showPayment && (
+                                    <div className="flex flex-col">
+                                        <AssessmentPayment
+                                            stripePromise={stripePromise}
+                                            showPayment={showPayment}
+                                        />
+                                    </div>
+                                )}
+                               
                             </div>
                         </div>
                     </Assessment>

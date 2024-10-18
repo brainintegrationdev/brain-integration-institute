@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import CheckoutForm from './CheckoutForm';
+import AssessmentCheckoutForm from './AssessmentCheckoutForm';
 import { useAuth0 } from '@auth0/auth0-react';
 
-export const Payment = ({stripePromise, showPayment, studyGuideAccess, setStudyGuideAccess}) => {
+export const AssessmentPayment = ({stripePromise, showPayment, }) => {
 
     const [clientSecret, setClientSecret] = useState('');
     const {  getAccessTokenSilently } = useAuth0();
@@ -13,7 +13,7 @@ export const Payment = ({stripePromise, showPayment, studyGuideAccess, setStudyG
 
     console.log(clientSecret);
     console.log(stripePromise);
-    console.log(studyGuideAccess)
+
 
 
 
@@ -21,15 +21,15 @@ export const Payment = ({stripePromise, showPayment, studyGuideAccess, setStudyG
 
     useEffect(() => {
         if (showPayment) {
-         createPaymentIntent()
+         createAssessmentPaymentIntent()
         }
     }, [showPayment]);
 
 
-    const createPaymentIntent = async () => {
+    const createAssessmentPaymentIntent = async () => {
         const accessToken = await getAccessTokenSilently();
         console.log(accessToken)
-        fetch('/api/create-payment-intent', {
+        fetch('/api/create-assessment-payment-intent', {
             method: 'POST',
             headers: {
                             'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ export const Payment = ({stripePromise, showPayment, studyGuideAccess, setStudyG
                 <div className='flex flex-col'>
                 <Elements stripe={stripePromise} options={{ clientSecret }} >
                     
-                    <CheckoutForm setStudyGuideAccess={setStudyGuideAccess} studyGuideAccess={studyGuideAccess}/>
+                    <AssessmentCheckoutForm/>
                 </Elements>
                 </div>
             )}
@@ -62,4 +62,4 @@ export const Payment = ({stripePromise, showPayment, studyGuideAccess, setStudyG
     );
 };
 
-export default Payment;
+export default AssessmentPayment;

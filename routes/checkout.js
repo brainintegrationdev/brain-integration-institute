@@ -10,8 +10,8 @@ checkoutRouter.get('/publishable-key', (req, res) => {
     try {
         res.json({ publishableKey: process.env.STRIPE_PUBLISHABLE_KEY });
     } catch (error) {
-        console.error("Error fetching publishable key:", error);
-        res.status(500).send("Server error");
+        console.error('Error fetching publishable key:', error);
+        res.status(500).send('Server error');
     }
 });
 
@@ -31,6 +31,28 @@ checkoutRouter.post('/create-payment-intent', async (req, res) => {
             currency: 'usd',
 
             amount: 6500,
+            automatic_payment_methods: {
+                enabled: true,
+            },
+        });
+
+        res.send({ clientSecret: paymentIntent.client_secret });
+    } catch (e) {
+        return res.status(400).send({
+            error: {
+                message: e.message,
+            },
+        });
+    }
+});
+
+//assessment checkout
+checkoutRouter.post('/create-assessment-payment-intent', async (req, res) => {
+    try {
+        const paymentIntent = await stripe.paymentIntents.create({
+            currency: 'usd',
+
+            amount: 25000,
             automatic_payment_methods: {
                 enabled: true,
             },
@@ -75,7 +97,7 @@ checkoutRouter.post('/create-assessment-checkout-session', async (req, res) => {
         ],
         mode: 'payment',
         success_url:
-            'http://localhost:5173/success?assessmentUrl=https://example.com/',
+            'http://localhost:5173/success?assessmentUrl=https://docs.google.com/forms/d/e/1FAIpQLSfdUfQkg5ExRPk8vuhKHCZFQmyZw6WhN3JOVfjDJWROId_JaA/viewform?usp=sf_link',
         cancel_url: 'http://localhost:5173/profile',
     });
     res.json({ id: session.id });

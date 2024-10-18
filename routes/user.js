@@ -116,6 +116,13 @@ userRouter.put('/:email/study-guide', async (req, res) => {
     }
 });
 
+//create put route for assessment access
+
+//assessmentAccess will toggle to true
+//once admin has approved all uploaded files.  
+//right now the only thing preventing them from getting the assessment is payment
+//but this will be changed once the admin approval flow is built out
+
 module.exports = userRouter;
 
 module.exports = {
