@@ -8,6 +8,7 @@ export const Payment = ({stripePromise, showPayment, studyGuideAccess, setStudyG
 
     const [clientSecret, setClientSecret] = useState('');
     const {  getAccessTokenSilently } = useAuth0();
+    const [paymentModalOpen, setPaymentModalOpen] = useState(false);
     // const [stripePromise, setStripePromise] = useState(null);
     // const [clientSecret, setClientSecret] = useState('');
 

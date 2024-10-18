@@ -509,9 +509,9 @@ const AccordionCard = () => {
                                                         undone.
                                                     </p>
                                                 </div>
-                                                <div className="flex flex-col gap-10">
+                                                <div className="flex gap-10">
                                                     <button
-                                                        className="bg-light-gray w-full py-2 rounded text-white"
+                                                        className="bg-light-gray w-[100px]  py-2 rounded text-white"
                                                         onClick={() =>
                                                             setDeleteModalOpen(
                                                                 false,
@@ -521,7 +521,7 @@ const AccordionCard = () => {
                                                         Cancel
                                                     </button>
                                                     <button
-                                                        className="bg-red w-full py-2 rounded text-white"
+                                                        className="bg-red w-[100px] py-2 rounded text-white"
                                                         onClick={() => {
                                                             const publicId =
                                                                 getPublicId(
@@ -943,7 +943,7 @@ const AccordionCard = () => {
                                             </div>
                                             <div className="flex flex-col gap-10">
                                                 <button
-                                                    className="bg-light-gray w-full py-2 rounded text-white"
+                                                    className="bg-light-gray h-[30px] py-2 rounded text-white"
                                                     onClick={() =>
                                                         setDeleteModalOpen(
                                                             false,
@@ -1464,6 +1464,7 @@ const AccordionCard = () => {
                                                     setStudyGuideAccess
                                                 }
                                             />
+                                            
                                             </div>
                                         )}
                                     </div>

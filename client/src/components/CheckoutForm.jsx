@@ -1,15 +1,17 @@
 import { PaymentElement } from '@stripe/react-stripe-js';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
 import { CloudinaryContext } from '../contexts';
+import PoweredbyStripe from '../assets/icons/PoweredbyStripe.png'
 
-export default function CheckoutForm() {
+export default function CheckoutForm({ open, onClose, children }) {
     const stripe = useStripe();
     const elements = useElements();
 
     const [message, setMessage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const { updateUserStudyGuide, email } = useContext(CloudinaryContext);
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,24 +26,11 @@ export default function CheckoutForm() {
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                // Make sure to change this to your payment completion page
+               
                 return_url: `${window.location.origin}/success?studyGuideAccess=true`,
             },
         });
-        // setIsProcessing(false);
-
-        // if (error) {
-        //     if (error.type === 'card_error' || error.type === 'validation_error') {
-        //         setMessage(error.message);
-        //     } else {
-        //         setMessage('An unexpected error occurred.');
-        //     }
-        // } else {
-        //     // Payment succeeded
-        //   console.log('completed')
-        //     // Call the update function here
-        // }
-
+       
         if (error) {
             setMessage(error.message);
             setIsProcessing(false);
@@ -50,25 +39,30 @@ export default function CheckoutForm() {
     };
 
     return (
-        <div className="flex flex-col gap-10 items-center border border-black rounded-lg p-10 text-center">
+        <div className="flex flex-col gap-10 items-center border border-black rounded-lg shadow-lg p-10 text-center justify-center">
             <form id="payment-form" onSubmit={handleSubmit}>
-                <h1>Brain Integration Study Guide</h1>
-                <h2> $65.00 USD plus tax</h2>
+                <p className='text-xl font-semibold'>Brain Integration Study Guide</p>
                 <br></br>
-                <h1>Powered by Stripe</h1>
+                {/* <h2> $65.00 USD plus tax</h2> */}
                 <br></br>
-                <div className='flex flex-col gap-10'>
+            
+                <br></br>
+                <div className='flex flex-col gap-10 items-center'>
+                    
                     <PaymentElement id="payment-element" />
-
+                    <p className='font-bold text-xl'>Total: $65.00</p>
                     <button
                         disabled={isProcessing || !stripe || !elements}
                         id="submit"
-                        className="btn bg-dark-green rounded-lg text-white"
+                        className="btn bg-dark-green rounded-3xl text-white h-12 w-48"
                     >
                         <span id="button-text">
                             {isProcessing ? 'Processing ... ' : 'Pay now'}
                         </span>
+                        
                     </button>
+                  
+                    <img src={PoweredbyStripe} className='h-[35px]'/>
                 </div>
                 {/* Show any error or success messages */}
                 {message && <div id="payment-message">{message}</div>}
