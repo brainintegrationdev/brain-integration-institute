@@ -138,7 +138,7 @@ export const PaymentSuccessPage = ({ setStudyGuideAccess }) => {
                 },
                 body: JSON.stringify({
                     userEmail: `${email}`,
-                    publicId: 'BII_study_guide_demo_rnrrbv',
+                    publicId: 'BII_study_guide_demo_2_zg7zlv',
                     format: 'pdf',
                 }),
             });
