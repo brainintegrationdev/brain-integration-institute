@@ -52,6 +52,8 @@ export const Profile = withAuthenticationRequired((props) => {
         },
     });
 
+    console.log(user)
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         console.log(name, value);
