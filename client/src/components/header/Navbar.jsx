@@ -1,10 +1,16 @@
+import { useContext, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
 import BrainIntegrationSeal from '../../assets/icons/BrainIntegrationSeal.png';
 import bell from '../../assets/icons/bell.png'
+import { CloudinaryContext } from '../../contexts';
+
 
 export const Navbar = () => {
     const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+    const { profilePictureUrl, imageUrl } = useContext(CloudinaryContext);
+
+    console.log(profilePictureUrl)
 
     const handleLogin = () =>
         loginWithRedirect({
@@ -20,6 +26,15 @@ export const Navbar = () => {
         console.log("logged out")
     };
 
+    
+    const { getUserMetaData, userMetaData } = useContext(CloudinaryContext);
+
+    useEffect(() => {
+        if (user?.email) {
+            getUserMetaData(user.email); 
+        }
+    }, [ ]);
+
     // console.log(isAuthenticated)
 
     const links = isAuthenticated ? (
@@ -34,7 +49,7 @@ export const Navbar = () => {
                         <img className="pl-[90px]" src={bell} />
                         <img
                             className="h-[32px] w-[32px] ml-4 rounded-full"
-                            src={user.picture}
+                            src={imageUrl } // Use profilePictureUrl if available, fallback to user.picture
                             alt="avatar"
                             
                         />

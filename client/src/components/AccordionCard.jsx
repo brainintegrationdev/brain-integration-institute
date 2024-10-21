@@ -29,6 +29,7 @@ import DeleteModal from './DeleteModal';
 import DeleteTooltip from './DeleteTooltip';
 import AssessmentPayment from './AssessmentPayment.jsx';
 import DeleteFileIcon from '../assets/icons/DeleteFileIcon.png';
+import ProfilePhotoUpload from './ProfilePhotoUpload.jsx'
 import { PaymentSuccessPage } from '../routes/PaymentSuccessPage.jsx';
 
 import { useAuth0 } from '@auth0/auth0-react';
@@ -38,7 +39,7 @@ import e from 'cors';
 import { CloudinaryContext } from '../contexts';
 import Payment from './Payment.jsx';
 
-const AccordionCard = () => {
+const AccordionCard = (props) => {
     // eslint-disable-next-line no-unused-vars
     const {
         uwConfig,
@@ -290,7 +291,13 @@ const AccordionCard = () => {
         };
 
         fetchData();
-    }, [user, progress]);
+    }, [user]);
+
+    useEffect(() => {
+        if (userMetaData) {
+            setProgress(userMetaData.userUploadProgress); // Set progress based on user metadata
+        }
+    }, [userMetaData]); 
 
     useEffect(() => {
         checkAllSectionsUploaded();
@@ -349,21 +356,10 @@ const AccordionCard = () => {
     // console.log(currentFileToDelete);
 
     return (
-        <div className="flex justify-start">
-            {isAuthenticated && (
-                <div className="relative">
-                    <img
-                        className="h-[200px] w-[200px] ml-20 mr-[80px] rounded-full"
-                        src={user.picture}
-                        alt="avatar"
-                    />
-                    <img
-                        className="h-[40px] w-[40px] absolute  bottom-30 right-10"
-                        src={ProfileEditIcon}
-                        alt="Edit Icon"
-                    />
-                </div>
-            )}
+    <div>
+                <ProfilePhotoUpload userMetaData={userMetaData}  setUserMetaData={setUserMetaData}/>
+                
+            
 
             <div className="flex flex-col justify-center gap-4  w-[832px] pl-10 ">
                 <p className="font-fira text-xl font-light pt-20 pb-10 pl-5">
@@ -1596,13 +1592,13 @@ const AccordionCard = () => {
                                         />
                                     </div>
                                 )}
-                               
                             </div>
                         </div>
                     </Assessment>
                 </Accordion>
             </div>
         </div>
+      
     );
 };
 

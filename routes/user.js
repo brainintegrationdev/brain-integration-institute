@@ -31,9 +31,7 @@ userRouter.post('/createuser', async (req, res) => {
                 .json({ message: 'User metadata created', userMetaData });
         }
 
-        return res
-            .status(200)
-            .json({ userMetaData });
+        return res.status(200).json({ userMetaData });
     } catch (error) {
         console.error('Error checking or creating user metadata:', error);
         return res.status(500).json({ error: 'Server error' });
@@ -91,6 +89,32 @@ userRouter.put('/:email/progress', async (req, res) => {
     }
 });
 
+//create put route to update user profile pic status
+
+userRouter.put('/:email/profile-picture', async (req, res) => {
+    const { userProfilePicture } = req.body;
+    const { email } = req.params;
+    if (typeof userProfilePicture !== 'string') {
+        return res.status(400).json({
+            error: 'userProfilePicture must be a string',
+        });
+    }
+    try {
+        const user = await UserModel.findOneAndUpdate(
+            { userEmail: email },
+            { userProfilePicture },
+            { new: true, runValidators: true },
+        );
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.json(user);
+    } catch (error) {
+        console.error('Error updating user profile picture:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 //create put route to update user study guide status
 userRouter.put('/:email/study-guide', async (req, res) => {
     const { studyGuideAccess } = req.body;
@@ -119,7 +143,7 @@ userRouter.put('/:email/study-guide', async (req, res) => {
 //create put route for assessment access
 
 //assessmentAccess will toggle to true
-//once admin has approved all uploaded files.  
+//once admin has approved all uploaded files.
 //right now the only thing preventing them from getting the assessment is payment
 //but this will be changed once the admin approval flow is built out
 

@@ -22,8 +22,20 @@ export const CloudinaryProvider = ({ children }) => {
     const [fileMetaData, setFileMetaData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
-    const [studyGuideAccess, setStudyGuideAccess] = useState(false)
-    const [email, setEmail] = useState('')
+    const [studyGuideAccess, setStudyGuideAccess] = useState(false);
+    const [email, setEmail] = useState('');
+    const [userMetaData, setUserMetaData] = useState({});
+
+    const [uploading, setUploading] = useState(false);
+    const [uploadError, setUploadError] = useState(null);
+    const [imageUrl, setImageUrl] = useState(user?.userProfilePicture || '');
+    const [profilePhotoUploaded, setProfilePhotoUploaded] = useState(false)
+
+    const handleProfileUpload = () => {
+        console.log('photo uploaded!');
+    };
+
+
 
     const uwConfig = {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUDNAME,
@@ -89,13 +101,17 @@ export const CloudinaryProvider = ({ children }) => {
                     },
                 },
             );
-            return response.data;
+            const metaData = response.data;
+
+            // Update state with the fetched metadata
+            setUserMetaData(metaData);
+            setImageUrl(metaData.userProfilePicture); 
+
+            return metaData;
         } catch (error) {
             console.error('Error fetching user metadata:', error);
         }
     };
-
-
 
     // eslint-disable-next-line no-unused-vars
     const cld = new Cloudinary({
@@ -186,17 +202,17 @@ export const CloudinaryProvider = ({ children }) => {
     // console.log(user)
 
     const updateUserStudyGuide = async (email) => {
-        console.log('updateUserStudyGuide called')
+        console.log('updateUserStudyGuide called');
         if (!email) {
-            console.error("Email is required to update the study guide.");
+            console.error('Email is required to update the study guide.');
             return;
         }
-    
+
         try {
             const accessToken = await getAccessTokenSilently();
-            console.log("Access Token:", accessToken);
-            console.log("Updating study guide for:", email);
-    
+            console.log('Access Token:', accessToken);
+            console.log('Updating study guide for:', email);
+
             const response = await fetch(
                 `http://localhost:8080/api/user/${email}/study-guide`,
                 {
@@ -206,17 +222,17 @@ export const CloudinaryProvider = ({ children }) => {
                         Authorization: `Bearer ${accessToken}`,
                     },
                     body: JSON.stringify({ studyGuideAccess: true }),
-                }
+                },
             );
-    
+
             console.log('Response Status:', response.status);
-    
+
             if (!response.ok) {
                 const errorData = await response.json();
                 console.error('Failed to update user study guide:', errorData);
                 throw new Error('Failed to update user study guide');
             }
-    
+
             const data = await response.json();
             console.log('User study guide updated on the server:', data);
             setStudyGuideAccess(true);
@@ -224,8 +240,6 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('Error updating user study guide:', error);
         }
     };
-    
-      
 
     const initializeCloudinaryWidget = (section) => {
         if (user) {
@@ -305,6 +319,69 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
+    const uploadProfilePicture = (file) => {
+        if (user) {
+            const myWidget = window.cloudinary.createUploadWidget(
+                {
+                    cloudName: uwConfig.cloudName,
+                    uploadPreset: uwConfig.uploadPreset,
+                    asset_folder: `users/${user.nickname}`,
+                },
+                async (error, result) => {
+                    if (error) {
+                        console.error('Upload error:', error);
+                        return;
+                    }
+                    if (result.event === 'success') {
+                        console.log('Upload successful:', result.info);
+                        
+                        const userMetaData = {
+                            userProfilePicture: result.info.secure_url
+                        };
+    
+                        // Update state with new profile picture URL
+                        setImageUrl(result.info.secure_url);
+                        setProfilePhotoUploaded(true);
+    
+                        // Send metadata to the server
+                        try {
+                            const accessToken = await getAccessTokenSilently();
+                            const response = await fetch(
+                                `http://localhost:8080/api/user/${user.email}/profile-picture`,
+                                {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        Authorization: `Bearer ${accessToken}`,
+                                    },
+                                    body: JSON.stringify(userMetaData),
+                                }
+                            );
+    
+                            if (response.ok) {
+                                console.log('User metadata successfully sent to the server.');
+                            } else {
+                                console.error('Failed to send user metadata to the server.');
+                            }
+                        } catch (error) {
+                            console.error('Error sending user metadata:', error);
+                        } finally {
+                            // Close the widget after processing
+                            myWidget.close();
+                        }
+                    }
+                }
+            );
+    
+            myWidget.open();
+        }
+    };
+    
+
+    
+    
+
+    //delete certification file
     const deleteFile = async (publicId) => {
         try {
             const accessToken = await getAccessTokenSilently();
@@ -367,7 +444,13 @@ export const CloudinaryProvider = ({ children }) => {
                 updateUserStudyGuide,
                 studyGuideAccess,
                 setStudyGuideAccess,
-                email
+                email,
+                uploadProfilePicture,
+                profilePhotoUploaded,
+                setProfilePhotoUploaded,
+                imageUrl,
+                userMetaData,
+                setUserMetaData
             }}
         >
             {loaded && children}

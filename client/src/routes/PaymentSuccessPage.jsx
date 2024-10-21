@@ -110,13 +110,15 @@ export const PaymentSuccessPage = ({ setStudyGuideAccess }) => {
     const cloudinaryUrl = queryParams.get('cloudinaryUrl');
     const assessmentUrl = queryParams.get('assessmentUrl');
     const { email } = useContext(CloudinaryContext);
-    const { getAccessTokenSilently } = useAuth0();
+    const { getAccessTokenSilently, user } = useAuth0();
 
     console.log(showModal);
     console.log(studyGuideAccess);
+    console.log(user)
+    console.log(email)
 
     useEffect(() => {
-        if (open) {
+        if (showModal) {
             document.body.classList.add('overflow-hidden');
         } else {
             document.body.classList.remove('overflow-hidden');
@@ -125,9 +127,14 @@ export const PaymentSuccessPage = ({ setStudyGuideAccess }) => {
         return () => {
             document.body.classList.remove('overflow-hidden');
         };
-    }, [open]);
+    }, [showModal]);
 
     const redirectToStudyGuide = async () => {
+        if (!email) {
+            console.error('Email not found in CloudinaryContext');
+            return;
+        }
+    
         try {
             const accessToken = await getAccessTokenSilently();
             const response = await fetch('/api/get-signed-url', {
@@ -137,22 +144,23 @@ export const PaymentSuccessPage = ({ setStudyGuideAccess }) => {
                     Authorization: `Bearer ${accessToken}`,
                 },
                 body: JSON.stringify({
-                    userEmail: `${email}`,
+                    userEmail: email,
                     publicId: 'BII_study_guide_demo_2_zg7zlv',
                     format: 'pdf',
                 }),
             });
-
+    
             if (!response.ok) {
                 throw new Error('Failed to get the signed URL');
             }
-
+    
             const { signedUrl } = await response.json();
             window.open(signedUrl, '_blank');
         } catch (err) {
             console.error('Error fetching the signed URL:', err);
         }
     };
+    
 
     console.log(cloudinaryUrl);
 
@@ -192,7 +200,7 @@ export const PaymentSuccessPage = ({ setStudyGuideAccess }) => {
                             ) : (
                                 <button
                                     onClick={redirectToAssessment}
-                                    className="block w-full px-4 py-2 text-white bg-green-600  rounded hover:bg-blue-700 mb-4"
+                                    className="block w-full px-4 py-2 text-white bg-dark-green  rounded-3xl hover:bg-blue-700 mb-4"
                                 >
                                     Take the Assessment
                                 </button>
