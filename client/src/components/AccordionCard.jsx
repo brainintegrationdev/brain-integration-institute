@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
@@ -15,7 +15,6 @@ import ProgressBar7 from '../assets/icons/ProgressBar7.png';
 import ProgressBar8 from '../assets/icons/ProgressBar8.png';
 import StudyGuidePages from '../assets/icons/StudyGuidePages.png';
 import PayforandStart from '../assets/icons/PayforandStart.png';
-import ProfileEditIcon from '../assets/icons/profileEditIcon.png';
 
 import Assessment from './Assessment';
 import Insurance from './Insurance';
@@ -29,8 +28,8 @@ import DeleteModal from './DeleteModal';
 import DeleteTooltip from './DeleteTooltip';
 import AssessmentPayment from './AssessmentPayment.jsx';
 import DeleteFileIcon from '../assets/icons/DeleteFileIcon.png';
-import ProfilePhotoUpload from './ProfilePhotoUpload.jsx'
-import { PaymentSuccessPage } from '../routes/PaymentSuccessPage.jsx';
+import ProfilePhotoUpload from './ProfilePhotoUpload.jsx';
+
 
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -73,16 +72,16 @@ const AccordionCard = (props) => {
     const [sectionName, setSectionName] = useState('');
     // const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [userMetaData, setUserMetaData] = useState({});
+    const [userMetaData, setUserMetaData] = useState({}); // move this to context
     const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
     const [stripePromise, setStripePromise] = useState(null);
 
     //checks to see if every section has an uploaded file, if so returns true
     const [isUploaded, setIsUploaded] = useState(false);
-    const [isAssessmentPaid, setIsAssessmentPaid] = useState(false);
+
     const [showPayment, setShowPayment] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const certProgressImages = [
         ProgressBar0,
@@ -102,13 +101,13 @@ const AccordionCard = (props) => {
 
     //will need to add put request to user metadata route to change studyGuideAccess to true, just saving in state for now
 
-    const closeModal = () => {
-        setShowModal(false);
-    };
+    // const closeModal = () => {
+    //     setShowModal(false);
+    // };
 
-    const redirectToAssessment = () => {
-        window.open('https://forms.gle/uL6ySYPDuwuXQj487', '_blank');
-    };
+    // const redirectToAssessment = () => {
+    //     window.open('https://forms.gle/uL6ySYPDuwuXQj487', '_blank');
+    // };
 
     const getStudyGuide = async () => {
         console.log('getStudyGuide function invoked');
@@ -274,10 +273,6 @@ const AccordionCard = (props) => {
                     const folderFiles = await getFilesInFolder(token); //docs themselves
                     const metadataFiles = await getFiles(token); //metadata
                     const userMetaData = await getUserMetaData(token);
-
-                    // console.log('Files in folder:', folderFiles);
-                    // console.log('File metadata:', metadataFiles);
-                    // console.log('User metadata', userMetaData);
                     setFileMetaData(metadataFiles);
                     setUserMetaData(userMetaData);
                     setProgress(userMetaData.userUploadProgress);
@@ -293,20 +288,18 @@ const AccordionCard = (props) => {
         fetchData();
     }, [user]);
 
-    useEffect(() => {
-        if (userMetaData) {
-            setProgress(userMetaData.userUploadProgress); // Set progress based on user metadata
-        }
-    }, [userMetaData]); 
+    // useEffect(() => {
+    //     if (userMetaData) {
+    //         setProgress(userMetaData.userUploadProgress);
+    //     }
+    // }, [userMetaData]);
+
+    console.log(userMetaData);
 
     useEffect(() => {
         checkAllSectionsUploaded();
     }, [fileMetaData]);
 
-    // console.log(fileMetaData);
-    // console.log(progress);
-
-    // console.log(isUploaded);
 
     const getSectionFileNames = (sectionName) => {
         const filteredFiles = fileMetaData.filter(
@@ -333,7 +326,7 @@ const AccordionCard = (props) => {
     const clinicalMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Clinical';
     });
-    // console.log(clinicalMetaData);
+   
 
     const firstAidMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'FirstAid';
@@ -356,10 +349,11 @@ const AccordionCard = (props) => {
     // console.log(currentFileToDelete);
 
     return (
-    <div>
-                <ProfilePhotoUpload userMetaData={userMetaData}  setUserMetaData={setUserMetaData}/>
-                
-            
+        <div>
+            <ProfilePhotoUpload
+                userMetaData={userMetaData}
+                setUserMetaData={setUserMetaData}
+            />
 
             <div className="flex flex-col justify-center gap-4  w-[832px] pl-10 ">
                 <p className="font-fira text-xl font-light pt-20 pb-10 pl-5">
@@ -1598,7 +1592,6 @@ const AccordionCard = (props) => {
                 </Accordion>
             </div>
         </div>
-      
     );
 };
 

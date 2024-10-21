@@ -7,14 +7,15 @@ import paleBanner from '../assets/icons/PaleGreenPractitionerBackground.png';
 export const Certification = () => {
     return (
         <>
-            <div
-                className="2FindAPractitioner w-full h-96 relative bg-white"
-                style={{
-                    backgroundImage: `url(${banner}), url(${paleBanner})`,
-                    backgroundSize: 'contain, contain',
-                    backgroundPosition: 'top, top',
-                    backgroundRepeat: 'no-repeat, no-repeat',
-                }}
+              <div
+        className="2FindAPractitioner w-full h-96 relative bg-white"
+        style={{
+          backgroundImage: `url(${banner}), url(${paleBanner})`,
+          backgroundSize: "contain, contain",
+          backgroundPosition: "top, top",
+          backgroundRepeat: "no-repeat, no-repeat",
+        }}
+      
             >
                 <div className=" left-[10%] top-[15%] pl-[180px] absolute text-center text-white text-5xl font-normal font-['Fenix']">
                     Integration Certification

@@ -1,9 +1,9 @@
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { useState } from 'react';
-import { ExampleFileList } from '../components/ExampleFileList';
-import { ExampleFileUploadForm } from '../components/ExampleFileUploadForm';
-import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage } from '@cloudinary/react';
+// import { ExampleFileList } from '../components/ExampleFileList';
+// import { ExampleFileUploadForm } from '../components/ExampleFileUploadForm';
+// import { Cloudinary } from '@cloudinary/url-gen';
+// import { AdvancedImage } from '@cloudinary/react';
 import banner from '../assets/icons/PractitionerBackground.png';
 import paleBanner from '../assets/icons/PaleGreenPractitionerBackground.png';
 import ProfilePhotoUpload from '../components/ProfilePhotoUpload';
@@ -32,6 +32,7 @@ export const Profile = withAuthenticationRequired((props) => {
     const [validationError, setValidationError] = useState('');
     const [requiredFieldError, setRequiredFieldError] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [sectionName, setSectionName] = useState(null);
     const {
         firstName,
         middleName,
@@ -46,13 +47,13 @@ export const Profile = withAuthenticationRequired((props) => {
         country,
     } = props;
 
-    const cld = new Cloudinary({
-        cloud: {
-            cloudName: 'dw1ktiayz',
-        },
-    });
+    // const cld = new Cloudinary({
+    //     cloud: {
+    //         cloudName: 'dw1ktiayz',
+    //     },
+    // });
 
-    console.log(user)
+    console.log(user);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -61,9 +62,14 @@ export const Profile = withAuthenticationRequired((props) => {
         setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
     };
 
+    const handleTabClick = (section) => {
+        setSectionName(section);
+    };
+
+    console.log(sectionName);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // getUserSauces();
         setIsSubmitted(true);
         console.log('submitted profile information');
         setInputs({
@@ -80,9 +86,11 @@ export const Profile = withAuthenticationRequired((props) => {
             country: '',
         });
         setValidationError('');
-        // getUserSauces();
-        // addSauce(inputs);
-        // handleOpenModal();
+    };
+
+    const handleEmailFormSubmit = (e) => {
+        e.preventDefault();
+        console.log('email address received');
     };
 
     const onRequiredBlur = (e) => {
@@ -100,7 +108,7 @@ export const Profile = withAuthenticationRequired((props) => {
     };
 
     return (
-        <>
+        <div>
             <div
                 className="2FindAPractitioner w-full h-96 relative bg-white"
                 style={{
@@ -114,289 +122,448 @@ export const Profile = withAuthenticationRequired((props) => {
                     Practitioner Profile
                 </div>
             </div>
-            <div className="flex justify-center">
-                <div className="inline-flex justify-center border-[2px] border-gray rounded-[6.831px] bg-white mb-20 shadow-[inset_0px_4.554px_4.554px_rgba(0,0,0,0.25)]">
-                    <button>
-                        <img src={profileTab} className="m-2" />
-                    </button>
-                    <button>
-                        <img src={passwordTab} className="m-2" />
-                    </button>
-                    <button>
-                        <img src={professionalPageTab} className="m-2" />
-                    </button>
+            <div className="flex flex-col   border-[2px] border-black px-10">
+                <div className="flex justify-center ">
+                    <div className="border-[2px] border-gray rounded-[6.831px] bg-white mb-20  shadow-[inset_0px_4.554px_4.554px_rgba(0,0,0,0.25)]">
+                        <button
+                            id="profile"
+                            onClick={() => handleTabClick('profile')}
+                        >
+                            <img src={profileTab} className="mt-1" />
+                        </button>
+                        <button
+                            id="password"
+                            onClick={() => handleTabClick('password')}
+                            style={{ backgroundColor: sectionName === 'password' ? 'green' : 'white' }}
+            >
+                            
+                        
+                            <img src={passwordTab} className="mt-1" />
+                        </button>
+                        <button
+                            id="professional"
+                            onClick={() => handleTabClick('professional')}
+                            className={sectionName === 'professional' ? 'bg-dark-green' : ''}
+                        >
+                            <img src={professionalPageTab} className="mt-1" />
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div className="flex">
-                <div className="flex flex-col px-[200px]">
-                    <ProfilePhotoUpload />
-                    <h3 className="font-poppins text-2xl"> {user.name}</h3>
-                </div>
-                <div className="flex flex-col pl-[300px] text-center gap-10">
-                    <h2 className="font-fira text-3xl">My Profile</h2>
-                    <h3 className="font-fira text-black text-xl text-opacity-60">
-                        Set your account settings down below
-                    </h3>
-               
-                    <div className="flex justify-center">
-                    <form onSubmit={handleSubmit} className="w-full max-w-md p-4 bg-white rounded shadow">
-                       
-                        <div className="flex space-x-4">
-                            <div className="mb-4">
-                                <label
-                                    htmlFor="firstName"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    First Name*
-                                </label>
-                                <input
-                                    type="text"
-                                    id="firstName"
-                                    name="firstName"
-                                    value={inputs.firstName}
-                                    onChange={handleChange}
-                                    onBlur={onRequiredBlur}
-                                    placeholder="First Name"
-                                    className="border rounded px-3 py-2 w-full"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label
-                                    htmlFor="middleName"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Middle Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="middleName"
-                                    name="middleName"
-                                    value={inputs.middleName}
-                                    onChange={handleChange}
-                                    onBlur={onRequiredBlur}
-                                    placeholder="Middle Name"
-                                    className="border rounded px-3 py-2 w-full"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label
-                                    htmlFor="lastName"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Last Name*
-                                </label>
-                                <input
-                                    type="text"
-                                    id="lastName"
-                                    name="lastName"
-                                    value={inputs.lastName}
-                                    onChange={handleChange}
-                                    onBlur={onRequiredBlur}
-                                    placeholder="Last Name"
-                                    className="border rounded px-3 py-2 w-full"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label
-                                    htmlFor="suffix"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Suffix
-                                </label>
-                                <input
-                                    type="text"
-                                    id="suffix"
-                                    name="suffix"
-                                    value={inputs.suffix}
-                                    onChange={handleChange}
-                                    placeholder="Suffix"
-                                    className="border rounded px-3 py-2 w-full"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex space-x-4">
-                        <div className="mb-4">
-                                <label
-                                    htmlFor="phone"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Phone Number*
-                                </label>
-                                <input
-                                    type="tel"
-                                    name="phoneNumber"
-                                    value={inputs.phoneNumber}
-                                    onChange={handleChange}
-                                    placeholder="Phone Number"
-                                    className="border rounded px-3 py-2 w-full"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label
-                                    htmlFor="email"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Email*
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={inputs.email}
-                                    onChange={handleChange}
-                                    placeholder="Email Address"
-                                    className="border rounded px-3 py-2 w-full"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex space-x-4">
-                        <div className="mb-4">
-                                <label
-                                    htmlFor="addressLine1"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Address Line 1*
-                                </label>
-                                <input
-                                    type="text"
-                                    name="addressLine1"
-                                    value={inputs.addressLine1}
-                                    onChange={handleChange}
-                                    placeholder="Street Address"
-                                    className="border rounded px-3 py-2"
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label
-                                    htmlFor="city"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    City*
-                                </label>
+                <div className="flex flex-col ">
+                    <div className="flex flex-col px-4 items-left">
+                        <ProfilePhotoUpload />
+                        <h3 className="font-poppins text-2xl"> {user.name}</h3>
+                        {!sectionName || sectionName === 'profile' && (
+                            <div>
+                                <div className=" flex flex-col pl-4 text-center  justify-start gap-10 pb-20 ">
+                                    <h2 className="font-fira text-3xl ">
+                                        My Profile
+                                    </h2>
+                                    <h3 className="font-fira text-black text-xl text-opacity-60">
+                                        Set your account settings down below
+                                    </h3>
+                                </div>
+                                <div className="flex justify-center w-full border black px-4">
+                                    <form
+                                        onSubmit={handleSubmit}
+                                        className="w-full  p-4 bg-white rounded shadow"
+                                    >
+                                        <div className="flex flex-wrap -mx-2">
+                                            <div className="mb-4 px-2 w-1/4">
+                                                <label
+                                                    htmlFor="firstName"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    First Name*
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="firstName"
+                                                    name="firstName"
+                                                    value={inputs.firstName}
+                                                    onChange={handleChange}
+                                                    onBlur={onRequiredBlur}
+                                                    placeholder="First Name"
+                                                    className="border rounded px-3 py-2 w-full"
+                                                />
+                                            </div>
+                                            <div className="mb-4 px-2 w-1/4">
+                                                <label
+                                                    htmlFor="middleName"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    Middle Name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="middleName"
+                                                    name="middleName"
+                                                    value={inputs.middleName}
+                                                    onChange={handleChange}
+                                                    onBlur={onRequiredBlur}
+                                                    placeholder="Middle Name"
+                                                    className="border rounded px-3 py-2 w-full"
+                                                />
+                                            </div>
+                                            <div className="mb-4 px-2 w-1/4">
+                                                <label
+                                                    htmlFor="lastName"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    Last Name*
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="lastName"
+                                                    name="lastName"
+                                                    value={inputs.lastName}
+                                                    onChange={handleChange}
+                                                    onBlur={onRequiredBlur}
+                                                    placeholder="Last Name"
+                                                    className="border rounded px-3 py-2 w-full"
+                                                />
+                                            </div>
+                                            <div className="mb-4 px-2 w-1/4">
+                                                <label
+                                                    htmlFor="suffix"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    Suffix
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="suffix"
+                                                    name="suffix"
+                                                    value={inputs.suffix}
+                                                    onChange={handleChange}
+                                                    placeholder="Suffix"
+                                                    className="border rounded px-3 py-2 w-full"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap -mx-2">
+                                            <div className="mb-4 px-2 w-1/2">
+                                                <label
+                                                    htmlFor="phone"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    Phone Number*
+                                                </label>
+                                                <input
+                                                    type="tel"
+                                                    name="phoneNumber"
+                                                    value={inputs.phoneNumber}
+                                                    onChange={handleChange}
+                                                    placeholder="Phone Number"
+                                                    className="border rounded px-3 py-2 w-full"
+                                                />
+                                            </div>
+                                            <div className="mb-4 px-2 w-1/2">
+                                                <label
+                                                    htmlFor="email"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    Email*
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    value={inputs.email}
+                                                    onChange={handleChange}
+                                                    placeholder="Email Address"
+                                                    className="border rounded px-3 py-2 w-full"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap -mx-2">
+                                            <div className="mb-4 px-2 w-1/3">
+                                                <label
+                                                    htmlFor="addressLine1"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    Address Line 1*
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="addressLine1"
+                                                    value={inputs.addressLine1}
+                                                    onChange={handleChange}
+                                                    placeholder="Street Address"
+                                                    className="border rounded px-3 py-2 w-full"
+                                                />
+                                            </div>
+                                            <div className="mb-4 px-2 w-1/3">
+                                                <label
+                                                    htmlFor="city"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    City*
+                                                </label>
 
-                                <input
-                                    type="text"
-                                    name="city"
-                                    value={inputs.city}
-                                    onChange={handleChange}
-                                    placeholder="City"
-                                    className="border rounded px-3 py-2"
-                                />
-                            </div>
-                            <div className="mb-4 w-full">
-                                <label
-                                    htmlFor="state"
-                                    className="block mb-2 text-sm font-medium text-gray-700 w-full"
-                                >
-                                    State*
-                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="city"
+                                                    value={inputs.city}
+                                                    onChange={handleChange}
+                                                    placeholder="City"
+                                                    className="border rounded px-3 py-2 w-full"
+                                                />
+                                            </div>
+                                            <div className="mb-4 px-2 w-1/3">
+                                                <label
+                                                    htmlFor="state"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    State*
+                                                </label>
 
-                                <select
-                                    className="border rounded px-3 py-2 w-full"
-                                    name="state"
-                                    value={inputs.state}
-                                    onChange={handleChange}
+                                                <select
+                                                    className="border rounded px-3 py-2 w-full"
+                                                    name="state"
+                                                    value={inputs.state}
+                                                    onChange={handleChange}
 
-                                    // onBlur={handleRequiredBlur}
+                                                    // onBlur={handleRequiredBlur}
+                                                >
+                                                    <option value="">
+                                                        -- State --
+                                                    </option>
+                                                    <option value="AL">
+                                                        AL
+                                                    </option>
+                                                    <option value="AK">
+                                                        AK
+                                                    </option>
+                                                    <option value="AZ">
+                                                        AZ
+                                                    </option>
+                                                    <option value="AR">
+                                                        AR
+                                                    </option>
+                                                    <option value="CA">
+                                                        CA
+                                                    </option>
+                                                    <option value="CO">
+                                                        CO
+                                                    </option>
+                                                    <option value="CT">
+                                                        CT
+                                                    </option>
+                                                    <option value="DE">
+                                                        DE
+                                                    </option>
+                                                    <option value="FL">
+                                                        FL
+                                                    </option>
+                                                    <option value="GA">
+                                                        GA
+                                                    </option>
+                                                    <option value="HI">
+                                                        HI
+                                                    </option>
+                                                    <option value="ID">
+                                                        ID
+                                                    </option>
+                                                    <option value="IL">
+                                                        IL
+                                                    </option>
+                                                    <option value="IN">
+                                                        IN
+                                                    </option>
+                                                    <option value="IA">
+                                                        IA
+                                                    </option>
+                                                    <option value="KS">
+                                                        KS
+                                                    </option>
+                                                    <option value="KY">
+                                                        KY
+                                                    </option>
+                                                    <option value="LA">
+                                                        LA
+                                                    </option>
+                                                    <option value="ME">
+                                                        ME
+                                                    </option>
+                                                    <option value="MD">
+                                                        MD
+                                                    </option>
+                                                    <option value="MA">
+                                                        MA
+                                                    </option>
+                                                    <option value="MI">
+                                                        MI
+                                                    </option>
+                                                    <option value="MN">
+                                                        MN
+                                                    </option>
+                                                    <option value="MS">
+                                                        MS
+                                                    </option>
+                                                    <option value="MO">
+                                                        MO
+                                                    </option>
+                                                    <option value="MT">
+                                                        MT
+                                                    </option>
+                                                    <option value="NE">
+                                                        NE
+                                                    </option>
+                                                    <option value="NV">
+                                                        NV
+                                                    </option>
+                                                    <option value="NH">
+                                                        NH
+                                                    </option>
+                                                    <option value="NJ">
+                                                        NJ
+                                                    </option>
+                                                    <option value="NM">
+                                                        NM
+                                                    </option>
+                                                    <option value="NY">
+                                                        NY
+                                                    </option>
+                                                    <option value="NC">
+                                                        NC
+                                                    </option>
+                                                    <option value="ND">
+                                                        ND
+                                                    </option>
+                                                    <option value="OH">
+                                                        OH
+                                                    </option>
+                                                    <option value="OK">
+                                                        OK
+                                                    </option>
+                                                    <option value="OR">
+                                                        OR
+                                                    </option>
+                                                    <option value="PA">
+                                                        PA
+                                                    </option>
+                                                    <option value="RI">
+                                                        RI
+                                                    </option>
+                                                    <option value="SC">
+                                                        SC
+                                                    </option>
+                                                    <option value="SD">
+                                                        SD
+                                                    </option>
+                                                    <option value="TN">
+                                                        TN
+                                                    </option>
+                                                    <option value="TX">
+                                                        TX
+                                                    </option>
+                                                    <option value="UT">
+                                                        UT
+                                                    </option>
+                                                    <option value="VT">
+                                                        VT
+                                                    </option>
+                                                    <option value="VA">
+                                                        VA
+                                                    </option>
+                                                    <option value="WA">
+                                                        WA
+                                                    </option>
+                                                    <option value="WV">
+                                                        WV
+                                                    </option>
+                                                    <option value="WI">
+                                                        WI
+                                                    </option>
+                                                    <option value="WY">
+                                                        WY
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap -mx-2">
+                                            <div className="mb-4 px-2 w-1/2">
+                                                <label
+                                                    htmlFor="addressLine2"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    Address Line 2
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="addressLine2"
+                                                    value={inputs.addressLine2}
+                                                    onChange={handleChange}
+                                                    placeholder="Address Line 2"
+                                                    className="border rounded px-3 py-2 w-full"
+                                                />
+                                            </div>
+                                            <div className="flex-1">
+                                                <label
+                                                    htmlFor="country"
+                                                    className="block mb-2 text-sm font-medium text-gray-700"
+                                                >
+                                                    Country
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="country"
+                                                    value={inputs.country}
+                                                    onChange={handleChange}
+                                                    placeholder="Country"
+                                                    className="border rounded px-3 py-2 w-full"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <div className="flex mt-10">
+                                                <button className="btn bg-light-green rounded-xl text-white h-12 w-[300px]">
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+                        {sectionName === 'password' && (
+                            <div className="flex flex-col items-center gap-10">
+                                <h1 className="font-fira text-3xl ">Reset your password</h1>
+                                <h3 className="font-fira text-black text-xl text-opacity-60">
+                                    You may change your password by entering
+                                    your email address and we will send you a
+                                    4-digit code.
+                                </h3>
+                                <div className='flex'>
+                                <form
+                                    onSubmit={handleEmailFormSubmit}
+                                    className="w-full p-4 bg-white"
                                 >
-                                    <option value="">-- State --</option>
-                                    <option value="AL">AL</option>
-                                    <option value="AK">AK</option>
-                                    <option value="AZ">AZ</option>
-                                    <option value="AR">AR</option>
-                                    <option value="CA">CA</option>
-                                    <option value="CO">CO</option>
-                                    <option value="CT">CT</option>
-                                    <option value="DE">DE</option>
-                                    <option value="FL">FL</option>
-                                    <option value="GA">GA</option>
-                                    <option value="HI">HI</option>
-                                    <option value="ID">ID</option>
-                                    <option value="IL">IL</option>
-                                    <option value="IN">IN</option>
-                                    <option value="IA">IA</option>
-                                    <option value="KS">KS</option>
-                                    <option value="KY">KY</option>
-                                    <option value="LA">LA</option>
-                                    <option value="ME">ME</option>
-                                    <option value="MD">MD</option>
-                                    <option value="MA">MA</option>
-                                    <option value="MI">MI</option>
-                                    <option value="MN">MN</option>
-                                    <option value="MS">MS</option>
-                                    <option value="MO">MO</option>
-                                    <option value="MT">MT</option>
-                                    <option value="NE">NE</option>
-                                    <option value="NV">NV</option>
-                                    <option value="NH">NH</option>
-                                    <option value="NJ">NJ</option>
-                                    <option value="NM">NM</option>
-                                    <option value="NY">NY</option>
-                                    <option value="NC">NC</option>
-                                    <option value="ND">ND</option>
-                                    <option value="OH">OH</option>
-                                    <option value="OK">OK</option>
-                                    <option value="OR">OR</option>
-                                    <option value="PA">PA</option>
-                                    <option value="RI">RI</option>
-                                    <option value="SC">SC</option>
-                                    <option value="SD">SD</option>
-                                    <option value="TN">TN</option>
-                                    <option value="TX">TX</option>
-                                    <option value="UT">UT</option>
-                                    <option value="VT">VT</option>
-                                    <option value="VA">VA</option>
-                                    <option value="WA">WA</option>
-                                    <option value="WV">WV</option>
-                                    <option value="WI">WI</option>
-                                    <option value="WY">WY</option>
-                                </select>
+                                      
+                                        <input
+                                                    type="text"
+                                                    id="firstName"
+                                                    name="firstName"
+                                                   
+                                                    onChange={handleChange}
+                                                    onBlur={onRequiredBlur}
+                                                    placeholder="Enter your email address"
+                                                    className="border rounded px-3 py-2"
+                                                />
+                                </form>
+                                </div>
+                                <button className="btn bg-light-green rounded-xl text-white h-12 w-[300px]">Get a 4-digit code</button>
                             </div>
-                        </div>
-                        <div className="flex space-x-4">
-                        <div className="mb-4">
-                                <label
-                                    htmlFor="addressLine2"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Address Line 2
-                                </label>
-                                <input
-                                    type="text"
-                                    name="addressLine2"
-                                    value={inputs.addressLine2}
-                                    onChange={handleChange}
-                                    placeholder="Address Line 2"
-                                    className="border rounded px-3 py-2"
-                                />
+                        )}
+                        {sectionName === 'professional' && (
+                            <div className="flex flex-col items-center justify-center gap-10 w-1/2">
+                                <h1>Cerebrum ipsum dolor sit amet, neural pathways connecting dendrites to synapses. Hippocampus et cortex lobus, neurotransmitters facilisis enhancing cognitive plasticity. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; dopamine in pulvinar nisl, ultricies efficitur massa. Neurogenesis non fermentum, lobus frontalis vulputate amygdala arcu sollicitudin sapien. Integer pharetra sagittis sapien, non tempus arcu dictum eu.
+                                Lorem cerebri dapibus, sed malesuada lobortis neuroplasticity facilisis. Vestibulum ante ipsum primis, synaptic vesicles release endorphins. Medulla at enim non arcu mollis, sagittis tempor sapien cursus. Serotonin elementum gravida pulvinar. Fusce potenti. Vestibulum mattis efficitur, ac neurotransmitter libero consectetur adipiscing.</h1>
                             </div>
-                            <div className="flex-1">
-                                <label
-                                    htmlFor="country"
-                                    className="block mb-2 text-sm font-medium text-gray-700"
-                                >
-                                    Country
-                                </label>
-                                <input
-                                    type="text"
-                                    name="country"
-                                    value={inputs.country}
-                                    onChange={handleChange}
-                                    placeholder="Country"
-                                    className="border rounded px-3 py-2"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex justify-center">
-                            <div className="flex-1">
-                                <button className="btn bg-light-green rounded-xl text-white h-12 w-[300px]">
-                                    Save
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                        )}
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 });
