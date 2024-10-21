@@ -9,7 +9,8 @@ export default {
       fontFamily: {
         'libre': ['Frank Ruhle Libre', 'serif'],
         'fira': ['Fira Sans', 'sans-serif'],
-        'fenix': ['Fenix', 'serif']
+        'fenix': ['Fenix', 'serif'],
+        'poppins': ['Poppins', 'sans serif']
       },
       colors: {
         'gray': '#ECECEC',
@@ -17,7 +18,8 @@ export default {
         'blue': '#4F72AF',
         'dark-gray': "#676767",
         'red': "#B32C36",
-        'light-gray': "#B7B7B7"
+        'light-gray': "#B7B7B7",
+        'light-green': '#599F50'
       }, 
       dropShadow: {
         'md': '0 4px 4px rgba(0, 0, 0, 0.25)',
