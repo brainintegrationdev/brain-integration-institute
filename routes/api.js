@@ -4,6 +4,7 @@ const { documentRouter } = require('./document');
 const { userRouter } = require('./user');
 const { checkoutRouter } = require('./checkout');
 const signedUrlRouter = require('./signedUrl');
+const { profileRouter } = require('./profile')
 // const { exampleRouter } = require('./example');
 
 
@@ -15,6 +16,7 @@ apiRouter.use('/images', documentRouter)
 apiRouter.use('/user', userRouter)
 apiRouter.use('/', checkoutRouter)
 apiRouter.use('/', signedUrlRouter)
+apiRouter.use('/', profileRouter)
 
 
 

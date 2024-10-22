@@ -19,7 +19,9 @@ export default {
         'dark-gray': "#676767",
         'red': "#B32C36",
         'light-gray': "#B7B7B7",
-        'light-green': '#599F50'
+        'light-green': '#599F50',
+        'pale-green': '#D0E4C3',
+        'medium-pale-green': "#9EC19A"
       }, 
       dropShadow: {
         'md': '0 4px 4px rgba(0, 0, 0, 0.25)',

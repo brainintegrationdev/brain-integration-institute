@@ -101,11 +101,13 @@ export const useFileAPI = () => {
         setFiles(data.files);
     };
 
-    const uploadFile = async (formData) => {
+    const uploadFile = async () => {
         const data = await request.post('/api/files', { body: formData });
         if (!data.success) throw Error(data.error);
         setFiles((prev) => [...prev, data.file]);
     };
+
+  
 
     return {
         files,
@@ -113,5 +115,61 @@ export const useFileAPI = () => {
         uploadFile,
     };
 };
+
+
+
+ export const useProfileForm = (initialValues) => {
+    
+    const [inputs, setInputs] = useState(initialValues);
+    const { getAccessTokenSilently, user } = useAuth0();
+
+  
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setInputs((prevInputs) => ({
+            ...prevInputs,
+            [name]: value,
+        }));
+    };
+
+  
+    const resetInputs = () => {
+        setInputs(initialValues);
+    };
+
+    const createProfileData = async () => {
+        try {
+            const response = await fetch('/api/create-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`, 
+                },
+                body: JSON.stringify(inputs),
+            });
+
+            const data = await response.json();
+            if (!data.success) throw new Error(data.error);
+
+            // Reset inputs after successful submission
+            resetInputs();
+            return data;
+        } catch (error) {
+            console.error('Failed to create profile:', error);
+            throw error;
+        }
+    };
+
+    return {
+        inputs,
+        useProfileForm,
+        handleInputChange,
+        createProfileData,
+        resetInputs,
+    };
+};
+
+
+
 
 export const useFileContext = () => useContext(FileContext);
