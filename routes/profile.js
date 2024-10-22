@@ -19,6 +19,7 @@ profileRouter.post('/create-profile', async (req, res) => {
         state,
         country,
     } = req.body;
+    console.log(req.body)
     try {
         let profileData = await ProfileModel.findOne({ email });
         if (!profileData) {
@@ -36,14 +37,13 @@ profileRouter.post('/create-profile', async (req, res) => {
                 country,
             });
             await profileData.save();
-            return res
-                .status(201)
-                .json({ message: 'User profile created', profileData });
+            return res.status(201).json({ success: true, message: 'User profile created', profileData });
+        
         }
-        return res.status(200).json({ userMetaData });
+        return res.status(200).json({ success: true, profileData });
     } catch (error) {
         console.error('Error creating profile data:', error);
-        return res.status(500).json({ error: 'Server error' });
+        return res.status(500).json({ success: false, error: 'Server error' });
     }
 });
 

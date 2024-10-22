@@ -125,6 +125,7 @@ export const useFileAPI = () => {
 
   
     const handleInputChange = (e) => {
+        console.log('change handled')
         const { name, value } = e.target;
         setInputs((prevInputs) => ({
             ...prevInputs,
@@ -134,21 +135,29 @@ export const useFileAPI = () => {
 
   
     const resetInputs = () => {
+        console.log('inputs reset!')
         setInputs(initialValues);
     };
 
     const createProfileData = async () => {
+        console.log('Inputs being sent:', inputs);
+
         try {
-            const response = await fetch('/api/create-profile', {
+            const response = await fetch('http://localhost:8080/api/create-profile', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${await getAccessTokenSilently()}`, 
                 },
                 body: JSON.stringify(inputs),
+                
             });
-
+            
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
             const data = await response.json();
+            console.log('Response from backend:', data);
             if (!data.success) throw new Error(data.error);
 
             // Reset inputs after successful submission

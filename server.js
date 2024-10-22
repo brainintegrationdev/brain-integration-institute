@@ -24,6 +24,12 @@ server.get('/api/files', (req, res) => {
     res.json({ message: 'CORS enabled!' });
 });
 
+// server.post('/api/profile', (req, res) => {
+//     const payload = req.body
+//     console.log('profile received', payload)
+//     res.status(200).send({ message: 'Profile updated successfully' });
+// })
+
 server.post('/webhook', (req, res) => {
     const payload = req.body; // Handle webhook payload
     console.log('Webhook received:', payload);

@@ -56,13 +56,15 @@ export const Profile = withAuthenticationRequired((props) => {
 
     console.log(sectionName);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
         try {
-            const result = await createProfileData();
-            console.log('Profile created successfully:', result);
+            await createProfileData();
+            console.log('Profile created successfully');
+           
         } catch (error) {
-            console.error('Error creating profile:', error);
+            console.error('Error creating profile:', error); 
+            alert(`Profile creation failed: ${error.message}`); 
         }
     };
 
