@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+// import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import AssessmentCheckoutForm from './AssessmentCheckoutForm';
 import { useAuth0 } from '@auth0/auth0-react';

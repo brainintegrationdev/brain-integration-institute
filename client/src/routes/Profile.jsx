@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { useState, useContext } from 'react';
 import banner from '../assets/icons/PractitionerBackground.png';
@@ -13,27 +14,27 @@ export const Profile = withAuthenticationRequired((props) => {
     const {
         inputs,
         handleInputChange,
-        createProfileData,
-        resetInputs,
+        createProfileData
+        
     } = useContext(UserContext);
    
     const [validationError, setValidationError] = useState('');
     const [requiredFieldError, setRequiredFieldError] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [sectionName, setSectionName] = useState(null);
-    const {
-        firstName,
-        middleName,
-        lastName,
-        suffix,
-        phoneNumber,
-        email,
-        addressLine1,
-        addressLine2,
-        city,
-        state,
-        country,
-    } = props;
+    // const {
+    //     firstName,
+    //     middleName,
+    //     lastName,
+    //     suffix,
+    //     phoneNumber,
+    //     email,
+    //     addressLine1,
+    //     addressLine2,
+    //     city,
+    //     state,
+    //     country,
+    // } = props;
 
     // const cld = new Cloudinary({
     //     cloud: {

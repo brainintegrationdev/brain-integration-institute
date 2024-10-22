@@ -1,7 +1,7 @@
 import { PaymentElement } from '@stripe/react-stripe-js';
-import { useState, useContext, useEffect } from 'react';
+import { useState } from 'react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
-import { CloudinaryContext } from '../contexts';
+// import { CloudinaryContext } from '../contexts';
 import PoweredbyStripe from '../assets/icons/PoweredbyStripe.png'
 
 export default function AssessmentCheckoutForm() {
@@ -11,7 +11,7 @@ export default function AssessmentCheckoutForm() {
     const [message, setMessage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [showModal, setShowModal] = useState(false); 
-    const {  email } = useContext(CloudinaryContext);
+    // const {  email } = useContext(CloudinaryContext);
     
 
     const handleSubmit = async (e) => {

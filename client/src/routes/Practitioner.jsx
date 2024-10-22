@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import  { useContext, useState, useEffect } from 'react';
 import { PractitionerCard } from '../components/PractitionerCard';
 import { PractitionerContext } from '../contexts';
 import banner from '../assets/icons/PractitionerBackground.png';
