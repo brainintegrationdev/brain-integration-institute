@@ -2,6 +2,7 @@
 
 import { useState, useContext, useEffect } from 'react';
 import ProfileEditIcon from '../assets/icons/profileEditIcon.png';
+import placeholderProfilePic from '../assets/icons/placeholderProfilePic.png'
 import { CloudinaryContext } from '../contexts';
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -84,7 +85,9 @@ export const ProfilePhotoUpload = () => {
                     </button>
                 </div>
             ) : (
-                <div>Loading...</div>
+                <div>Loading...
+                    <img src={placeholderProfilePic} />
+                </div>
             )}
         </div>
     );

@@ -42,7 +42,7 @@ export const Profile = withAuthenticationRequired((props) => {
     //     },
     // });
 
-    console.log(inputs);
+    console.log(sectionName);
 
     // const handleChange = (e) => {
     //     const { name, value } = e.target;
@@ -55,7 +55,7 @@ export const Profile = withAuthenticationRequired((props) => {
         setSectionName(section);
     };
 
-    console.log(sectionName);
+ 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -110,7 +110,7 @@ export const Profile = withAuthenticationRequired((props) => {
                             id="profile"
                             onClick={() => handleTabClick('profile')}
                             className={
-                                sectionName === 'profile'
+                                sectionName === 'profile' || !sectionName
                                     ? 'bg-pale-green rounded-xl shadow w-[235px] p-[9px]'
                                     : 'rounded-xl shadow w-[235px] p-[9px]'
                             }
@@ -147,8 +147,7 @@ export const Profile = withAuthenticationRequired((props) => {
                     <div className="flex flex-col px-4 items-left">
                         <ProfilePhotoUpload />
                         <h3 className="font-poppins text-2xl"> {user.name}</h3>
-                        {!sectionName ||
-                            (sectionName === 'profile' && (
+                        {(!sectionName || sectionName === 'profile') && (
                                 <div>
                                     <div className=" flex flex-col pl-4 text-center  justify-start gap-10 pb-20 ">
                                         <h2 className="font-fira text-3xl ">
@@ -534,7 +533,7 @@ export const Profile = withAuthenticationRequired((props) => {
                                         </form>
                                     </div>
                                 </div>
-                            ))}
+                            )}
                         {sectionName === 'password' && (
                             <div className="flex flex-col items-center gap-10">
                                 <h1 className="font-fira text-3xl ">
