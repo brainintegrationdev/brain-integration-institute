@@ -1,54 +1,63 @@
 const mg = require('mongoose');
+const Schema = mg.Schema;
 
-
-const ProfileSchema = new mg.Schema({
-    firstName: { 
+const ProfileSchema = new Schema({
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    firstName: {
         type: String,
-        required: true
+        required: true,
     },
 
     middleName: {
-        type: String
+        type: String,
     },
     lastName: {
         type: String,
-        required: true
+        required: true,
     },
     suffix: {
         type: String,
-        
     },
     phoneNumber: {
         type: String,
-        required: true
+        required: true,
     },
     email: {
         type: String,
-        required: true
+        required: true,
     },
     addressLine1: {
         type: String,
-        required: true
+        required: true,
     },
     addressLine2: {
-        type: String
+        type: String,
     },
     city: {
         type: String,
-        required: true
+        required: true,
     },
     state: {
         type: String,
-        required: true
+        required: true,
+    },
+    zip: {
+        type: String,
     },
     country: {
-        type: String
-    }
-
+        type: String,
+    },
+    bio: {
+        type: String,
+    },
 });
 
 const ProfileModel = mg.model('Profile', ProfileSchema);
 
 module.exports = {
-    ProfileModel
-}
+    ProfileModel,
+};

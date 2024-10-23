@@ -16,7 +16,7 @@ apiRouter.use('/images', documentRouter)
 apiRouter.use('/user', userRouter)
 apiRouter.use('/', checkoutRouter)
 apiRouter.use('/', signedUrlRouter)
-apiRouter.use('/', profileRouter)
+apiRouter.use('/profile', profileRouter)
 
 
 

@@ -30,12 +30,12 @@ export const useHttpAuthClient = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${await getAccessTokenSilently()}`, 
+                        Authorization: `Bearer ${await getAccessTokenSilently()}`,
                     },
                     body: JSON.stringify({
                         userEmail: email,
                         userName: name,
-                        userProfilePicture: picture
+                        userProfilePicture: picture,
                     }),
                 },
             );
@@ -61,13 +61,13 @@ export const useHttpAuthClient = () => {
 
     useEffect(() => {
         if (user && !metadataCreated) {
-            createUserMetadata(user); 
+            createUserMetadata(user);
         }
-    }, [user, metadataCreated, getAccessTokenSilently]); 
+    }, [user, metadataCreated, getAccessTokenSilently]);
 
     const handler = async (url, options) => {
         const accessToken = await getAccessTokenSilently();
-        
+
         return http.request(accessToken)(url, options);
     };
 
@@ -107,8 +107,6 @@ export const useFileAPI = () => {
         setFiles((prev) => [...prev, data.file]);
     };
 
-  
-
     return {
         files,
         getUserFiles,
@@ -116,16 +114,13 @@ export const useFileAPI = () => {
     };
 };
 
-
-
- export const useProfileForm = (initialValues) => {
-    
+export const useProfileForm = (initialValues) => {
     const [inputs, setInputs] = useState(initialValues);
     const { getAccessTokenSilently, user } = useAuth0();
+    const [profileData, setProfileData] = useState({})
 
-  
     const handleInputChange = (e) => {
-        console.log('change handled')
+        console.log('change handled');
         const { name, value } = e.target;
         setInputs((prevInputs) => ({
             ...prevInputs,
@@ -133,9 +128,8 @@ export const useFileAPI = () => {
         }));
     };
 
-  
     const resetInputs = () => {
-        console.log('inputs reset!')
+        console.log('inputs reset!');
         setInputs(initialValues);
     };
 
@@ -143,18 +137,22 @@ export const useFileAPI = () => {
         console.log('Inputs being sent:', inputs);
 
         try {
-            const response = await fetch('http://localhost:8080/api/create-profile', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${await getAccessTokenSilently()}`, 
+            const response = await fetch(
+                'http://localhost:8080/api/profile/create-profile',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${await getAccessTokenSilently()}`,
+                    },
+                    body: JSON.stringify(inputs),
                 },
-                body: JSON.stringify(inputs),
-                
-            });
-            
+            );
+
             if (!response.ok) {
-                throw new Error(`Server responded with status: ${response.status}`);
+                throw new Error(
+                    `Server responded with status: ${response.status}`,
+                );
             }
             const data = await response.json();
             console.log('Response from backend:', data);
@@ -169,16 +167,71 @@ export const useFileAPI = () => {
         }
     };
 
+    
+
     return {
         inputs,
         useProfileForm,
         handleInputChange,
         createProfileData,
         resetInputs,
+       
+        profileData,
+        setProfileData
     };
 };
 
 
+
+const useProfileData = (user) => {
+    const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { getAccessTokenSilently } = useAuth0();
+
+
+        const fetchProfileData = async () => {
+            if (user && user.email) {
+               
+                try {
+                    setLoading(true); // Set loading state
+                    const response = await fetch(`/api/profile/${user.email}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${await getAccessTokenSilently()}`,
+                        },
+                    });
+        
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+        
+                    const data = await response.json();
+                    setProfileData(data); 
+                    console.log(profileData)// Set the profile data state
+                } catch (error) {
+                    console.error('Error fetching profile data:', error);
+                    setError(error.message); // Set error state
+                } finally {
+                    setLoading(false); // Reset loading state
+                }
+            } else {
+                console.warn('User object is invalid:', user);
+                setLoading(false); // Reset loading state if user is invalid
+            }
+        };
+        
+       
+        
+  
+
+    console.log(profileData)
+
+    return { profileData, loading, error, fetchProfileData }; // Return profile data, loading state, and error
+};
+
+export default useProfileData;
 
 
 export const useFileContext = () => useContext(FileContext);

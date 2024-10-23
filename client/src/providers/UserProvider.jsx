@@ -17,7 +17,9 @@ export const UserProvider = ({ children }) => {
         addressLine2: '',
         city: '',
         state: '',
+        zip: '',
         country: '',
+        bio: ''
     };
 
 
@@ -25,7 +27,8 @@ export const UserProvider = ({ children }) => {
         inputs, 
         handleInputChange, 
         createProfileData, 
-        resetInputs 
+        resetInputs,
+        getProfileData
     } = useProfileForm(initialValues)
     // Initialize the custom hook and get the values
   
@@ -50,6 +53,7 @@ export const UserProvider = ({ children }) => {
                 handleInputChange,
                 createProfileData,
                 resetInputs,
+                getProfileData
             }}
         >
             {children}
