@@ -13,15 +13,15 @@ import ProfileEditForm from '../components/ProfileEditForm';
 
 export const Profile = withAuthenticationRequired((props) => {
     const { user } = useAuth0();
-    const { inputs, handleInputChange, createProfileData, setProfileData } =
+    const { inputs, setInputs, initialValues, loading, setLoading, error, setError, resetInputs, handleInputChange, createProfileData, setProfileData, fetchProfileData, profileData } =
         useContext(UserContext);
     const { getAccessTokenSilently } = useAuth0();
     const [validationError, setValidationError] = useState('');
     const [requiredFieldError, setRequiredFieldError] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [sectionName, setSectionName] = useState(null);
-    const { profileData, loading, error, fetchProfileData } =
-        useProfileData(user);
+    // const { profileData, loading, error, fetchProfileData, profileData } =
+    //     useProfileData(user);
     const [isEditing, setIsEditing] = useState(false)
 
     console.log(profileData);
@@ -46,16 +46,16 @@ export const Profile = withAuthenticationRequired((props) => {
         console.log('edit click')
     }
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            await createProfileData();
-            console.log('Profile created successfully');
-        } catch (error) {
-            console.error('Error creating profile:', error);
-            alert(`Profile creation failed: ${error.message}`);
-        }
-    };
+    // const handleSubmit = async (event) => {
+    //     event.preventDefault();
+    //     try {
+    //         await createProfileData();
+    //         console.log('Profile created successfully');
+    //     } catch (error) {
+    //         console.error('Error creating profile:', error);
+    //         alert(`Profile creation failed: ${error.message}`);
+    //     }
+    // };
 
     const handleEmailFormSubmit = (e) => {
         e.preventDefault();

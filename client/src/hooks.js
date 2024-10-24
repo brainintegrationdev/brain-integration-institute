@@ -117,7 +117,7 @@ export const useFileAPI = () => {
 export const useProfileForm = (initialValues) => {
     const [inputs, setInputs] = useState(initialValues);
     const { getAccessTokenSilently, user } = useAuth0();
-    const [profileData, setProfileData] = useState({})
+    // const [profileData, setProfileData] = useState(null)
 
     const handleInputChange = (e) => {
         console.log('change handled');
@@ -155,9 +155,11 @@ export const useProfileForm = (initialValues) => {
                 );
             }
             const data = await response.json();
+           
+            
             console.log('Response from backend:', data);
             if (!data.success) throw new Error(data.error);
-
+          
             // Reset inputs after successful submission
             resetInputs();
             return data;
@@ -176,8 +178,7 @@ export const useProfileForm = (initialValues) => {
         createProfileData,
         resetInputs,
        
-        profileData,
-        setProfileData
+        
     };
 };
 
@@ -194,7 +195,7 @@ const useProfileData = (user) => {
             if (user && user.email) {
                
                 try {
-                    setLoading(true); // Set loading state
+                    setLoading(true); 
                     const response = await fetch(`/api/profile/${user.email}`, {
                         method: 'GET',
                         headers: {
@@ -209,18 +210,24 @@ const useProfileData = (user) => {
         
                     const data = await response.json();
                     setProfileData(data); 
-                    console.log(profileData)// Set the profile data state
+                    console.log(profileData)
                 } catch (error) {
                     console.error('Error fetching profile data:', error);
-                    setError(error.message); // Set error state
+                    setError(error.message); 
                 } finally {
-                    setLoading(false); // Reset loading state
+                    setLoading(false); 
                 }
             } else {
                 console.warn('User object is invalid:', user);
-                setLoading(false); // Reset loading state if user is invalid
+                setLoading(false); 
             }
         };
+
+        useEffect(() => {
+           
+                fetchProfileData();
+            
+        }, [user]);
         
        
         
@@ -228,7 +235,7 @@ const useProfileData = (user) => {
 
     console.log(profileData)
 
-    return { profileData, loading, error, fetchProfileData }; // Return profile data, loading state, and error
+    return { profileData, loading, error, fetchProfileData, setProfileData }; 
 };
 
 export default useProfileData;
