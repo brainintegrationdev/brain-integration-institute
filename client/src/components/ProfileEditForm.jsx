@@ -1,30 +1,96 @@
 /* eslint-disable react/prop-types */
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../contexts';
 import useProfileData from '../hooks';
+import ProfileModal from './ProfileModal';
 
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 
 export const ProfileEditForm = (props) => {
-    const { inputs, setInputs, initialValues, loading, setLoading, error, setError, resetInputs, handleInputChange, createProfileData, setProfileData, fetchProfileData, profileData } =
-        useContext(UserContext);
-    const { isEditing, setIsEditing } = props;
-    const { user } = useAuth0();
-   
-      
-        const [dummy, setDummy] = useState(false);
+    const {
+        inputs,
+        setInputs,
+        initialValues,
+        loading,
+        setLoading,
+        error,
+        setError,
+        resetInputs,
 
-    console.log(profileData);
+        createProfileData,
+        editProfileData,
+        setProfileData,
+        fetchProfileData,
+        profileData,
+    } = useContext(UserContext);
+    const { isEditing, setIsEditing } = props;
+
+    const { user } = useAuth0();
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [requiredFieldError, setRequiredFieldError] = useState('');
+    const [hasRequiredError, setHasRequiredError] = useState(false);
+    const [validationError, setValidationError] = useState('');
+    // const [showModal, setShowModal] = useState(false);
+    const [profileModalOpen, setProfileModalOpen] = useState(false);
+    const regex = /^[0-9]+$/;
+
+    // console.log(showModal);
+    console.log(hasRequiredError);
+
+    const validateRequiredFields = () => {
+        if (!profileData) {
+            const requiredFields = [
+                'firstName',
+                'lastName',
+                'phoneNumber',
+                'email',
+                'addressLine1',
+                'city',
+                'state',
+                'zip',
+            ];
+            const isAnyFieldEmpty = requiredFields.some(
+                (field) => !inputs[field],
+            );
+
+            setHasRequiredError(isAnyFieldEmpty);
+        } else {
+            setHasRequiredError(false);
+        }
+    };
+
+    console.log(profileModalOpen, 'profile modal status');
+
+    const handleInputChange = (e) => {
+        console.log('change handled');
+        const { name, value } = e.target;
+        const regex = /^[0-9]+$/;
+        console.log(name, value);
+        if (name === 'phoneNumber' && !regex.test(value)) {
+            setValidationError('Please enter a valid number.');
+            setRequiredFieldError('');
+            return;
+        }
+        setInputs((prevInputs) => ({
+            ...prevInputs,
+            [name]: value,
+        }));
+        if (!profileData) {
+            validateRequiredFields();
+        }
+    };
 
     const handleSubmit = async (event) => {
+        console.log('submitting new profile');
         event.preventDefault();
         try {
             const result = await createProfileData();
             console.log(result);
 
-            setProfileData(result.profileData ); 
-            setIsEditing(false);
-            setDummy((prev) => !prev);
+            setProfileData(result.profileData);
+            
+            setIsSubmitted(true);
+            setProfileModalOpen(true);
         } catch (error) {
             console.error('Error creating profile:', error);
             alert(`Profile creation failed: ${error.message}`);
@@ -32,24 +98,126 @@ export const ProfileEditForm = (props) => {
         console.log(profileData);
     };
 
-    console.log(profileData);
+    const onSubmitWithProfileData = async (event) => {
+        event.preventDefault();
+        validateRequiredFields();
 
-    console.log(isEditing)
+        if (hasRequiredError) {
+            alert('Please fill in all required fields.');
+            return;
+        }
 
-    const onRequiredBlur = () => {
-        console.log('this is a required field');
+        setProfileModalOpen(true);
+
+        try {
+            console.log('editing profile');
+            const result = await editProfileData(inputs);
+            console.log(result);
+
+            setProfileData(result.updatedProfile);
+           
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert(`Profile update failed: ${error.message}`);
+        }
     };
+
+    const handleOpenModal = () => {
+        setShowModal(true);
+        setInputs({
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            suffix: '',
+            phoneNumber: '',
+            email: '',
+            addressLine1: '',
+            addressLine2: '',
+            city: '',
+            state: '',
+            zip: '',
+            country: '',
+            bio: '',
+        });
+    };
+
+    const handleCloseModal = () => {
+        setProfileModalOpen(false);
+        setIsEditing(false)
+    };
+    console.log(requiredFieldError);
+
+    console.log(isEditing);
+
+    const onBlur = (e) => {
+        const { name, value } = e.target;
+        console.log(name, value);
+        if (regex.test(value)) {
+            setValidationError('');
+        }
+    };
+
+    const onRequiredBlur = (e) => {
+        const { name, value } = e.target;
+        console.log(name, value);
+        if (!isSubmitted) {
+            if (!profileData && value === '') {
+                setRequiredFieldError(
+                    'Please enter a value in required fields.',
+                );
+                setHasRequiredError(true);
+                // Set error if the field is empty
+            } else {
+                setRequiredFieldError('');
+                setHasRequiredError(false); // Clear error if field is filled
+            }
+        }
+    };
+
+    const isError =
+        !profileData &&
+        !(
+            inputs.firstName &&
+            inputs.lastName &&
+            inputs.addressLine1 &&
+            inputs.city &&
+            inputs.state &&
+            inputs.zip &&
+            inputs.phone &&
+            inputs.email
+        );
+
+    // useEffect(() => {
+    //     console.log('Profile modal open status:', profileModalOpen);
+    // }, [profileModalOpen]);
+
+    useEffect(() => {
+        console.log('profileModalOpen changed:', profileModalOpen);
+    }, [profileModalOpen]);
+
+    useEffect(() => {
+        if (profileModalOpen) {
+            setProfileModalOpen(true); // Ensure it stays open if set to true
+        }
+    }, [profileModalOpen]);
+    
     return (
         <div>
             {isEditing && (
                 <div>
-                    <p className="pl-10 pb-10 text-2xl text-red font-bold">
-                        * Required field
-                    </p>
+                    {!profileData && (
+                        <p className="pl-10 pb-10 text-2xl text-red font-bold">
+                            * Required field
+                        </p>
+                    )}
                     <div className="flex justify-center w-full px-4 ">
                         <form
-                            onSubmit={handleSubmit}
-                            className="w-full  p-4 bg-white rounded shadow"
+                            onSubmit={
+                                profileData
+                                    ? onSubmitWithProfileData
+                                    : handleSubmit
+                            }
+                            className="w-full p-4 bg-white rounded shadow"
                         >
                             <div className="flex flex-wrap -mx-2">
                                 <div className="mb-4 px-2 w-1/4">
@@ -57,7 +225,7 @@ export const ProfileEditForm = (props) => {
                                         htmlFor="firstName"
                                         className="block mb-2 text-sm font-medium text-gray-700"
                                     >
-                                        First Name*
+                                        First Name{!profileData && '*'}
                                     </label>
                                     <input
                                         type="text"
@@ -83,7 +251,6 @@ export const ProfileEditForm = (props) => {
                                         name="middleName"
                                         value={inputs.middleName}
                                         onChange={handleInputChange}
-                                        onBlur={onRequiredBlur}
                                         placeholder="Middle Name"
                                         className="border rounded px-3 py-2 w-full"
                                     />
@@ -93,7 +260,7 @@ export const ProfileEditForm = (props) => {
                                         htmlFor="lastName"
                                         className="block mb-2 text-sm font-medium text-gray-700"
                                     >
-                                        Last Name*
+                                        Last Name{!profileData && '*'}
                                     </label>
                                     <input
                                         type="text"
@@ -130,13 +297,14 @@ export const ProfileEditForm = (props) => {
                                         htmlFor="phone"
                                         className="block mb-2 text-sm font-medium text-gray-700"
                                     >
-                                        Phone Number*
+                                        Phone Number{!profileData && '*'}
                                     </label>
                                     <input
                                         type="tel"
                                         name="phoneNumber"
                                         value={inputs.phoneNumber}
                                         onChange={handleInputChange}
+                                        onBlur={onBlur}
                                         placeholder="Phone Number"
                                         className="border rounded px-3 py-2 w-full"
                                     />
@@ -146,13 +314,14 @@ export const ProfileEditForm = (props) => {
                                         htmlFor="email"
                                         className="block mb-2 text-sm font-medium text-gray-700"
                                     >
-                                        Email*
+                                        Email{!profileData && '*'}
                                     </label>
                                     <input
                                         type="email"
                                         name="email"
                                         value={inputs.email}
                                         onChange={handleInputChange}
+                                        onBlur={onRequiredBlur}
                                         placeholder="Email Address"
                                         className="border rounded px-3 py-2 w-full"
                                     />
@@ -164,13 +333,14 @@ export const ProfileEditForm = (props) => {
                                         htmlFor="addressLine1"
                                         className="block mb-2 text-sm font-medium text-gray-700"
                                     >
-                                        Address Line 1*
+                                        Address Line 1{!profileData && '*'}
                                     </label>
                                     <input
                                         type="text"
                                         name="addressLine1"
                                         value={inputs.addressLine1}
                                         onChange={handleInputChange}
+                                        onBlur={onRequiredBlur}
                                         placeholder="Street Address"
                                         className="border rounded px-3 py-2 w-full"
                                     />
@@ -180,7 +350,7 @@ export const ProfileEditForm = (props) => {
                                         htmlFor="city"
                                         className="block mb-2 text-sm font-medium text-gray-700"
                                     >
-                                        City*
+                                        City{!profileData && '*'}
                                     </label>
 
                                     <input
@@ -188,6 +358,7 @@ export const ProfileEditForm = (props) => {
                                         name="city"
                                         value={inputs.city}
                                         onChange={handleInputChange}
+                                        onBlur={onRequiredBlur}
                                         placeholder="City"
                                         className="border rounded px-3 py-2 w-full"
                                     />
@@ -197,7 +368,7 @@ export const ProfileEditForm = (props) => {
                                         htmlFor="state"
                                         className="block mb-2 text-sm font-medium text-gray-700"
                                     >
-                                        State*
+                                        State{!profileData && '*'}
                                     </label>
 
                                     <select
@@ -205,6 +376,7 @@ export const ProfileEditForm = (props) => {
                                         name="state"
                                         value={inputs.state}
                                         onChange={handleInputChange}
+                                        onBlur={onRequiredBlur}
 
                                         // onBlur={handleRequiredBlur}
                                     >
@@ -266,7 +438,7 @@ export const ProfileEditForm = (props) => {
                                         htmlFor="zip"
                                         className="block mb-2 text-sm font-medium text-gray-700"
                                     >
-                                        Zip/Postal Code*
+                                        Zip/Postal Code{!profileData && '*'}
                                     </label>
 
                                     <input
@@ -274,6 +446,7 @@ export const ProfileEditForm = (props) => {
                                         name="zip"
                                         value={inputs.zip}
                                         onChange={handleInputChange}
+                                        onBlur={onRequiredBlur}
                                         placeholder="Zip/Postal Code"
                                         className="border rounded px-3 py-2 w-full"
                                     />
@@ -326,13 +499,40 @@ export const ProfileEditForm = (props) => {
                                 </div>
                             </div>
                             <div className="flex justify-center">
+                                {validationError && (
+                                    <p className="pl-10 pb-10 text-2xl text-red font-bold">
+                                        {validationError}
+                                    </p>
+                                )}
+                                {hasRequiredError && (
+                                    <p className="pl-10 pb-10 text-2xl text-red font-bold">
+                                        {requiredFieldError}
+                                    </p>
+                                )}
                                 <div className="flex mt-10">
                                     <button className="btn bg-light-green rounded-xl text-white h-12 w-[493px]">
                                         Save
                                     </button>
                                 </div>
                             </div>
+                           
                         </form>
+                        {profileModalOpen && (
+                                <ProfileModal
+                                    open={profileModalOpen}
+                                    handleClose={handleCloseModal}
+                                >
+                                   
+                                    <div className="flex justify-center gap-10">
+                                        <button
+                                            className="bg-medium-pale-green rounded-2xl  w-[100px]  py-2  text-white"
+                                            onClick={handleCloseModal}
+                                        >
+                                            OK
+                                        </button>
+                                    </div>
+                                </ProfileModal>
+                            )}
                     </div>
                 </div>
             )}

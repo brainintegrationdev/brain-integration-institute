@@ -30,7 +30,6 @@ import AssessmentPayment from './AssessmentPayment.jsx';
 import DeleteFileIcon from '../assets/icons/DeleteFileIcon.png';
 import ProfilePhotoUpload from './ProfilePhotoUpload.jsx';
 
-
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { Accordion } from 'react-accessible-accordion';
@@ -70,7 +69,7 @@ const AccordionCard = (props) => {
     const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
 
     const [sectionName, setSectionName] = useState('');
-    // const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
     const [selectedFile, setSelectedFile] = useState(null);
     const [userMetaData, setUserMetaData] = useState({}); // move this to context
     const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
@@ -81,7 +80,8 @@ const AccordionCard = (props) => {
 
     const [showPayment, setShowPayment] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    // const navigate = useNavigate();
+
+    console.log(deleteModalOpen)
 
     const certProgressImages = [
         ProgressBar0,
@@ -288,18 +288,9 @@ const AccordionCard = (props) => {
         fetchData();
     }, [user]);
 
-    // useEffect(() => {
-    //     if (userMetaData) {
-    //         setProgress(userMetaData.userUploadProgress);
-    //     }
-    // }, [userMetaData]);
-
-    console.log(userMetaData);
-
     useEffect(() => {
         checkAllSectionsUploaded();
     }, [fileMetaData]);
-
 
     const getSectionFileNames = (sectionName) => {
         const filteredFiles = fileMetaData.filter(
@@ -326,7 +317,6 @@ const AccordionCard = (props) => {
     const clinicalMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Clinical';
     });
-   
 
     const firstAidMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'FirstAid';
@@ -355,26 +345,29 @@ const AccordionCard = (props) => {
                 setUserMetaData={setUserMetaData}
             />
 
-            <div className="flex flex-col justify-center gap-4  w-[832px] pl-10 ">
-                <p className="font-fira text-xl font-light pt-20 pb-10 pl-5">
+            <div className="flex flex-col justify-center gap-4 w-full md:w-[832px] pl-4 md:pl-10">
+                <p className="font-fira text-lg md:text-xl font-light pt-10 md:pt-20 pb-5 md:pb-10 pl-2 md:pl-5">
                     Follow these steps to submit your documentation for
                     certification review. You may complete them in any order,
                     except for the assessment, which can only be accessed once
                     the preceding items are completed. If you have any questions
                     about the process, please{' '}
-                    <span className="font-fira text-xl font-bold text-blue">
+                    <span className="font-fira text-lg md:text-xl font-bold text-blue">
                         contact us
                     </span>
                     , and a member of our board will be happy to assist you.
                 </p>
-                <div className="flex flex-col justify-center items-center pl-20 gap-4 pb-5">
-                    <img src={certProgressImages[progress]} />
+                <div className="flex flex-col justify-center items-center pl-2 md:pl-20 gap-4 pb-5">
+                    <img
+                        src={certProgressImages[progress]}
+                        className="w-full md:w-auto"
+                    />
                 </div>
 
                 <Accordion
                     allowMultipleExpanded={true}
                     allowZeroExpanded={true}
-                    className="w-[826px]"
+                    className="w-full md:w-[826px]"
                 >
                     <Brain
                         title="Brain Integration Training"
@@ -382,14 +375,14 @@ const AccordionCard = (props) => {
                         fileMetadata={fileMetaData}
                         brainMetaData={brainMetaData}
                     >
-                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
-                            <h1 className="font-fira text-dark-green font-bold text-xl pt-10">
+                        <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-lg md:text-xl pt-6 md:pt-10">
                                 Complete 500 hours of relevant brain integration
                                 training.
                             </h1>
 
                             <br></br>
-                            <p className="font-fira text-black text-base font-normal">
+                            <p className="font-fira text-black text-sm md:text-base font-normal mt-4">
                                 The Brain Integration Training program requires
                                 a comprehensive 500-hour training to ensure
                                 proficiency and expertise in the field. The
@@ -398,11 +391,11 @@ const AccordionCard = (props) => {
                                 and Competency Base. Below is a detailed
                                 breakdown of each component:
                             </p>
-                            <br></br>
-                            <h3 className="font-fira text-black text-base font-bold">
-                                Standard Knowledge Base
+
+                            <h3 className="font-fira text-black text-sm md:text-base font-bold mt-4">
+                                Standard Knowledge Base Standard Knowledge Base
                             </h3>
-                            <p>
+                            <p className="mt-2">
                                 Anatomy and Physiology: Understanding the human
                                 body&apos;s structure and function, with a focus
                                 on the brain and nervous system. <br></br>Brain
@@ -420,11 +413,11 @@ const AccordionCard = (props) => {
                                 brain integration and their practical
                                 applications in clinical settings.
                             </p>
-                            <br></br>
-                            <h3 className="font-fira text-black text-base font-bold">
+
+                            <h3 className="font-fira text-black text-sm md:text-base font-bold mt-4">
                                 Professional Training
                             </h3>
-                            <p>
+                            <p className="mt-2">
                                 Objectives and Assessments: Setting clear
                                 objectives for brain integration sessions and
                                 learning how to assess client progress
@@ -438,11 +431,11 @@ const AccordionCard = (props) => {
                                 business practices, including client management,
                                 record-keeping, and financial responsibilities.
                             </p>
-                            <br></br>
-                            <h3 className="font-fira text-black text-base font-bold">
+
+                            <h3 className="font-fira text-black text-sm md:text-base font-bold mt-4">
                                 Competency Base
                             </h3>
-                            <p>
+                            <p className="mt-2">
                                 Effective Communication: Developing strong
                                 communication skills to interact effectively
                                 with clients and colleagues.<br></br> Client
@@ -461,7 +454,6 @@ const AccordionCard = (props) => {
                                 standards required to provide high-quality brain
                                 integration services.
                             </p>
-                            <br></br>
 
                             <div className="flex flex-col gap-10 pt-10 pb-2">
                                 <div className="flex justify-center gap-10 pb-5">
@@ -576,8 +568,8 @@ const AccordionCard = (props) => {
                         sectionName="Clinical"
                         clinicalMetaData={clinicalMetaData}
                     >
-                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
-                            <p className="font-fira text-dark-green font-bold text-xl pt-10">
+                        <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
+                            <p className="font-fira text-dark-green font-bold text-lg md:text-xl pt-6 md:pt-10">
                                 Completion of 200 hours of clinical practice in
                                 brain integration or kinesiology including
                                 various populations and settings.
@@ -734,8 +726,8 @@ const AccordionCard = (props) => {
                         sectionName="FirstAid"
                         firstAidMetaData={firstAidMetaData}
                     >
-                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
-                            <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
+                        <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-lg md:text-xl pt-6 md:pt-10">
                                 Show proof of First Aid certification.
                             </h1>
                             <p className="font-fira text-black text-base font-normal">
@@ -872,8 +864,8 @@ const AccordionCard = (props) => {
                         sectionName="CPR"
                         cPRMetaData={cPRMetaData}
                     >
-                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
-                            <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
+                        <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-lg md:text-xl pt-6 md:pt-10">
                                 Show proof of CPR certification
                             </h1>
                             <p className="pb-5">
@@ -1019,8 +1011,8 @@ const AccordionCard = (props) => {
                         sectionName="Video"
                         videoMetaData={videoMetaData}
                     >
-                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
-                            <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
+                        <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-lg md:text-xl pt-6 md:pt-10">
                                 Submit video recording of a documented Brain
                                 Integration session.
                             </h1>
@@ -1175,8 +1167,8 @@ const AccordionCard = (props) => {
                         sectionName="Insurance"
                         insuranceMetaData={insuranceMetaData}
                     >
-                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
-                            <h1 className="font-fira text-dark-green font-bold text-xl pt-10 pb-8">
+                        <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-lg md:text-xl pt-6 md:pt-10">
                                 Show proof of professional and liability
                                 insurance
                             </h1>
@@ -1324,11 +1316,11 @@ const AccordionCard = (props) => {
                     </Insurance>
 
                     <StudyGuide title={'Study Guide'}>
-                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
-                            <h1 className="font-fira text-dark-green font-bold text-xl pb-5 pt-10">
+                        <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-lg md:text-xl pt-6 md:pt-10">
                                 Areas of knowledge for the Study Guide
                             </h1>
-                            <h1 className="font-fira text-black font-normal text-xl pb-5">
+                            <h1 className="font-fira text-black font-normal text-xl pb-5 mt-4">
                                 Having knowledge of Structure, Function, and
                                 Processes.
                             </h1>
@@ -1484,13 +1476,13 @@ const AccordionCard = (props) => {
                         </div>
                     </StudyGuide>
                     <Assessment title={'Assessment'} id="assessment">
-                        <div className="flex flex-col pl-6 pr-6 border rounded-lg border-t-0 solid black rounded-tr-none rounded-tl-none mb-5">
-                            <h1 className="font-fira text-dark-green font-bold text-xl pt-10">
+                        <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
+                            <h1 className="font-fira text-dark-green font-bold text-lg md:text-xl pt-6 md:pt-10">
                                 Complete 500 hours of relevant brain integration
                                 training.
                             </h1>
-                            <br></br>
-                            <p className="font-fira text-black text-base font-normal">
+                            
+                            <p className="font-fira text-black text-base font-normal mt-2">
                                 The Brain Integration Training program requires
                                 a comprehensive 500-hour training to ensure
                                 proficiency and expertise in the field. The
@@ -1499,8 +1491,8 @@ const AccordionCard = (props) => {
                                 and Competency Base. Below is a detailed
                                 breakdown of each component:
                             </p>
-                            <br></br>
-                            <h3 className="font-fira text-black text-base font-bold">
+                        
+                            <h3 className="font-fira text-black text-base font-bold mt-2">
                                 Standard Knowledge Base
                             </h3>
                             <p className="font-fira text-black text-base font-normal">
@@ -1520,8 +1512,8 @@ const AccordionCard = (props) => {
                                 for brain integration and their practical
                                 applications in clinical settings.
                             </p>
-                            <br></br>
-                            <h3 className="font-fira text-black text-base font-bold">
+                           
+                            <h3 className="font-fira text-black text-base font-bold mt-4">
                                 Professional Training
                             </h3>
                             <p className="font-fira text-black text-base font-normal">
@@ -1538,8 +1530,8 @@ const AccordionCard = (props) => {
                                 client management, record-keeping, and financial
                                 responsibilities.
                             </p>
-                            <br></br>
-                            <h3 className="font-fira text-black text-base font-bold">
+                           
+                            <h3 className="font-fira text-black text-base font-bold mt-4">
                                 Competency Base
                             </h3>
                             <p className="font-fira text-black text-base font-normal">
@@ -1560,9 +1552,9 @@ const AccordionCard = (props) => {
                                 rigorous standards required to provide
                                 high-quality brain integration services.
                             </p>
-                            <br></br>
+                          
 
-                            <div className="form-flex gap-10 pt-20 pb-5">
+                            <div className="form-flex gap-10 pt-20 pb-5 mt-4">
                                 <button
                                     disabled={!isUploaded}
                                     className={`${
