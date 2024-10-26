@@ -6,6 +6,8 @@ const { UserModel } = require('../models/User');
 
 const profileRouter = ex.Router();
 
+//api/profile
+
 //create get request to get profile info by user (eg, email)
 //call get request in useEffect in the profile page
 //if !profileData - render text to create profile - post request is submitted on form submit
@@ -33,21 +35,6 @@ profileRouter.get('/:email', async (req, res) => {
     }
 });
 
-// userRouter.get('/:email', async (req, res) => {
-//     const { email } = req.params;
-//     console.log('Received email param:', email);
-//     try {
-//         const userMetaData = await getUserMetaData(email);
-//         if (!userMetaData) {
-//             return res.status(404).json({ message: 'user not found' });
-//         }
-//         return res.status(200).json(userMetaData);
-//     } catch (error) {
-//         console.error('Error fetching user metadata', error);
-//         res.status(500).json({ error: 'Failed to send user metadata' });
-//     }
-// });
-
 profileRouter.post('/create-profile', async (req, res) => {
     const {
         firstName,
@@ -64,13 +51,15 @@ profileRouter.post('/create-profile', async (req, res) => {
         country,
         bio,
     } = req.body;
-    
+
     console.log(req.body);
     try {
         // Find the user by their email to get the userId
         const user = await UserModel.findOne({ userEmail: email }); // Assuming the userEmail is used to find the user
         if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+            return res
+                .status(404)
+                .json({ success: false, message: 'User not found' });
         }
 
         // Check if the profile already exists for the user
@@ -107,6 +96,44 @@ profileRouter.post('/create-profile', async (req, res) => {
     }
 });
 
+profileRouter.put('/:email', async (req, res) => {
+    const { email } = req.params;
+    const updatedData = req.body;
+    try {
+        // Update only the fields that are provided and not empty
+        const filteredData = Object.fromEntries(
+            Object.entries(updatedData).filter(
+                ([key, value]) => value !== '' && value !== null,
+            ),
+        );
+
+        const user = await UserModel.findOne({ userEmail: email });
+        if (!user) {
+            return res
+                .status(404)
+                .json({ success: false, message: 'User not found' });
+        }
+
+        const updatedProfile = await ProfileModel.findOneAndUpdate(
+            { userId: user._id },
+            { $set: req.body },
+            {
+                new: true,
+                runValidators: true,
+            },
+        );
+        if (!updatedProfile) {
+            return res
+                .status(404)
+                .json({ success: false, message: 'Profile not found' });
+        }
+
+        return res.status(200).json({ success: true, updatedProfile });
+    } catch (error) {
+        console.error('Error updating profile data:', error);
+        return res.status(500).json({ success: false, error: 'Server error' });
+    }
+});
 
 module.exports = {
     profileRouter,

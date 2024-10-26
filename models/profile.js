@@ -8,42 +8,41 @@ const ProfileSchema = new Schema({
         required: true,
     },
     firstName: {
-        type: String,
-        required: true,
+        type: String
+       
     },
 
     middleName: {
         type: String,
     },
     lastName: {
-        type: String,
-        required: true,
+        type: String
+        
     },
     suffix: {
         type: String,
     },
     phoneNumber: {
-        type: String,
-        required: true,
+        type: String
+        
     },
     email: {
-        type: String,
-        required: true,
+        type: String
+        
     },
     addressLine1: {
-        type: String,
-        required: true,
+        type: String
+       
     },
     addressLine2: {
         type: String,
     },
     city: {
-        type: String,
-        required: true,
+        type: String
+        
     },
     state: {
-        type: String,
-        required: true,
+        type: String
     },
     zip: {
         type: String,
