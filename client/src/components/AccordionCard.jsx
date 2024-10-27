@@ -270,7 +270,7 @@ const AccordionCard = (props) => {
             if (user) {
                 const token = localStorage.getItem('token');
                 try {
-                    const folderFiles = await getFilesInFolder(token); //docs themselves
+                    // const folderFiles = await getFilesInFolder(token); //docs themselves
                     const metadataFiles = await getFiles(token); //metadata
                     const userMetaData = await getUserMetaData(token);
                     setFileMetaData(metadataFiles);
