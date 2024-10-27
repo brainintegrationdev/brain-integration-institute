@@ -27,6 +27,7 @@ export const UserProvider = ({ children }) => {
     const [profileData, setProfileData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
     const handleInputChange = (e) => {
         console.log('change handled');
@@ -47,7 +48,7 @@ export const UserProvider = ({ children }) => {
 
         try {
             const response = await fetch(
-                'http://localhost:8080/api/profile/create-profile',
+                `${baseUrl}/api/profile/create-profile`,
                 {
                     method: 'POST',
                     headers: {
@@ -93,7 +94,7 @@ export const UserProvider = ({ children }) => {
         try {
             const accessToken = await getAccessTokenSilently();
             const response = await fetch(
-                `http://localhost:8080/api/profile/${user.email}`,
+                `${baseUrl}/api/profile/${user.email}`,
                 {
                     method: 'PUT',
                     headers: {

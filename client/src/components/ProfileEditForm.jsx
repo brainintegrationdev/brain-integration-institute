@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../contexts';
-import useProfileData from '../hooks';
+// import useProfileData from '../hooks';
 import ProfileModal from './ProfileModal';
 
-import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export const ProfileEditForm = (props) => {
     const {

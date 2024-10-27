@@ -1,8 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import { useContext, useState, useEffect } from 'react';
 import { http } from './http';
 import { useAuth0 } from '@auth0/auth0-react';
 import { FileContext } from './contexts';
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const createUserEndpoint = `${baseUrl}/api/user/createuser`;
 
 /**
  * Automatically attaches Auth0 user access token to outgoing requests
@@ -24,21 +27,18 @@ export const useHttpAuthClient = () => {
         const { email, name, picture } = user;
 
         try {
-            const response = await fetch(
-                'http://localhost:8080/api/user/createuser',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${await getAccessTokenSilently()}`,
-                    },
-                    body: JSON.stringify({
-                        userEmail: email,
-                        userName: name,
-                        userProfilePicture: picture,
-                    }),
+            const response = await fetch(createUserEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
                 },
-            );
+                body: JSON.stringify({
+                    userEmail: email,
+                    userName: name,
+                    userProfilePicture: picture,
+                }),
+            });
 
             const data = await response.json();
             // console.log(data);
@@ -101,16 +101,15 @@ export const useFileAPI = () => {
         setFiles(data.files);
     };
 
-    const uploadFile = async () => {
-        const data = await request.post('/api/files', { body: formData });
-        if (!data.success) throw Error(data.error);
-        setFiles((prev) => [...prev, data.file]);
-    };
+    // const uploadFile = async () => {
+    //     const data = await request.post('/api/files', { body: formData });
+    //     if (!data.success) throw Error(data.error);
+    //     setFiles((prev) => [...prev, data.file]);
+    // };
 
     return {
         files,
         getUserFiles,
-        uploadFile,
     };
 };
 
@@ -138,7 +137,7 @@ export const useProfileForm = (initialValues) => {
 
         try {
             const response = await fetch(
-                'http://localhost:8080/api/profile/create-profile',
+                createUserEndpoint,
                 {
                     method: 'POST',
                     headers: {
@@ -155,11 +154,10 @@ export const useProfileForm = (initialValues) => {
                 );
             }
             const data = await response.json();
-           
-            
+
             console.log('Response from backend:', data);
             if (!data.success) throw new Error(data.error);
-          
+
             // Reset inputs after successful submission
             resetInputs();
             return data;
@@ -169,20 +167,14 @@ export const useProfileForm = (initialValues) => {
         }
     };
 
-    
-
     return {
         inputs,
         useProfileForm,
         handleInputChange,
         createProfileData,
         resetInputs,
-       
-        
     };
 };
-
-
 
 const useProfileData = (user) => {
     const [profileData, setProfileData] = useState(null);
@@ -190,55 +182,46 @@ const useProfileData = (user) => {
     const [error, setError] = useState(null);
     const { getAccessTokenSilently } = useAuth0();
 
+    const fetchProfileData = async () => {
+        if (user && user.email) {
+            try {
+                setLoading(true);
+                const response = await fetch(`/api/profile/${user.email}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${await getAccessTokenSilently()}`,
+                    },
+                });
 
-        const fetchProfileData = async () => {
-            if (user && user.email) {
-               
-                try {
-                    setLoading(true); 
-                    const response = await fetch(`/api/profile/${user.email}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${await getAccessTokenSilently()}`,
-                        },
-                    });
-        
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-        
-                    const data = await response.json();
-                    setProfileData(data); 
-                    console.log(profileData)
-                } catch (error) {
-                    console.error('Error fetching profile data:', error);
-                    setError(error.message); 
-                } finally {
-                    setLoading(false); 
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            } else {
-                console.warn('User object is invalid:', user);
-                setLoading(false); 
+
+                const data = await response.json();
+                setProfileData(data);
+                console.log(profileData);
+            } catch (error) {
+                console.error('Error fetching profile data:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
             }
-        };
+        } else {
+            console.warn('User object is invalid:', user);
+            setLoading(false);
+        }
+    };
 
-        useEffect(() => {
-           
-                fetchProfileData();
-            
-        }, [user]);
-        
-       
-        
-  
+    useEffect(() => {
+        fetchProfileData();
+    }, [user]);
 
-    console.log(profileData)
+    console.log(profileData);
 
-    return { profileData, loading, error, fetchProfileData, setProfileData }; 
+    return { profileData, loading, error, fetchProfileData, setProfileData };
 };
 
 export default useProfileData;
-
 
 export const useFileContext = () => useContext(FileContext);

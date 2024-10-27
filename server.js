@@ -19,6 +19,13 @@ server.use('/api', validateAuthToken, apiRouter)
 // server.use(ex.static(path.resolve(__dirname, 'client', 'dist')))
 // server.get('*', staticSiteRouter)
 
+server.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(`https://${req.headers.host}${req.url}`);
+    }
+    next();
+  });
+
 
 server.get('/api/files', (req, res) => {
     res.json({ message: 'CORS enabled!' });
