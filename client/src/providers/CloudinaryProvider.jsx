@@ -33,7 +33,7 @@ export const CloudinaryProvider = ({ children }) => {
     const baseUrl = import.meta.env.VITE_API_BASE_URL;
     const fileMetaDataEndpoint = `${baseUrl}/api/files`;
     // const callBackEndpoint = `${baseUrl}/api/images/${user.nickname}`
-    const userMetaDataEndpoint = `${baseUrl}/api/user/${user.email}`
+    // const userMetaDataEndpoint = `${baseUrl}/api/user/${user.email}`
     
 
     // const handleProfileUpload = () => {
@@ -99,7 +99,7 @@ export const CloudinaryProvider = ({ children }) => {
             const accessToken = await getAccessTokenSilently();
 
             const response = await axios.get(
-                userMetaDataEndpoint,
+                `${baseUrl}/api/user/${user.email}`,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
