@@ -16,7 +16,7 @@ server.use(ex.urlencoded({ extended: true }));
 
 
 server.use('/api', validateAuthToken, apiRouter)
-// server.use(ex.static(path.resolve(__dirname, 'client', 'dist')))
+server.use(ex.static(path.resolve(__dirname, 'client', 'dist')))
 // server.get('*', staticSiteRouter)
 
 server.use((req, res, next) => {
@@ -24,6 +24,10 @@ server.use((req, res, next) => {
       return res.redirect(`https://${req.headers.host}${req.url}`);
     }
     next();
+  });
+
+  server.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/dist/index.html'));
   });
 
 
