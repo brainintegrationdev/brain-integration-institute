@@ -32,7 +32,7 @@ export const CloudinaryProvider = ({ children }) => {
     const [profilePhotoUploaded, setProfilePhotoUploaded] = useState(false)
     const baseUrl = import.meta.env.VITE_API_BASE_URL;
     const fileMetaDataEndpoint = `${baseUrl}/api/files`;
-    const callBackEndpoint = `${baseUrl}/api/images/${user.nickname}`
+    // const callBackEndpoint = `${baseUrl}/api/images/${user.nickname}`
     const userMetaDataEndpoint = `${baseUrl}/api/user/${user.email}`
     
 
@@ -81,7 +81,7 @@ export const CloudinaryProvider = ({ children }) => {
             const accessToken = await getAccessTokenSilently();
 
             const response = await axios.get(
-                callBackEndpoint,
+                `${baseUrl}/api/images/${user.nickname}`,
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
