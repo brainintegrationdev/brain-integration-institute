@@ -12,7 +12,7 @@ export const Profile = withAuthenticationRequired(() => {
     const { fetchProfileData, profileData } = useContext(UserContext);
     const [isEditing, setIsEditing] = useState(false);
     
-    const [sectionName, setSectionName] = useState(null);
+    const [sectionName, setSectionName] = useState('profile');
 
     useEffect(() => {
         fetchProfileData(user);
