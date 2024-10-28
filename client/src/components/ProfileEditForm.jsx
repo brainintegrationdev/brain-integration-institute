@@ -510,7 +510,7 @@ export const ProfileEditForm = (props) => {
                                     </p>
                                 )}
                                 <div className="flex mt-10">
-                                    <button className="btn bg-light-green rounded-xl text-white h-12 w-[493px]">
+                                    <button className="bg-medium-pale-green hover:bg-green-600 rounded-full w-[204px] h-[43px] text-white font-medium px-6 py-2">
                                         Save
                                     </button>
                                 </div>
@@ -525,7 +525,7 @@ export const ProfileEditForm = (props) => {
                                    
                                     <div className="flex justify-center gap-10">
                                         <button
-                                            className="bg-medium-pale-green rounded-2xl  w-[100px]  py-2  text-white"
+                                            className="bg-medium-pale-green hover:bg-green-600 rounded-full w-[104px] h-[43px] text-white font-medium px-6 py-2"
                                             onClick={handleCloseModal}
                                         >
                                             OK
