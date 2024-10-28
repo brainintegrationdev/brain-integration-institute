@@ -1,31 +1,26 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../contexts';
-import useProfileData from '../hooks';
+
 import ProfileModal from './ProfileModal';
 
-import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
+
 
 export const ProfileEditForm = (props) => {
     const {
         inputs,
         setInputs,
-        initialValues,
-        loading,
-        setLoading,
-        error,
-        setError,
-        resetInputs,
+       
 
         createProfileData,
         editProfileData,
         setProfileData,
-        fetchProfileData,
+        
         profileData,
     } = useContext(UserContext);
     const { isEditing, setIsEditing } = props;
 
-    const { user } = useAuth0();
+   
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [requiredFieldError, setRequiredFieldError] = useState('');
     const [hasRequiredError, setHasRequiredError] = useState(false);
@@ -122,24 +117,8 @@ export const ProfileEditForm = (props) => {
         }
     };
 
-    const handleOpenModal = () => {
-        setShowModal(true);
-        setInputs({
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            suffix: '',
-            phoneNumber: '',
-            email: '',
-            addressLine1: '',
-            addressLine2: '',
-            city: '',
-            state: '',
-            zip: '',
-            country: '',
-            bio: '',
-        });
-    };
+    
+   
 
     const handleCloseModal = () => {
         setProfileModalOpen(false);
@@ -169,27 +148,14 @@ export const ProfileEditForm = (props) => {
                 // Set error if the field is empty
             } else {
                 setRequiredFieldError('');
-                setHasRequiredError(false); // Clear error if field is filled
+                setHasRequiredError(false); 
             }
         }
     };
 
-    const isError =
-        !profileData &&
-        !(
-            inputs.firstName &&
-            inputs.lastName &&
-            inputs.addressLine1 &&
-            inputs.city &&
-            inputs.state &&
-            inputs.zip &&
-            inputs.phone &&
-            inputs.email
-        );
 
-    // useEffect(() => {
-    //     console.log('Profile modal open status:', profileModalOpen);
-    // }, [profileModalOpen]);
+
+  
 
     useEffect(() => {
         console.log('profileModalOpen changed:', profileModalOpen);
