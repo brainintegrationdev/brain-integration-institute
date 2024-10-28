@@ -87,7 +87,7 @@ import { useState } from 'react';
 export const Navbar = () => {
     const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
     const { profilePictureUrl, imageUrl } = useContext(CloudinaryContext);
-    const [isOpen, setIsOpen] = useState(false); // State to control mobile menu visibility
+    const [isOpen, setIsOpen] = useState(false); 
 
     const handleLogin = () =>
         loginWithRedirect({
