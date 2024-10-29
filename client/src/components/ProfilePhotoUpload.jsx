@@ -1,9 +1,8 @@
-
-
 import { useState, useContext, useEffect } from 'react';
 import ProfileEditIcon from '../assets/icons/profileEditIcon.png';
-import placeholderProfilePic from '../assets/icons/placeholderProfilePic.png'
+
 import { CloudinaryContext } from '../contexts';
+
 import { useAuth0 } from '@auth0/auth0-react';
 
 export const ProfilePhotoUpload = () => {
@@ -11,16 +10,16 @@ export const ProfilePhotoUpload = () => {
         uploadProfilePicture,
         getUserMetaData,
         userMetaData,
-        setUserMetaData
+        setUserMetaData,
     } = useContext(CloudinaryContext);
+
+
     const { isAuthenticated, user } = useAuth0();
 
-    // const { userMetaData, setUserMetaData } = props;
-
-    // Local state for profile picture URL
+   
     const [profilePictureUrl, setProfilePictureUrl] = useState(user?.picture);
 
-    // Fetch user metadata on component mount to get the saved profile picture URL
+   
     useEffect(() => {
         const fetchData = async () => {
             if (user) {
@@ -31,7 +30,9 @@ export const ProfilePhotoUpload = () => {
 
                     // Update profile picture URL if it exists in user metadata
                     if (fetchedUserMetaData?.userProfilePicture) {
-                        setProfilePictureUrl(fetchedUserMetaData.userProfilePicture);
+                        setProfilePictureUrl(
+                            fetchedUserMetaData.userProfilePicture,
+                        );
                     }
                 } catch (error) {
                     console.error(
@@ -43,12 +44,12 @@ export const ProfilePhotoUpload = () => {
         };
 
         fetchData();
-    }, [ ]);
+    }, []);
 
     // Handler for uploading a new profile picture
     const handleProfilePictureUpload = async () => {
         try {
-            const newProfilePictureUrl = await uploadProfilePicture(); 
+            const newProfilePictureUrl = await uploadProfilePicture();
             if (newProfilePictureUrl) {
                 setProfilePictureUrl(newProfilePictureUrl);
 
@@ -58,8 +59,6 @@ export const ProfilePhotoUpload = () => {
                     userProfilePicture: newProfilePictureUrl,
                 };
                 setUserMetaData(updatedUserMetaData);
-
-                
             }
         } catch (error) {
             console.error('Error uploading profile picture:', error);
@@ -67,31 +66,28 @@ export const ProfilePhotoUpload = () => {
     };
 
     return (
-        <div className="flex justify-start">
+        <div className="flex flex-col items-start">
             {isAuthenticated ? (
                 <div className="relative">
                     <img
-                        className="h-[200px] w-[200px] ml-20 mr-[80px] rounded-full"
+                        className="h-[200px] w-[200px] rounded-full"
                         src={profilePictureUrl}
                         alt="avatar"
                     />
-
                     <button onClick={handleProfilePictureUpload}>
                         <img
-                            className="h-[40px] w-[40px] absolute bottom-30 right-10"
+                            className="h-[32px] w-[32px] absolute bottom-2 right-2 bg-white p-1 rounded-full shadow-md"
                             src={ProfileEditIcon}
                             alt="Edit Icon"
                         />
                     </button>
+            
                 </div>
-            ) : (
-                <div>Loading...
-                    <img src={placeholderProfilePic} />
-                </div>
-            )}
+            ) : null}
+
+           
         </div>
     );
 };
 
 export default ProfilePhotoUpload;
-

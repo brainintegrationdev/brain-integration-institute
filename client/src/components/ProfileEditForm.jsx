@@ -1,31 +1,26 @@
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../contexts';
-// import useProfileData from '../hooks';
+
 import ProfileModal from './ProfileModal';
 
-import { useAuth0 } from '@auth0/auth0-react';
+
 
 export const ProfileEditForm = (props) => {
     const {
         inputs,
         setInputs,
-        initialValues,
-        loading,
-        setLoading,
-        error,
-        setError,
-        resetInputs,
+       
 
         createProfileData,
         editProfileData,
         setProfileData,
-        fetchProfileData,
+        
         profileData,
     } = useContext(UserContext);
     const { isEditing, setIsEditing } = props;
 
-    const { user } = useAuth0();
+   
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [requiredFieldError, setRequiredFieldError] = useState('');
     const [hasRequiredError, setHasRequiredError] = useState(false);
@@ -122,24 +117,8 @@ export const ProfileEditForm = (props) => {
         }
     };
 
-    const handleOpenModal = () => {
-        setShowModal(true);
-        setInputs({
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            suffix: '',
-            phoneNumber: '',
-            email: '',
-            addressLine1: '',
-            addressLine2: '',
-            city: '',
-            state: '',
-            zip: '',
-            country: '',
-            bio: '',
-        });
-    };
+    
+   
 
     const handleCloseModal = () => {
         setProfileModalOpen(false);
@@ -169,27 +148,14 @@ export const ProfileEditForm = (props) => {
                 // Set error if the field is empty
             } else {
                 setRequiredFieldError('');
-                setHasRequiredError(false); // Clear error if field is filled
+                setHasRequiredError(false); 
             }
         }
     };
 
-    const isError =
-        !profileData &&
-        !(
-            inputs.firstName &&
-            inputs.lastName &&
-            inputs.addressLine1 &&
-            inputs.city &&
-            inputs.state &&
-            inputs.zip &&
-            inputs.phone &&
-            inputs.email
-        );
 
-    // useEffect(() => {
-    //     console.log('Profile modal open status:', profileModalOpen);
-    // }, [profileModalOpen]);
+
+  
 
     useEffect(() => {
         console.log('profileModalOpen changed:', profileModalOpen);
@@ -381,6 +347,7 @@ export const ProfileEditForm = (props) => {
                                         // onBlur={handleRequiredBlur}
                                     >
                                         <option value="">-- State --</option>
+                                        <option value="NUS">Non-US</option>
                                         <option value="AL">AL</option>
                                         <option value="AK">AK</option>
                                         <option value="AZ">AZ</option>
@@ -510,7 +477,7 @@ export const ProfileEditForm = (props) => {
                                     </p>
                                 )}
                                 <div className="flex mt-10">
-                                    <button className="btn bg-light-green rounded-xl text-white h-12 w-[493px]">
+                                    <button className="bg-medium-pale-green hover:bg-green-600 rounded-full w-[204px] h-[43px] text-white font-medium px-6 py-2">
                                         Save
                                     </button>
                                 </div>
@@ -525,7 +492,7 @@ export const ProfileEditForm = (props) => {
                                    
                                     <div className="flex justify-center gap-10">
                                         <button
-                                            className="bg-medium-pale-green rounded-2xl  w-[100px]  py-2  text-white"
+                                            className="bg-medium-pale-green hover:bg-green-600 rounded-full w-[104px] h-[43px] text-white font-medium px-6 py-2"
                                             onClick={handleCloseModal}
                                         >
                                             OK
