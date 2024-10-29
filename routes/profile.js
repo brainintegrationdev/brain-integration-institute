@@ -17,7 +17,7 @@ const profileRouter = ex.Router();
 
 profileRouter.get('/:email', async (req, res) => {
     const { email } = req.params;
-    console.log('Received email param:', email);
+   
     try {
         const user = await UserModel.findOne({ userEmail: email });
         if (!user) {
@@ -52,7 +52,7 @@ profileRouter.post('/create-profile', async (req, res) => {
         bio,
     } = req.body;
 
-    console.log(req.body);
+
     try {
         // Find the user by their email to get the userId
         const user = await UserModel.findOne({ userEmail: email }); // Assuming the userEmail is used to find the user

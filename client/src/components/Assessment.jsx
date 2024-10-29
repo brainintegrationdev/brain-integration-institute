@@ -36,7 +36,7 @@ function Assessment(props) {
         }
     }, [location]);
 
-    // console.log(isExpanded);
+   
     return (
         <AccordionItem>
             <AccordionItemHeading>

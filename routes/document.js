@@ -19,10 +19,10 @@ cloudinary.config({
   documentRouter.get('/:nickname', validateAuthToken, async (req, res) => {
     const nickname = req.params.nickname;
     const folder = `users/${nickname}`;
-    console.log('Fetching images from folder:', folder);
+  
     try {
         const images = await getImagesFromCloudinary(folder);
-        console.log('fetching images')
+    
         res.json(images);
     } catch (error) {
         console.error(error);

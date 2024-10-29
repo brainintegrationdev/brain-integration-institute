@@ -9,7 +9,7 @@
 //     const [loading, setLoading] = useState(true);
 //     const { isAuthenticated, user } = useAuth0();
 
-//     console.log(images)
+
 
   
 //         const fetchImages = async () => {

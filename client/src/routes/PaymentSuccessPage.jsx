@@ -11,15 +11,11 @@ export const PaymentSuccessPage = ({ setStudyGuideAccess }) => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const studyGuideAccess = queryParams.get('studyGuideAccess');
-    const cloudinaryUrl = queryParams.get('cloudinaryUrl');
     const assessmentUrl = queryParams.get('assessmentUrl');
     const { email } = useContext(CloudinaryContext);
-    const { getAccessTokenSilently, user } = useAuth0();
+    const { getAccessTokenSilently } = useAuth0();
 
-    console.log(showModal);
-    console.log(studyGuideAccess);
-    console.log(user)
-    console.log(email)
+
 
     useEffect(() => {
         if (showModal) {
@@ -66,7 +62,7 @@ export const PaymentSuccessPage = ({ setStudyGuideAccess }) => {
     };
     
 
-    console.log(cloudinaryUrl);
+
 
     const redirectToAssessment = () => {
         window.open(

@@ -29,8 +29,7 @@ export const ProfileEditForm = (props) => {
     const [profileModalOpen, setProfileModalOpen] = useState(false);
     const regex = /^[0-9]+$/;
 
-    // console.log(showModal);
-    console.log(hasRequiredError);
+   
 
     const validateRequiredFields = () => {
         if (!profileData) {
@@ -54,13 +53,13 @@ export const ProfileEditForm = (props) => {
         }
     };
 
-    console.log(profileModalOpen, 'profile modal status');
+  
 
     const handleInputChange = (e) => {
-        console.log('change handled');
+        
         const { name, value } = e.target;
         const regex = /^[0-9]+$/;
-        console.log(name, value);
+       
         if (name === 'phoneNumber' && !regex.test(value)) {
             setValidationError('Please enter a valid number.');
             setRequiredFieldError('');
@@ -76,11 +75,11 @@ export const ProfileEditForm = (props) => {
     };
 
     const handleSubmit = async (event) => {
-        console.log('submitting new profile');
+      
         event.preventDefault();
         try {
             const result = await createProfileData();
-            console.log(result);
+       
 
             setProfileData(result.profileData);
             
@@ -90,7 +89,7 @@ export const ProfileEditForm = (props) => {
             console.error('Error creating profile:', error);
             alert(`Profile creation failed: ${error.message}`);
         }
-        console.log(profileData);
+      
     };
 
     const onSubmitWithProfileData = async (event) => {
@@ -105,9 +104,9 @@ export const ProfileEditForm = (props) => {
         setProfileModalOpen(true);
 
         try {
-            console.log('editing profile');
+           
             const result = await editProfileData(inputs);
-            console.log(result);
+          
 
             setProfileData(result.updatedProfile);
            
@@ -124,9 +123,7 @@ export const ProfileEditForm = (props) => {
         setProfileModalOpen(false);
         setIsEditing(false)
     };
-    console.log(requiredFieldError);
-
-    console.log(isEditing);
+  
 
     const onBlur = (e) => {
         const { name, value } = e.target;

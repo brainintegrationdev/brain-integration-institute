@@ -40,7 +40,7 @@ userRouter.post('/createuser', async (req, res) => {
 
 userRouter.get('/:email', async (req, res) => {
     const { email } = req.params;
-    console.log('Received email param:', email);
+   
     try {
         const userMetaData = await getUserMetaData(email);
         if (!userMetaData) {
@@ -57,8 +57,7 @@ userRouter.get('/:email', async (req, res) => {
 userRouter.put('/:email/progress', async (req, res) => {
     const { userUploadProgress } = req.body;
     const { email } = req.params;
-    console.log('Request body:', req.body);
-    console.log('Email to find:', email);
+  
 
     if (
         userUploadProgress === undefined ||
@@ -76,7 +75,7 @@ userRouter.put('/:email/progress', async (req, res) => {
             { new: true, runValidators: true },
         );
 
-        console.log('User found:', user); // Log the found user (or null if not found)
+     
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });

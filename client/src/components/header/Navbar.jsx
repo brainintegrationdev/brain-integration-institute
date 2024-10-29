@@ -24,7 +24,7 @@ export const Navbar = () => {
 
     const handleLogout = () => {
         logout();
-        console.log('logged out');
+       
     };
 
     const { getUserMetaData } = useContext(CloudinaryContext);

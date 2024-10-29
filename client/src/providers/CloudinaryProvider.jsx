@@ -32,13 +32,9 @@ export const CloudinaryProvider = ({ children }) => {
     const [profilePhotoUploaded, setProfilePhotoUploaded] = useState(false)
     const baseUrl = import.meta.env.VITE_API_BASE_URL;
     const fileMetaDataEndpoint = `${baseUrl}/api/files`;
-    // const callBackEndpoint = `${baseUrl}/api/images/${user.nickname}`
-    // const userMetaDataEndpoint = `${baseUrl}/api/user/${user.email}`
+
     
 
-    // const handleProfileUpload = () => {
-    //     console.log('photo uploaded!');
-    // };
 
 
 
@@ -53,7 +49,7 @@ export const CloudinaryProvider = ({ children }) => {
     const apiSecret = import.meta.env.VITE_CLOUDINARY_API_SECRET;
     const apiKey = import.meta.VITE_CLOUDINARY_API_KEY;
 
-    // console.log(isAuthenticated);
+
 
     //gets file metadata
     const getFiles = async () => {
@@ -159,16 +155,12 @@ export const CloudinaryProvider = ({ children }) => {
     //this whole function is being called inside getStudyGuide in accordioncard
 
     const updateUserProgress = async (newProgress) => {
-        console.log('updateUserProgress called with:', newProgress);
+      
         //this works
         if (user) {
             try {
                 const accessToken = await getAccessTokenSilently();
-                console.log('Updating user progress:', {
-                    userUploadProgress: newProgress,
-                });
-                console.log('User email:', user.email);
-                console.log('User object:', user);
+             
 
                 const response = await fetch(
                     `${baseUrl}/api/user/${user.email}/progress`,
@@ -184,8 +176,7 @@ export const CloudinaryProvider = ({ children }) => {
                     },
                 );
 
-                console.log('Response Status:', response.status);
-                console.log('Response Status Text:', response.statusText);
+              
 
                 if (!response.ok) {
                     const errorData = await response.json();
@@ -194,7 +185,7 @@ export const CloudinaryProvider = ({ children }) => {
                 }
 
                 const data = await response.json();
-                console.log('User progress updated on the server:', data);
+              
             } catch (error) {
                 console.error('Error updating user progress:', error);
             }
@@ -203,11 +194,10 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
-    // console.log(email)
-    // console.log(user)
+
 
     const updateUserStudyGuide = async (email) => {
-        console.log('updateUserStudyGuide called');
+       
         if (!email) {
             console.error('Email is required to update the study guide.');
             return;
@@ -215,8 +205,8 @@ export const CloudinaryProvider = ({ children }) => {
 
         try {
             const accessToken = await getAccessTokenSilently();
-            console.log('Access Token:', accessToken);
-            console.log('Updating study guide for:', email);
+           
+          
 
             const response = await fetch(
                 `${baseUrl}/api/user/${email}/study-guide`,
@@ -230,7 +220,7 @@ export const CloudinaryProvider = ({ children }) => {
                 },
             );
 
-            console.log('Response Status:', response.status);
+       
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -239,7 +229,7 @@ export const CloudinaryProvider = ({ children }) => {
             }
 
             const data = await response.json();
-            console.log('User study guide updated on the server:', data);
+          
             setStudyGuideAccess(true);
         } catch (error) {
             console.error('Error updating user study guide:', error);
@@ -260,7 +250,7 @@ export const CloudinaryProvider = ({ children }) => {
                         return;
                     }
                     if (result.event === 'success') {
-                        console.log('Upload successful:', result.info);
+                      
                         const newProgress = Math.max(progress + 1, 8);
 
                         setProgress(newProgress);
@@ -298,9 +288,7 @@ export const CloudinaryProvider = ({ children }) => {
                             );
 
                             if (response.ok) {
-                                console.log(
-                                    'File metadata successfully sent to the server.',
-                                );
+                              
                                 setFiles((prevFiles) => [
                                     ...prevFiles,
                                     fileMetadata,
@@ -338,7 +326,7 @@ export const CloudinaryProvider = ({ children }) => {
                         return;
                     }
                     if (result.event === 'success') {
-                        console.log('Upload successful:', result.info);
+                     
                         
                         const userMetaData = {
                             userProfilePicture: result.info.secure_url

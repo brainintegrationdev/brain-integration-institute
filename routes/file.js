@@ -68,13 +68,13 @@ fileRouter.post('/', async (req, res) => {
     }
 });
 
-console.log('File model:', File);
+
 
 fileRouter.delete('/:publicId', async (req, res) => {
     const publicId = req.params.publicId;
     
     try {
-        console.log('Attempting to delete file with publicId:', publicId);
+       
         const result = await cloudinary.uploader.destroy(publicId);
         if (result.result === 'ok') {
             await File.findOneAndDelete({ publicId: publicId }); 

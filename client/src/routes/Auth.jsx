@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react"
 // import { Auth0Provider } from '@auth0/auth0-react';
@@ -57,7 +58,7 @@ const Auth = () => {
     const handleLogin = (e) => {
         e.preventDefault()
         createUserMetadata()
-        console.log('user created!')
+       
         // login
     }
     

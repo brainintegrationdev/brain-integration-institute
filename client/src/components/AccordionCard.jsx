@@ -81,8 +81,6 @@ const AccordionCard = (props) => {
     const [showPayment, setShowPayment] = useState(false);
     const [showModal, setShowModal] = useState(false);
 
-    console.log(deleteModalOpen)
-
     const certProgressImages = [
         ProgressBar0,
         ProgressBar1,
@@ -95,25 +93,10 @@ const AccordionCard = (props) => {
         ProgressBar8,
     ];
 
-    console.log(studyGuideAccess);
-    console.log(showPayment);
-    // console.log(stripePromise);
-
-    //will need to add put request to user metadata route to change studyGuideAccess to true, just saving in state for now
-
-    // const closeModal = () => {
-    //     setShowModal(false);
-    // };
-
-    // const redirectToAssessment = () => {
-    //     window.open('https://forms.gle/uL6ySYPDuwuXQj487', '_blank');
-    // };
-
     const getStudyGuide = async () => {
-        console.log('getStudyGuide function invoked');
         try {
             const accessToken = await getAccessTokenSilently();
-            console.log('Access token retrieved:', accessToken);
+
             const stripe = await stripePromise;
             const response = await fetch('/api/create-payment-intent', {
                 method: 'POST',
@@ -125,24 +108,16 @@ const AccordionCard = (props) => {
             });
 
             const session = await response.json();
-            console.log('Session retrieved:', session);
+
             if (session.clientSecret) {
-                console.log(
-                    'Payment intent created successfully',
-                    session.clientSecret,
-                );
                 //this part still works
                 setShowPayment(true);
 
                 try {
                     await updateUserProgress(progress + 1);
-                    console.log('User progress update');
+
                     setProgress((prevProgress) => {
                         const newProgress = Math.min(prevProgress + 1, 8);
-                        console.log(
-                            'Progress successfully updated:',
-                            newProgress,
-                        );
 
                         return newProgress;
                     });
@@ -154,8 +129,6 @@ const AccordionCard = (props) => {
             console.error('Error creating checkout session:', error);
         }
     };
-
-    console.log(progress);
 
     const getPublishableKey = async () => {
         const accessToken = await getAccessTokenSilently();
@@ -173,7 +146,6 @@ const AccordionCard = (props) => {
                 }
                 const { publishableKey } = await response.json();
                 setStripePromise(loadStripe(publishableKey));
-                console.log('Stripe promise set successfully');
             })
             .catch((error) => {
                 console.error('Error fetching publishable key:', error);
@@ -181,7 +153,6 @@ const AccordionCard = (props) => {
     };
 
     const getAssessment = async () => {
-        console.log('assessment button clicked');
         try {
             const accessToken = await getAccessTokenSilently();
             const stripe = await stripePromise;
@@ -199,22 +170,14 @@ const AccordionCard = (props) => {
 
             const session = await response.json();
             if (session.clientSecret) {
-                console.log(
-                    'Payment intent created successfully',
-                    session.clientSecret,
-                );
                 setShowPayment(true);
                 setShowModal(true);
 
                 try {
                     await updateUserProgress(progress + 1);
-                    console.log('User progress update');
+
                     setProgress((prevProgress) => {
                         const newProgress = Math.min(prevProgress + 1, 8);
-                        console.log(
-                            'Progress successfully updated:',
-                            newProgress,
-                        );
 
                         return newProgress;
                     });
@@ -227,8 +190,6 @@ const AccordionCard = (props) => {
         }
     };
 
-    // console.log(progress);
-
     const showFile = () => {
         console.log('file shown');
     };
@@ -236,12 +197,7 @@ const AccordionCard = (props) => {
     const handleUploadClick = (section) => {
         setSectionName(section);
         initializeCloudinaryWidget(section);
-        console.log('Calling updateUserProgress with value:', 1);
     };
-
-    // if (isAuthenticated) {
-    //     console.log('User Data:', user);
-    // }
 
     const checkAllSectionsUploaded = () => {
         const sections = [
@@ -259,9 +215,6 @@ const AccordionCard = (props) => {
     };
 
     useEffect(() => {
-        console.log('Fetching publishable key...');
-        // Fetch the publishable key and set the stripePromise
-
         getPublishableKey();
     }, []);
 
@@ -333,10 +286,6 @@ const AccordionCard = (props) => {
     const insuranceMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'Insurance';
     });
-
-    // console.log(user);
-
-    // console.log(currentFileToDelete);
 
     return (
         <div>
@@ -1447,9 +1396,6 @@ const AccordionCard = (props) => {
                                                 className="pl-[100px]"
                                                 src={GetStudyGuideBtn}
                                                 onClick={() => {
-                                                    console.log(
-                                                        'Button clicked',
-                                                    );
                                                     getStudyGuide();
                                                 }}
                                             />
@@ -1481,7 +1427,7 @@ const AccordionCard = (props) => {
                                 Complete 500 hours of relevant brain integration
                                 training.
                             </h1>
-                            
+
                             <p className="font-fira text-black text-base font-normal mt-2">
                                 The Brain Integration Training program requires
                                 a comprehensive 500-hour training to ensure
@@ -1491,7 +1437,7 @@ const AccordionCard = (props) => {
                                 and Competency Base. Below is a detailed
                                 breakdown of each component:
                             </p>
-                        
+
                             <h3 className="font-fira text-black text-base font-bold mt-2">
                                 Standard Knowledge Base
                             </h3>
@@ -1512,7 +1458,7 @@ const AccordionCard = (props) => {
                                 for brain integration and their practical
                                 applications in clinical settings.
                             </p>
-                           
+
                             <h3 className="font-fira text-black text-base font-bold mt-4">
                                 Professional Training
                             </h3>
@@ -1530,7 +1476,7 @@ const AccordionCard = (props) => {
                                 client management, record-keeping, and financial
                                 responsibilities.
                             </p>
-                           
+
                             <h3 className="font-fira text-black text-base font-bold mt-4">
                                 Competency Base
                             </h3>
@@ -1552,7 +1498,6 @@ const AccordionCard = (props) => {
                                 rigorous standards required to provide
                                 high-quality brain integration services.
                             </p>
-                          
 
                             <div className="form-flex gap-10 pt-20 pb-5 mt-4">
                                 <button

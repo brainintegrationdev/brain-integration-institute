@@ -119,7 +119,7 @@ export const useProfileForm = (initialValues) => {
     // const [profileData, setProfileData] = useState(null)
 
     const handleInputChange = (e) => {
-        console.log('change handled');
+        // console.log('change handled');
         const { name, value } = e.target;
         setInputs((prevInputs) => ({
             ...prevInputs,
@@ -128,12 +128,12 @@ export const useProfileForm = (initialValues) => {
     };
 
     const resetInputs = () => {
-        console.log('inputs reset!');
+        // console.log('inputs reset!');
         setInputs(initialValues);
     };
 
     const createProfileData = async () => {
-        console.log('Inputs being sent:', inputs);
+        // console.log('Inputs being sent:', inputs);
 
         try {
             const response = await fetch(
@@ -155,7 +155,7 @@ export const useProfileForm = (initialValues) => {
             }
             const data = await response.json();
 
-            console.log('Response from backend:', data);
+            // console.log('Response from backend:', data);
             if (!data.success) throw new Error(data.error);
 
             // Reset inputs after successful submission
@@ -200,7 +200,7 @@ const useProfileData = (user) => {
 
                 const data = await response.json();
                 setProfileData(data);
-                console.log(profileData);
+                // console.log(profileData);
             } catch (error) {
                 console.error('Error fetching profile data:', error);
                 setError(error.message);
@@ -217,7 +217,7 @@ const useProfileData = (user) => {
         fetchProfileData();
     }, [user]);
 
-    console.log(profileData);
+   
 
     return { profileData, loading, error, fetchProfileData, setProfileData };
 };

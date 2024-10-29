@@ -12,9 +12,7 @@ export const Payment = ({stripePromise, showPayment, studyGuideAccess, setStudyG
    
 
 
-    console.log(clientSecret);
-    console.log(stripePromise);
-    console.log(studyGuideAccess)
+
 
 
 
@@ -29,7 +27,7 @@ export const Payment = ({stripePromise, showPayment, studyGuideAccess, setStudyG
 
     const createPaymentIntent = async () => {
         const accessToken = await getAccessTokenSilently();
-        console.log(accessToken)
+      
         fetch('/api/create-payment-intent', {
             method: 'POST',
             headers: {
