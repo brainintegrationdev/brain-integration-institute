@@ -12,9 +12,7 @@ const ProfileSchema = new Schema({
        
     },
 
-    middleName: {
-        type: String,
-    },
+
     lastName: {
         type: String
         

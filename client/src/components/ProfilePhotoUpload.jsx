@@ -83,9 +83,11 @@ export const ProfilePhotoUpload = () => {
                             alt="Edit Icon"
                         />
                     </button>
-                    {/* <h3 className="mt-4 text-xl pl-5 font-semibold text-gray-800 text-center">
+                    {profileData && (
+                     <h3 className="mt-4 text-xl pl-5 pr-10 font-semibold text-gray-800 text-center">
                 {profileData.firstName} {profileData.lastName}
-            </h3> */}
+            </h3> 
+                    )}
                 </div>
             ) : null}
 

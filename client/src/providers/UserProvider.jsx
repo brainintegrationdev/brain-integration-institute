@@ -8,7 +8,6 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 export const UserProvider = ({ children }) => {
     const initialValues = {
         firstName: '',
-        middleName: '',
         lastName: '',
         suffix: '',
         phoneNumber: '',

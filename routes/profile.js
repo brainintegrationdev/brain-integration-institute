@@ -38,7 +38,7 @@ profileRouter.get('/:email', async (req, res) => {
 profileRouter.post('/create-profile', async (req, res) => {
     const {
         firstName,
-        middleName,
+
         lastName,
         suffix,
         phoneNumber,
@@ -69,7 +69,6 @@ profileRouter.post('/create-profile', async (req, res) => {
             profileData = new ProfileModel({
                 userId: user._id, // Set the userId here
                 firstName,
-                middleName,
                 lastName,
                 suffix,
                 phoneNumber,

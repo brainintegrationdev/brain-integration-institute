@@ -74,7 +74,7 @@ export const Profile = withAuthenticationRequired(() => {
 
                 {/* Profile Section */}
                 {(!sectionName || sectionName === 'profile') && (
-                    <div className="flex flex-col items-center gap-6 p-6 max-w-lg mx-auto bg-white shadow-md rounded-lg">
+                    <div className="flex flex-col items-center gap-6 p-6   mx-auto bg-white shadow-md rounded-lg">
                         {profileData ? (
                             <>
                                 <p className="text-lg font-semibold text-gray-700">
