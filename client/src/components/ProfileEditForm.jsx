@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../contexts';

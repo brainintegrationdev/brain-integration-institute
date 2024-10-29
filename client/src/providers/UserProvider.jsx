@@ -1,9 +1,9 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
 import { UserContext } from '../contexts';
 import { useState } from 'react';
-import { useProfileForm } from '../hooks'; // Import the custom hook
-import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export const UserProvider = ({ children }) => {
     const initialValues = {

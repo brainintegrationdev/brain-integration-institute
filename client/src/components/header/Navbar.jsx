@@ -72,6 +72,12 @@ export const Navbar = () => {
                     >
                         Certification
                     </Link>
+                    <Link
+                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        to="/admin"
+                    >
+                        Admin Portal
+                    </Link>
                     <button
                         className="py-2 px-10 transition duration-200 border-b-2 border-transparent hover:bg-red rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         onClick={handleLogout}

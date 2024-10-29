@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 import ProfileEditIcon from '../assets/icons/profileEditIcon.png';
-import placeholderProfilePic from '../assets/icons/placeholderProfilePic.png';
+
 import { CloudinaryContext } from '../contexts';
 import { UserContext } from '../contexts';
 import { useAuth0 } from '@auth0/auth0-react';
