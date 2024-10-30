@@ -13,6 +13,10 @@ import { Practitioner } from '../routes/Practitioner';
 import { PaymentSuccessPage } from '../routes/PaymentSuccessPage';
 import { NotFound } from '../routes/NotFound';
 import { Admin } from '../routes/Admin';
+import  AddAdmins  from '../routes/AddAdmins'
+import PractitionerManagement from '../routes/PractitionerManagement';
+import  AdminUploadManagement  from '../routes/AdminUploadManagement'
+import  MessagingHub  from '../routes/MessagingHub'
 // import PaymentSuccessPage from "../routes/PaymentSuccessPage";
 
 const router = createBrowserRouter([
@@ -51,6 +55,12 @@ const router = createBrowserRouter([
             {
                 path: '/admin',
                 element: <Admin />,
+                children: [
+                    { path: 'practitioner-management', element: <PractitionerManagement /> },
+                    { path: 'add-admins', element: <AddAdmins /> },
+                    { path: 'admin-uploads', element: <AdminUploadManagement /> },
+                    { path: 'messaging-hub', element: <MessagingHub /> },
+                ],
             },
             {
                 path: '*',

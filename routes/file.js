@@ -43,6 +43,8 @@ fileRouter.get('/', async (req, res, next) => {
 
 // //creates metadata upon successful cloudinary upload
 
+//create put route to update isApproved on the file object
+
 fileRouter.post('/', async (req, res) => {
     try {
         const { publicId, url, uploadDate, filename, sectionName } = req.body;
