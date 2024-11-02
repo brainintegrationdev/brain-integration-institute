@@ -31,13 +31,11 @@ export const CloudinaryProvider = ({ children }) => {
     const [uploading, setUploading] = useState(false);
     const [uploadError, setUploadError] = useState(null);
     const [imageUrl, setImageUrl] = useState(user?.userProfilePicture || '');
-    const [profilePhotoUploaded, setProfilePhotoUploaded] = useState(false)
+    const [profilePhotoUploaded, setProfilePhotoUploaded] = useState(false);
 
     const handleProfileUpload = () => {
         console.log('photo uploaded!');
     };
-
-
 
     const uwConfig = {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUDNAME,
@@ -107,7 +105,7 @@ export const CloudinaryProvider = ({ children }) => {
 
             // Update state with the fetched metadata
             setUserMetaData(metaData);
-            setImageUrl(metaData.userProfilePicture); 
+            setImageUrl(metaData.userProfilePicture);
 
             return metaData;
         } catch (error) {
@@ -243,7 +241,7 @@ export const CloudinaryProvider = ({ children }) => {
                 try {
                     await updateUserProgress(newProgress);
                     console.log('User progress updated to:', newProgress);
-                    setProgress(newProgress);  // Update state only after success
+                    setProgress(newProgress); // Update state only after success
                 } catch (error) {
                     console.error('Error updating user progress:', error);
                 }
@@ -253,6 +251,47 @@ export const CloudinaryProvider = ({ children }) => {
             //call setProgress here, not in accordion
         } catch (error) {
             console.error('Error updating user study guide:', error);
+        }
+    };
+
+    const updateUserDocumentStatus = async (newDocStatus) => {
+        console.log('updated user doc status with:', newDocStatus);
+        if (user) {
+            try {
+                const accessToken = await getAccessTokenSilently();
+                const response = await fetch(
+                    `http://localhost:8080/api/user/${user.email}/document-status`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                        body: JSON.stringify({
+                            certListUploadStatus: newDocStatus,
+                        }),
+                    },
+                );
+
+                console.log('Response Status:', response.status);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error(
+                        'Failed to update user doc status:',
+                        errorData,
+                    );
+                    throw new Error('Failed to update user doc status');
+                }
+
+                const data = await response.json();
+                console.log('User doc status updated on the server:', data);
+                return data; 
+            } catch (error) {
+                console.error('Error updating user doc status:', error);
+               
+            }
+        } else {
+            console.error('User is not defined');
         }
     };
 
@@ -349,15 +388,15 @@ export const CloudinaryProvider = ({ children }) => {
                     }
                     if (result.event === 'success') {
                         console.log('Upload successful:', result.info);
-                        
+
                         const userMetaData = {
-                            userProfilePicture: result.info.secure_url
+                            userProfilePicture: result.info.secure_url,
                         };
-    
+
                         // Update state with new profile picture URL
                         setImageUrl(result.info.secure_url);
                         setProfilePhotoUploaded(true);
-    
+
                         // Send metadata to the server
                         try {
                             const accessToken = await getAccessTokenSilently();
@@ -370,31 +409,34 @@ export const CloudinaryProvider = ({ children }) => {
                                         Authorization: `Bearer ${accessToken}`,
                                     },
                                     body: JSON.stringify(userMetaData),
-                                }
+                                },
                             );
-    
+
                             if (response.ok) {
-                                console.log('User metadata successfully sent to the server.');
+                                console.log(
+                                    'User metadata successfully sent to the server.',
+                                );
                             } else {
-                                console.error('Failed to send user metadata to the server.');
+                                console.error(
+                                    'Failed to send user metadata to the server.',
+                                );
                             }
                         } catch (error) {
-                            console.error('Error sending user metadata:', error);
+                            console.error(
+                                'Error sending user metadata:',
+                                error,
+                            );
                         } finally {
                             // Close the widget after processing
                             myWidget.close();
                         }
                     }
-                }
+                },
             );
-    
+
             myWidget.open();
         }
     };
-    
-
-    
-    
 
     //delete certification file
     const deleteFile = async (publicId) => {
@@ -419,7 +461,6 @@ export const CloudinaryProvider = ({ children }) => {
                 setFiles((prevFiles) =>
                     prevFiles.filter((file) => file.publicId !== publicId),
                 );
-               
             } else {
                 console.error('Failed to delete file.');
             }
@@ -428,7 +469,7 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
-    console.log(progress, "progress")
+    console.log(progress, 'progress');
 
     return (
         <CloudinaryContext.Provider
@@ -467,7 +508,7 @@ export const CloudinaryProvider = ({ children }) => {
                 showPayment,
                 setShowPayment,
                 showModal,
-                setShowModal
+                setShowModal,
             }}
         >
             {loaded && children}

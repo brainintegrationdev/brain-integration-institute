@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useState, useContext, useEffect } from 'react';
 // import { useNavigate } from 'react-router-dom';
@@ -37,7 +38,7 @@ import e from 'cors';
 import { CloudinaryContext } from '../contexts';
 import Payment from './Payment.jsx';
 
-const AccordionCard = (props) => {
+const AccordionCard = ({ certListUploadStatus}) => {
     // eslint-disable-next-line no-unused-vars
     const {
         uwConfig,
@@ -82,6 +83,7 @@ const AccordionCard = (props) => {
 
     //checks to see if every section has an uploaded file, if so returns true
     const [isUploaded, setIsUploaded] = useState(false);
+    
 
     // const [showPayment, setShowPayment] = useState(false);
     // const [showModal, setShowModal] = useState(false);
@@ -329,6 +331,7 @@ const AccordionCard = (props) => {
     });
 
     console.log(fileMetaData, 'file metadata');
+    console.log(userMetaData, 'user metadata')
 
     return (
         <div>

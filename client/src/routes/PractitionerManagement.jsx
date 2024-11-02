@@ -6,9 +6,11 @@
 import { useContext, useEffect } from 'react';
 import { AdminContext } from '../contexts';
 import UserList from '../components/UserList';
+import { Outlet, useParams } from 'react-router-dom';
 
 const PractitionerManagement = () => {
     const { getAllUsers, users } = useContext(AdminContext);
+    const { userId } = useParams();
 
     console.log(users);
 
@@ -19,7 +21,7 @@ const PractitionerManagement = () => {
         <div className="flex flex-col justify-center items-center gap-10 w-full">
             <h2 className="text-2xl">Practitioner Management</h2>
             <p>Manage practitioners' information here.</p>
-            <UserList />
+            {userId ? <Outlet /> : <UserList />}
         </div>
     );
 };

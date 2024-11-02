@@ -16,6 +16,7 @@ export const AdminProvider = ({ children }) => {
 
     const [users, setUsers] = useState([])
     const [profiles, setProfiles] = useState([])
+    const [individualUser, setIndividualUser] = useState(null)
 
     const getManagementToken = async () => {
         const response = await axios.post(
@@ -55,6 +56,24 @@ export const AdminProvider = ({ children }) => {
             console.error('Error fetching users:', error);
         }
     }
+    //get user by Id
+    const getUserById = async (userId) => {
+       
+        try {
+            const accessToken = await getAccessTokenSilently();
+            const response = await axios.get(`/api/users/${userId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                },
+            );
+            setIndividualUser(response.data);
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        }
+    }
+
 
     const updateUserToAdmin = async (userId) => {
         const token = await getManagementToken();
@@ -77,7 +96,7 @@ export const AdminProvider = ({ children }) => {
     };
     return (
         <AdminContext.Provider
-            value={{ updateUserToAdmin, getManagementToken, getAllUsers, users, setUsers }}
+            value={{ updateUserToAdmin, getManagementToken, getAllUsers, users, setUsers, getUserById, individualUser, setIndividualUser }}
         >
             {children}
         </AdminContext.Provider>

@@ -1,5 +1,12 @@
 const mg = require('mongoose');
 
+const UploadStatus = {
+    WAITINGFORUPLOAD: 'waiting for upload',
+    PENDINGAPPROVAL: 'pending approval',
+    APPROVED: 'approved',
+    DECLINED: 'declined',
+};
+
 // User Model Blueprint
 const UserSchema = new mg.Schema({
     // User's Email
@@ -35,28 +42,36 @@ const UserSchema = new mg.Schema({
     //        via a custom hook on the frontend.
     certListUploadStatus: {
         brainIntegrationTraining: {
-            type: Boolean,
-            default: false
+            type: String,
+            enum: [UploadStatus.WAITINGFORUPLOAD, UploadStatus.PENDINGAPPROVAL, UploadStatus.APPROVED, UploadStatus.DECLINED],
+            default: UploadStatus.WAITINGFORUPLOAD,
+            required: true,
         },
         clinicalHours: {
-            type: Boolean,
-            default: false
+            type: String,
+            enum: [UploadStatus.WAITINGFORUPLOAD, UploadStatus.PENDINGAPPROVAL, UploadStatus.APPROVED, UploadStatus.DECLINED],
+            default: UploadStatus.WAITINGFORUPLOAD,
+            required: true,
         },
         firstAidTraining: {
-            type: Boolean,
-            default: false
+            type: String,
+            enum: [UploadStatus.WAITINGFORUPLOAD, UploadStatus.PENDINGAPPROVAL, UploadStatus.APPROVED, UploadStatus.DECLINED],
+            default: UploadStatus.WAITINGFORUPLOAD
         },
         cprCert: {
-            type: Boolean,
-            default: false
+            type: String,
+            enum: [UploadStatus.WAITINGFORUPLOAD, UploadStatus.PENDINGAPPROVAL, UploadStatus.APPROVED, UploadStatus.DECLINED],
+            default: UploadStatus.WAITINGFORUPLOAD
         },
         videoPresentation: {
-            type: Boolean,
-            default: false
+            type: String,
+            enum: [UploadStatus.WAITINGFORUPLOAD, UploadStatus.PENDINGAPPROVAL, UploadStatus.APPROVED, UploadStatus.DECLINED],
+            default: UploadStatus.WAITINGFORUPLOAD
         },
         insurance: {
-            type: Boolean,
-            default: false
+            type: String,
+            enum: [UploadStatus.WAITINGFORUPLOAD, UploadStatus.PENDINGAPPROVAL,UploadStatus.APPROVED, UploadStatus.DECLINED],
+            default: UploadStatus.WAITINGFORUPLOAD
         }
     },
     // After the Stripe API confirms the successful payment for the Study Guide

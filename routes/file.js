@@ -19,8 +19,8 @@ cloudinary.config({
 //gets user specific file metadata
 fileRouter.get('/files/:user', async (req, res) => {
     try {
-        const { user } = req.params; // Expecting the userId to be passed as a route parameter
-        const files = await getAllFilesByOwner(user); // Call the modified function
+        const { user } = req.params; 
+        const files = await getAllFilesByOwner(user); 
         res.json(files);
     } catch (error) {
         console.error('Error fetching files:', error);

@@ -16,9 +16,10 @@ import GreenRedDot from '../assets/icons/GreenRedDots.png';
 import Trashcan from '../assets/icons/Trashcan.png';
 import Pracsearch from '../assets/icons/Pracsearch.svg';
 import { CircleUserRound } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 
 function UserList() {
-    const {  getAllUsers, users } =
+    const {  getAllUsers, users, individualUser, setIndividualUser  } =
         useContext(AdminContext);
 
     // const { fetchProfileData, profileData } = useContext(UserContext);
@@ -32,6 +33,7 @@ function UserList() {
     console.log('Is Admin:', isAdmin);
 
     const [searchInput, setSearchInput] = useState('');
+    const navigate =useNavigate()
 
     const certProgressImages = [
         ProgressBar0,
@@ -66,6 +68,11 @@ function UserList() {
         }));
     };
 
+    const handleViewProfileClick = (userId) => {
+        setIndividualUser(users.find((user) => user._id === userId)); 
+        navigate(`/admin/practitioner-management/${userId}`);
+    }
+
     // const handlePromote = async (userId) => {
     //     await updateUserToAdmin(userId); // Call your promotion function here
     //     alert('User promoted to admin!');
@@ -90,7 +97,7 @@ function UserList() {
                 {users.map((user) => (
                     <div
                         className="flex border border-black rounded p-10 mb-10 items-center"
-                        key={user.user_id}
+                        key={user._id}
                     >
                         <div>
                             <input
@@ -124,8 +131,8 @@ function UserList() {
                                 />
                             </div>
                             <div className="flex justify-center items-center">
-                                <button className="border border-black rounded px-4 py-1 ml-4 font-bold">
-                                    <CircleUserRound className=' ml-4 '/>
+                                <button className="border border-black rounded px-4 py-1 ml-4 font-bold"   type="submit"  onClick={() => handleViewProfileClick(user._id)}>
+                                    {/* <CircleUserRound className=' ml-4 '/> */}
                                     View Profile
                                 </button>
                             </div>
