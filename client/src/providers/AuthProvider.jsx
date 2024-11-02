@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
             clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
             authorizationParams={{
                 redirect_uri: location.origin,
-                audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+                audience: import.meta.env.VITE_AUTH0_AUDIENCE_SPA,
                 scope: import.meta.env.VITE_AUTH0_SCOPE
             }}
         >

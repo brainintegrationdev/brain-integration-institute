@@ -28,9 +28,11 @@ fileRouter.get('/files/:user', async (req, res) => {
     }
 });
 
+//get file metadata from all users
 fileRouter.get('/', async (req, res, next) => {
     try {
-        const files = await getAllFilesByOwner(req.auth.payload.sub);
+        const files = await File.find()
+        console.log(files)
         res.status(200).send({ success: true, files });
     } catch (err) {
         console.error(err);
@@ -78,6 +80,7 @@ fileRouter.delete('/:publicId', async (req, res) => {
     try {
         console.log('Attempting to delete file with publicId:', publicId);
         const result = await cloudinary.uploader.destroy(publicId);
+        console.log(result, "cloudinary delete")
         if (result.result === 'ok') {
             await File.findOneAndDelete({ publicId: publicId }); 
             res.status(200).json({ message: 'File deleted successfully' });

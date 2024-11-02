@@ -17,6 +17,11 @@ const getUserMetaData = async (email) => {
     return user; 
 };
 
+const getAllUserMetaData = async () => {
+    const allUsers = await UserModel.find()
+    return allUsers
+}
+
 const editUserMetaData = async (email) => {
     const user = await UserModel.findOne({
         userEmail: email
@@ -26,5 +31,6 @@ const editUserMetaData = async (email) => {
 module.exports = {
     getUserMetaData,
     createUserMetaData,
-    editUserMetaData
+    editUserMetaData,
+    getAllUserMetaData
 };

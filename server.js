@@ -1,6 +1,7 @@
 const ex = require('express');
 const path = require('path');
 const { apiRouter } = require('./routes/api');
+const { adminRouter } = require('./routes/admin')
 const { enableCors, validateAuthToken } = require('./middleware/auth');
 const { staticSiteRouter } = require('./routes/static');
 // const { errorHandler, logger } = require('./middleware/log');
@@ -16,6 +17,7 @@ server.use(ex.urlencoded({ extended: true }));
 
 
 server.use('/api', validateAuthToken, apiRouter)
+// server.use('/admin', adminRouter)
 // server.use(ex.static(path.resolve(__dirname, 'client', 'dist')))
 // server.get('*', staticSiteRouter)
 

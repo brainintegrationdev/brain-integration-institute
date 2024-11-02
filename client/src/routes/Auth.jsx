@@ -22,7 +22,7 @@ const Auth = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${await getAccessTokenSilently()}`, // Use if you have authentication
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`, 
                 },
                 body: JSON.stringify({
                     userEmail: email,

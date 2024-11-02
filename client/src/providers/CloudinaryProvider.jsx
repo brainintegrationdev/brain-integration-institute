@@ -16,6 +16,8 @@ export const CloudinaryProvider = ({ children }) => {
     const { user, getAccessTokenSilently, isAuthenticated } = useAuth0();
     const [files, setFiles] = useState([]);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [showPayment, setShowPayment] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [sectionName, setSectionName] = useState('');
@@ -236,6 +238,19 @@ export const CloudinaryProvider = ({ children }) => {
             const data = await response.json();
             console.log('User study guide updated on the server:', data);
             setStudyGuideAccess(true);
+            const newProgress = Math.min(progress + 1, 8);
+            if (newProgress > progress) {
+                try {
+                    await updateUserProgress(newProgress);
+                    console.log('User progress updated to:', newProgress);
+                    setProgress(newProgress);  // Update state only after success
+                } catch (error) {
+                    console.error('Error updating user progress:', error);
+                }
+            } else {
+                console.log('Progress is already at maximum:', newProgress);
+            }
+            //call setProgress here, not in accordion
         } catch (error) {
             console.error('Error updating user study guide:', error);
         }
@@ -404,11 +419,7 @@ export const CloudinaryProvider = ({ children }) => {
                 setFiles((prevFiles) =>
                     prevFiles.filter((file) => file.publicId !== publicId),
                 );
-                setProgress((prevProgress) => {
-                    const newProgress = Math.max(0, prevProgress - 1);
-                    updateUserProgress(newProgress);
-                    return newProgress;
-                });
+               
             } else {
                 console.error('Failed to delete file.');
             }
@@ -416,6 +427,8 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('Error deleting file:', error);
         }
     };
+
+    console.log(progress, "progress")
 
     return (
         <CloudinaryContext.Provider
@@ -450,7 +463,11 @@ export const CloudinaryProvider = ({ children }) => {
                 setProfilePhotoUploaded,
                 imageUrl,
                 userMetaData,
-                setUserMetaData
+                setUserMetaData,
+                showPayment,
+                setShowPayment,
+                showModal,
+                setShowModal
             }}
         >
             {loaded && children}

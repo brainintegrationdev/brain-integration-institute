@@ -25,7 +25,8 @@ export default {
                 'lightest-grey': '#dadadf80',
                 'greyish-blue': '#bdcbdd80',
                 'pinky-pink': '#f0cabe80',
-                'mauve': '#e4b5c680'
+                'mauve': '#e4b5c680',
+                'mediumish-green': '#D9E2B8'
             },
             dropShadow: {
                 md: '0 4px 4px rgba(0, 0, 0, 0.25)',

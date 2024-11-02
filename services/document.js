@@ -39,6 +39,11 @@ const getImagesFromCloudinary = async (folder) => {
     }
 };
 
+const deleteImageFromCloudinary = async (folder) => {
+    const { publicId } = req.body
+
+}
+
 
 
 module.exports = { getImagesFromCloudinary };

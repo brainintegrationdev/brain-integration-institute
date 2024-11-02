@@ -6,19 +6,81 @@ import bell from '../../assets/icons/bell.png';
 import placeholderProfilePic from '../../assets/icons/placeholderProfilePic.png';
 import { CloudinaryContext } from '../../contexts';
 import { Menu, X } from 'lucide-react';
+import axios from 'axios';
 
 export const Navbar = () => {
-    const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+    const {
+        loginWithRedirect,
+        logout,
+        isAuthenticated,
+        user,
+        getAccessTokenSilently,
+    } = useAuth0();
     const { imageUrl } = useContext(CloudinaryContext);
     const [isOpen, setIsOpen] = useState(false);
     const [isLargeScreen, setIsLargeScreen] = useState(
         window.innerWidth >= 768,
     );
+    // const AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN
 
-    const handleLogin = () =>
-        loginWithRedirect({
+    const handleLogin = async () => {
+        await loginWithRedirect({
             authorizationParams: { redirect_uri: location.origin + '/profile' },
         });
+    };
+
+    const isAdmin = user?.['https://brainintegration.com/isAdmin'];
+
+    console.log('Is Admin:', isAdmin);
+
+    // const roles = user['https://brainintegration.institute/roles']; // Adjust the URL based on your configuration
+
+    // const getAuth0Token = async (targetAudience, scope) => {
+    //     try {
+    //         return await getAccessTokenSilently({
+    //             audience: targetAudience,
+    //             scope: scope,
+    //             cacheMode: "off"
+    //         });
+    //     } catch (error) {
+    //         console.error("Error fetching token:", error);
+    //     }
+    // };
+
+    // const fetchUserRoles = async () => {
+    //     try {
+    //         // Use getAuth0Token to request the Management API token with read:roles scope
+    //         const token = await getAuth0Token(`https://${import.meta.env.VITE_AUTH0_DOMAIN}/api/v2/`, 'read:roles');
+
+    //         if (token) {
+    //             const userId = user.sub;
+    //             const response = await axios.get(`https://${import.meta.env.VITE_AUTH0_DOMAIN}/api/v2/users/${userId}/roles`, {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             });
+    //             console.log("User Roles:", response.data);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error fetching user roles:", error);
+    //     }
+    // };
+
+
+    
+    const getAuth0Token = async (targetAudience, scope) => {
+        try {
+            return await getAccessTokenSilently({
+                audience:
+                    targetAudience ||
+                    `https://${import.meta.env.VITE_AUTH0_DOMAIN}/api/v2/`, // Ensure this is correct
+                scope: scope || 'read:roles',
+                cacheMode: 'off',
+            });
+        } catch (error) {
+            console.error('Error fetching token:', error);
+        }
+    };
 
     const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -35,6 +97,48 @@ export const Navbar = () => {
         }
     }, [user]);
 
+    const fetchUserRoles = async () => {
+        try {
+            const token = await getAuth0Token(
+                `https://${import.meta.env.VITE_AUTH0_DOMAIN}/api/v2/`,
+                'read:roles',
+            );
+            if (token) {
+                const userId = user.sub; // User ID from Auth0
+                const response = await axios.get(
+                    `https://${
+                        import.meta.env.VITE_AUTH0_DOMAIN
+                    }/api/v2/users/${userId}/roles`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    },
+                );
+                console.log('User Roles from Management API:', response.data);
+            }
+        } catch (error) {
+            console.error('Error fetching user roles:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            fetchUserRoles();
+        }
+    }, [isAuthenticated, user]);
+
+    // useEffect(() => {
+    //     const getRoles = async () => {
+    //         const token = await getAuth0Token(`https://${import.meta.env.VITE_AUTH0_DOMAIN}/api/v2/`, 'read:roles');
+    //         if (token) {
+    //             const roles = user[`https://brainintegration.institute/roles`]; // Access roles from the user profile
+    //             console.log("User Roles:", roles);
+    //         }
+    //     };
+    //     getRoles();
+    // }, [user, getAccessTokenSilently]);
+
     useEffect(() => {
         const handleResize = () => setIsLargeScreen(window.innerWidth >= 768);
         window.addEventListener('resize', handleResize);
@@ -42,6 +146,8 @@ export const Navbar = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
+
+    // console.log('User Object:', user.name);
 
     const renderLinks = () => {
         if (isAuthenticated) {
@@ -71,13 +177,8 @@ export const Navbar = () => {
                         to="/certification"
                     >
                         Certification
-                    </Link>
-                    <Link
-                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
-                        to="/admin"
-                    >
-                        Admin Portal
-                    </Link>
+                    </Link >
+                    {isAdmin && <Link className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"to="/admin">Admin Portal</Link>}
                     <button
                         className="py-2 px-10 transition duration-200 border-b-2 border-transparent hover:bg-red rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         onClick={handleLogout}
@@ -104,13 +205,22 @@ export const Navbar = () => {
         } else {
             return (
                 <>
-                    <Link to="/" className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap">
+                    <Link
+                        to="/"
+                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                    >
                         Home
                     </Link>
-                    <Link className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap" to="/about">
+                    <Link
+                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        to="/about"
+                    >
                         About Us
                     </Link>
-                    <button className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap" onClick={handleLogin}>
+                    <button
+                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        onClick={handleLogin}
+                    >
                         Login
                     </button>
                 </>

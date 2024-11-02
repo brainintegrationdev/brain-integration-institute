@@ -59,6 +59,13 @@
     transform: translateX(0); 
 }
 
+.custom-checkbox {
+    transform: scale(2); 
+    margin: 10px; 
+   
+ 
+}
+
 
 
 

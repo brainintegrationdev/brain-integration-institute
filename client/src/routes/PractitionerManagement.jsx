@@ -3,14 +3,25 @@
 
 //
 
+import { useContext, useEffect } from 'react';
+import { AdminContext } from '../contexts';
+import UserList from '../components/UserList';
 
 const PractitionerManagement = () => {
-  return (
-    <div className="flex flex-col justify-center items-center gap-10 border border-black rounded-xl">
-      <h2 className="text-2xl">Practitioner Management</h2>
-      <p>Manage practitioners' information here.</p>
-    </div>
-  );
+    const { getAllUsers, users } = useContext(AdminContext);
+
+    console.log(users);
+
+    useEffect(() => {
+        getAllUsers();
+    }, []);
+    return (
+        <div className="flex flex-col justify-center items-center gap-10 w-full">
+            <h2 className="text-2xl">Practitioner Management</h2>
+            <p>Manage practitioners' information here.</p>
+            <UserList />
+        </div>
+    );
 };
 
 export default PractitionerManagement;

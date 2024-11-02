@@ -1,6 +1,6 @@
 const ex = require('express');
 // const { processFile } = require('../middleware/cdn');
-const { createProfileData } = require('../services/profile');
+const { createProfileData, getAllProfileMetaData } = require('../services/profile');
 const { ProfileModel } = require('../models/profile');
 const { UserModel } = require('../models/User');
 
@@ -8,12 +8,30 @@ const profileRouter = ex.Router();
 
 //api/profile
 
+//create get request to get all active practitioner profiles
+//save in context on FE
+
+
 //create get request to get profile info by user (eg, email)
 //call get request in useEffect in the profile page
 //if !profileData - render text to create profile - post request is submitted on form submit
 //if profileData -  render text to edit profile - put request is submitted on form submit
 
 //create put request for profile data
+
+profileRouter.get('/', async (req, res) => {
+    try {
+        const allProfileMetaData = await getAllProfileMetaData()
+        if (!allProfileMetaData) {
+            return res.status(404).json({ message: 'no profile metadata found'})
+        }
+        return res.status(200).json(allProfileMetaData)
+    } catch (error) {
+        console.error('Error fetching all profile metadata', error);
+        res.status(500).json({ error: 'Failed to send all profile metadata' });
+    }
+})
+
 
 profileRouter.get('/:email', async (req, res) => {
     const { email } = req.params;

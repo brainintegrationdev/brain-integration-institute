@@ -19,7 +19,7 @@ const UserSchema = new mg.Schema({
         type: String,
         required: true,
         unique: true,
-        default: ''// userEmail
+        default: ''// first and last name
     },
     // User's password
 

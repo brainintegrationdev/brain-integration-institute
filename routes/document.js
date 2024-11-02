@@ -15,6 +15,8 @@ cloudinary.config({
 
 //will need get route for user profile pic
 
+//create delete route
+
 
   documentRouter.get('/:nickname', validateAuthToken, async (req, res) => {
     const nickname = req.params.nickname;

@@ -4,6 +4,7 @@ const {
     getUserMetaData,
     createUserMetaData,
     editUserMetaData,
+    getAllUserMetaData
 } = require('../services/user');
 const { UserModel } = require('../models/User');
 
@@ -38,6 +39,8 @@ userRouter.post('/createuser', async (req, res) => {
     }
 });
 
+
+//get user specific user metadata
 userRouter.get('/:email', async (req, res) => {
     const { email } = req.params;
     console.log('Received email param:', email);
@@ -52,6 +55,22 @@ userRouter.get('/:email', async (req, res) => {
         res.status(500).json({ error: 'Failed to send user metadata' });
     }
 });
+
+//need a get request to get all users
+userRouter.get('/', async (req, res) => {
+    try {
+        const allUserMetaData = await getAllUserMetaData()
+        if (!allUserMetaData) {
+            return res.status(404).json({ message: 'no user metadata found'})
+        }
+        return res.status(200).json(allUserMetaData)
+    } catch (error) {
+        console.error('Error fetching all users metadata', error);
+        res.status(500).json({ error: 'Failed to send all users metadata' });
+    }
+})
+
+
 
 // Route to update user progress
 userRouter.put('/:email/progress', async (req, res) => {

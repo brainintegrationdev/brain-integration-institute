@@ -64,6 +64,10 @@ const AccordionCard = (props) => {
         studyGuideAccess,
         setStudyGuideAccess,
         email,
+        showPayment,
+        setShowPayment,
+        showModal,
+        setShowModal
     } = useContext(CloudinaryContext);
 
     const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
@@ -74,14 +78,13 @@ const AccordionCard = (props) => {
     const [userMetaData, setUserMetaData] = useState({}); // move this to context
     const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
     const [stripePromise, setStripePromise] = useState(null);
+    const [cloudinaryFiles, setCloudinaryFiles] = useState([]);
 
     //checks to see if every section has an uploaded file, if so returns true
     const [isUploaded, setIsUploaded] = useState(false);
 
-    const [showPayment, setShowPayment] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-
-    console.log(deleteModalOpen)
+    // const [showPayment, setShowPayment] = useState(false);
+    // const [showModal, setShowModal] = useState(false);
 
     const certProgressImages = [
         ProgressBar0,
@@ -95,8 +98,7 @@ const AccordionCard = (props) => {
         ProgressBar8,
     ];
 
-    console.log(studyGuideAccess);
-    console.log(showPayment);
+    console.log(cloudinaryFiles, 'user specific cloudinary files');
     // console.log(stripePromise);
 
     //will need to add put request to user metadata route to change studyGuideAccess to true, just saving in state for now
@@ -180,6 +182,9 @@ const AccordionCard = (props) => {
             });
     };
 
+
+
+    //move this to the cloudinarycontext and update progress there as well since it updates the progress
     const getAssessment = async () => {
         console.log('assessment button clicked');
         try {
@@ -206,21 +211,7 @@ const AccordionCard = (props) => {
                 setShowPayment(true);
                 setShowModal(true);
 
-                try {
-                    await updateUserProgress(progress + 1);
-                    console.log('User progress update');
-                    setProgress((prevProgress) => {
-                        const newProgress = Math.min(prevProgress + 1, 8);
-                        console.log(
-                            'Progress successfully updated:',
-                            newProgress,
-                        );
-
-                        return newProgress;
-                    });
-                } catch (error) {
-                    console.error('Error updating user progress:', error);
-                }
+              
             }
         } catch (error) {
             console.error('Error creating checkout session:', error);
@@ -270,12 +261,15 @@ const AccordionCard = (props) => {
             if (user) {
                 const token = localStorage.getItem('token');
                 try {
-                    const folderFiles = await getFilesInFolder(token); //docs themselves
-                    const metadataFiles = await getFiles(token); //metadata
+                    const folderFiles = await getFilesInFolder(token); //docs themselves - user specific
+                    const metadataFiles = await getFiles(token);
+                    console.log(metadataFiles); //metadata
                     const userMetaData = await getUserMetaData(token);
                     setFileMetaData(metadataFiles);
                     setUserMetaData(userMetaData);
                     setProgress(userMetaData.userUploadProgress);
+                    setCloudinaryFiles(folderFiles); //user specific files (objects) from Cloudinary
+                    console.log(folderFiles[16]);
                 } catch (error) {
                     console.error(
                         'Error fetching files:',
@@ -334,9 +328,7 @@ const AccordionCard = (props) => {
         return metadata.sectionName === 'Insurance';
     });
 
-    // console.log(user);
-
-    // console.log(currentFileToDelete);
+    console.log(fileMetaData, 'file metadata');
 
     return (
         <div>
@@ -358,11 +350,19 @@ const AccordionCard = (props) => {
                     , and a member of our board will be happy to assist you.
                 </p>
                 <div className="flex flex-col justify-center items-center pl-2 md:pl-20 gap-4 pb-5">
-                    <img
-                        src={certProgressImages[progress]}
-                        className="w-full md:w-auto"
-                    />
-                </div>
+                                <img
+                                    src={
+                                        certProgressImages[
+                                            Math.min(
+                                                progress || 0,
+                                                certProgressImages.length - 1,
+                                            )
+                                        ]
+                                    }
+                                    className="w-full md:w-auto"
+                                    alt={`Progress level ${user.userUploadProgress}`}
+                                />
+                            </div>
 
                 <Accordion
                     allowMultipleExpanded={true}
@@ -631,6 +631,7 @@ const AccordionCard = (props) => {
                                             ),
                                         )}
                                     </ul>
+
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -676,6 +677,22 @@ const AccordionCard = (props) => {
                                                             deleteFile(
                                                                 publicId,
                                                             );
+                                                            setProgress(
+                                                                (
+                                                                    prevProgress,
+                                                                ) => {
+                                                                    const newProgress =
+                                                                        Math.max(
+                                                                            0,
+                                                                            prevProgress -
+                                                                                1,
+                                                                        );
+                                                                    updateUserProgress(
+                                                                        newProgress,
+                                                                    );
+                                                                    return newProgress;
+                                                                },
+                                                            ); // Closed the function here
                                                         } else {
                                                             console.error(
                                                                 'Public ID not found for file:',
@@ -1481,7 +1498,7 @@ const AccordionCard = (props) => {
                                 Complete 500 hours of relevant brain integration
                                 training.
                             </h1>
-                            
+
                             <p className="font-fira text-black text-base font-normal mt-2">
                                 The Brain Integration Training program requires
                                 a comprehensive 500-hour training to ensure
@@ -1491,7 +1508,7 @@ const AccordionCard = (props) => {
                                 and Competency Base. Below is a detailed
                                 breakdown of each component:
                             </p>
-                        
+
                             <h3 className="font-fira text-black text-base font-bold mt-2">
                                 Standard Knowledge Base
                             </h3>
@@ -1512,7 +1529,7 @@ const AccordionCard = (props) => {
                                 for brain integration and their practical
                                 applications in clinical settings.
                             </p>
-                           
+
                             <h3 className="font-fira text-black text-base font-bold mt-4">
                                 Professional Training
                             </h3>
@@ -1530,7 +1547,7 @@ const AccordionCard = (props) => {
                                 client management, record-keeping, and financial
                                 responsibilities.
                             </p>
-                           
+
                             <h3 className="font-fira text-black text-base font-bold mt-4">
                                 Competency Base
                             </h3>
@@ -1552,7 +1569,6 @@ const AccordionCard = (props) => {
                                 rigorous standards required to provide
                                 high-quality brain integration services.
                             </p>
-                          
 
                             <div className="form-flex gap-10 pt-20 pb-5 mt-4">
                                 <button
