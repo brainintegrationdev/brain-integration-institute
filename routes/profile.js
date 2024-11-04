@@ -38,14 +38,23 @@ profileRouter.get('/:email', async (req, res) => {
     console.log('Received email param:', email);
     try {
         const user = await UserModel.findOne({ userEmail: email });
+        
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        const profileData = await ProfileModel.findOne({ userId: user._id });
-        if (!profileData) {
+        const profile = await ProfileModel.findOne({ userId: user._id }).populate({
+      
+            path: 'userId',
+            select: 'userProfilePicture',
+        });
+       
+        if (!profile) {
             return res.status(404).json({ message: 'Profile not found' });
         }
-
+        const profileData = {
+            ...profile.toObject(),
+            userProfilePicture: profile.userId.userProfilePicture,
+        };
         res.status(200).json(profileData);
     } catch (error) {
         console.error('Error fetching profile data:', error);
@@ -68,6 +77,7 @@ profileRouter.post('/create-profile', async (req, res) => {
         zip,
         country,
         bio,
+        userProfilePicture
     } = req.body;
 
     console.log(req.body);
@@ -98,6 +108,7 @@ profileRouter.post('/create-profile', async (req, res) => {
                 zip,
                 country,
                 bio,
+                userProfilePicture
             });
             await profileData.save();
             return res.status(201).json({

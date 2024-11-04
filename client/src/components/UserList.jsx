@@ -15,11 +15,11 @@ import ProgressBar8 from '../assets/icons/ProgressBar8.png';
 import GreenRedDot from '../assets/icons/GreenRedDots.png';
 import Trashcan from '../assets/icons/Trashcan.png';
 import Pracsearch from '../assets/icons/Pracsearch.svg';
-import { CircleUserRound } from 'lucide-react';
+// import { CircleUserRound } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 
 function UserList() {
-    const {  getAllUsers, users, individualUser, setIndividualUser  } =
+    const {  getAllUsers, users,  setIndividualUser  } =
         useContext(AdminContext);
 
     // const { fetchProfileData, profileData } = useContext(UserContext);

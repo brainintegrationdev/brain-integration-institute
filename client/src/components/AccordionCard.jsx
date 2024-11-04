@@ -38,7 +38,7 @@ import e from 'cors';
 import { CloudinaryContext } from '../contexts';
 import Payment from './Payment.jsx';
 
-const AccordionCard = ({ certListUploadStatus}) => {
+const AccordionCard = ({ certStatus }) => {
     // eslint-disable-next-line no-unused-vars
     const {
         uwConfig,
@@ -68,7 +68,10 @@ const AccordionCard = ({ certListUploadStatus}) => {
         showPayment,
         setShowPayment,
         showModal,
-        setShowModal
+        setShowModal,
+        certListUploadStatus,
+        setCertListUploadStatus,
+        updateUserDocumentStatus,
     } = useContext(CloudinaryContext);
 
     const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
@@ -80,10 +83,15 @@ const AccordionCard = ({ certListUploadStatus}) => {
     const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
     const [stripePromise, setStripePromise] = useState(null);
     const [cloudinaryFiles, setCloudinaryFiles] = useState([]);
+    // const [certListUploadStatus, setCertListUploadStatus] = useState({});
 
     //checks to see if every section has an uploaded file, if so returns true
     const [isUploaded, setIsUploaded] = useState(false);
-    
+
+    const handleDeleteClick = (publicId) => {
+        const sectionName = 'Brain'; // or dynamically get section name based on the accordion section
+        deleteFile(publicId, sectionName); // Pass section name here
+    };
 
     // const [showPayment, setShowPayment] = useState(false);
     // const [showModal, setShowModal] = useState(false);
@@ -99,6 +107,19 @@ const AccordionCard = ({ certListUploadStatus}) => {
         ProgressBar7,
         ProgressBar8,
     ];
+
+    const getStatusBadgeClass = (status) => {
+        switch (status) {
+            case 'pending approval':
+                return 'bg-school-bus-yellow text-black';
+            case 'declined':
+                return 'bg-red text-white';
+            case 'approved':
+                return 'bg-green-is-good text-white';
+            default:
+                return 'bg-gray text-black';
+        }
+    };
 
     console.log(cloudinaryFiles, 'user specific cloudinary files');
     // console.log(stripePromise);
@@ -184,8 +205,6 @@ const AccordionCard = ({ certListUploadStatus}) => {
             });
     };
 
-
-
     //move this to the cloudinarycontext and update progress there as well since it updates the progress
     const getAssessment = async () => {
         console.log('assessment button clicked');
@@ -212,8 +231,6 @@ const AccordionCard = ({ certListUploadStatus}) => {
                 );
                 setShowPayment(true);
                 setShowModal(true);
-
-              
             }
         } catch (error) {
             console.error('Error creating checkout session:', error);
@@ -226,9 +243,15 @@ const AccordionCard = ({ certListUploadStatus}) => {
         console.log('file shown');
     };
 
-    const handleUploadClick = (section) => {
+    const handleUploadClick = async (section) => {
         setSectionName(section);
         initializeCloudinaryWidget(section);
+        const updatedStatus = {
+            ...certListUploadStatus,
+            [sectionName]: 'PENDING', // Update status based on section
+        };
+        await updateUserDocumentStatus(updatedStatus);
+        setCertListUploadStatus(updatedStatus);
         console.log('Calling updateUserProgress with value:', 1);
     };
 
@@ -236,20 +259,18 @@ const AccordionCard = ({ certListUploadStatus}) => {
     //     console.log('User Data:', user);
     // }
 
-    const checkAllSectionsUploaded = () => {
-        const sections = [
-            brainMetaData,
-            clinicalMetaData,
-            firstAidMetaData,
-            cPRMetaData,
-            videoMetaData,
-            insuranceMetaData,
-        ];
-
-        const allUploaded = sections.every((section) => section.length > 0);
-
-        setIsUploaded(allUploaded);
-    };
+    // const checkAllSectionsUploaded = () => {
+    //     const sections = [
+    //         brainIntegrationTraining,
+    //         clinicalHours,
+    //         firstAidTraining,
+    //         cprCert,
+    //         videoPresentation,
+    //         insurance,
+    //     ];
+    //     const allUploaded = sections.every((section) => section.length > 0);
+    //     setIsUploaded(allUploaded);
+    // };
 
     useEffect(() => {
         console.log('Fetching publishable key...');
@@ -270,8 +291,10 @@ const AccordionCard = ({ certListUploadStatus}) => {
                     setFileMetaData(metadataFiles);
                     setUserMetaData(userMetaData);
                     setProgress(userMetaData.userUploadProgress);
+                    setCertListUploadStatus(userMetaData.certListUploadStatus);
                     setCloudinaryFiles(folderFiles); //user specific files (objects) from Cloudinary
                     console.log(folderFiles[16]);
+                    console.log(userMetaData);
                 } catch (error) {
                     console.error(
                         'Error fetching files:',
@@ -284,9 +307,9 @@ const AccordionCard = ({ certListUploadStatus}) => {
         fetchData();
     }, [user]);
 
-    useEffect(() => {
-        checkAllSectionsUploaded();
-    }, [fileMetaData]);
+    // useEffect(() => {
+    //     checkAllSectionsUploaded();
+    // }, [fileMetaData]);
 
     const getSectionFileNames = (sectionName) => {
         const filteredFiles = fileMetaData.filter(
@@ -307,31 +330,34 @@ const AccordionCard = ({ certListUploadStatus}) => {
     };
 
     const brainMetaData = fileMetaData.filter((metadata) => {
-        return metadata.sectionName === 'Brain';
+        return metadata.sectionName === 'brainIntegrationTraining';
     });
 
     const clinicalMetaData = fileMetaData.filter((metadata) => {
-        return metadata.sectionName === 'Clinical';
+        return metadata.sectionName === 'clinicalHours';
     });
 
     const firstAidMetaData = fileMetaData.filter((metadata) => {
-        return metadata.sectionName === 'FirstAid';
+        return metadata.sectionName === 'firstAidTraining';
     });
 
     const cPRMetaData = fileMetaData.filter((metadata) => {
-        return metadata.sectionName === 'CPR';
+        return metadata.sectionName === 'cprCert';
     });
 
     const videoMetaData = fileMetaData.filter((metadata) => {
-        return metadata.sectionName === 'Video';
+        return metadata.sectionName === 'videoPresentation';
     });
 
     const insuranceMetaData = fileMetaData.filter((metadata) => {
-        return metadata.sectionName === 'Insurance';
+        return metadata.sectionName === 'insurance';
     });
 
+    // const certListUploadStatus = userMetaData.certListUploadStatus
+
     console.log(fileMetaData, 'file metadata');
-    console.log(userMetaData, 'user metadata')
+    console.log(userMetaData, 'user metadata');
+    console.log(certListUploadStatus);
 
     return (
         <div>
@@ -353,19 +379,19 @@ const AccordionCard = ({ certListUploadStatus}) => {
                     , and a member of our board will be happy to assist you.
                 </p>
                 <div className="flex flex-col justify-center items-center pl-2 md:pl-20 gap-4 pb-5">
-                                <img
-                                    src={
-                                        certProgressImages[
-                                            Math.min(
-                                                progress || 0,
-                                                certProgressImages.length - 1,
-                                            )
-                                        ]
-                                    }
-                                    className="w-full md:w-auto"
-                                    alt={`Progress level ${user.userUploadProgress}`}
-                                />
-                            </div>
+                    <img
+                        src={
+                            certProgressImages[
+                                Math.min(
+                                    progress || 0,
+                                    certProgressImages.length - 1,
+                                )
+                            ]
+                        }
+                        className="w-full md:w-auto"
+                        alt={`Progress level ${user.userUploadProgress}`}
+                    />
+                </div>
 
                 <Accordion
                     allowMultipleExpanded={true}
@@ -374,9 +400,10 @@ const AccordionCard = ({ certListUploadStatus}) => {
                 >
                     <Brain
                         title="Brain Integration Training"
-                        sectionName="Brain"
+                        sectionName="brainIntegrationTraining"
                         fileMetadata={fileMetaData}
                         brainMetaData={brainMetaData}
+                        certStatus={brainMetaData.brainIntegrationTraining}
                     >
                         <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-lg md:text-xl pt-6 md:pt-10">
@@ -462,35 +489,40 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                 <div className="flex justify-center gap-10 pb-5">
                                     <div className="flex flex-col justify-start items-start pl-0">
                                         <ul>
-                                            {getSectionFileNames('Brain').map(
-                                                (file, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className="flex gap-5"
+                                            {getSectionFileNames(
+                                                'brainIntegrationTraining',
+                                            ).map((file, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="flex gap-5"
+                                                >
+                                                    <button
+                                                        className="font-fira text-xl text-blue font-bold text-left"
+                                                        onClick={showFile}
                                                     >
-                                                        <button
-                                                            className="font-fira text-xl text-blue font-bold text-left"
-                                                            onClick={showFile}
-                                                        >
-                                                            {file}{' '}
-                                                        </button>
-                                                        <button
-                                                            onClick={() => {
-                                                                setCurrentFileToDelete(
-                                                                    file,
-                                                                );
-                                                                setDeleteModalOpen(
-                                                                    true,
-                                                                );
-                                                            }}
-                                                        >
-                                                            X
-                                                        </button>
-                                                    </li>
-                                                ),
-                                            )}
+                                                        {file}{' '}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            setCurrentFileToDelete(
+                                                                file,
+                                                            );
+                                                            setDeleteModalOpen(
+                                                                true,
+                                                            );
+                                                        }}
+                                                    >
+                                                        X
+                                                    </button>
+                                                </li>
+                                            ))}
                                         </ul>
-                                        <div></div>
+
+                                        <div>
+                                            {
+                                                certListUploadStatus.brainIntegrationTraining
+                                            }{' '}
+                                        </div>
                                         {deleteModalOpen && (
                                             <DeleteModal
                                                 open={deleteModalOpen}
@@ -532,10 +564,13 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                                                 getPublicId(
                                                                     currentFileToDelete,
                                                                 );
+                                                            const sectionName =
+                                                                'brainIntegrationTraining'; 
                                                             if (publicId) {
                                                                 deleteFile(
                                                                     publicId,
-                                                                );
+                                                                    sectionName,
+                                                                ); 
                                                             } else {
                                                                 console.error(
                                                                     'Public ID not found for file:',
@@ -550,13 +585,20 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                             </DeleteModal>
                                         )}
                                     </div>
+                                    <p className="mt-2">
+                                        Status:{' '}
+                                        {certListUploadStatus.brainIntegrationTraining ||
+                                            'Not submitted'}
+                                    </p>
 
                                     <div className="flex justify-center items-center">
                                         <button>
                                             <img
                                                 src={UploadBtn}
                                                 onClick={() =>
-                                                    handleUploadClick('Brain')
+                                                    handleUploadClick(
+                                                        'brainIntegrationTraining',
+                                                    )
                                                 }
                                                 alt="Upload Brain"
                                             />
@@ -568,7 +610,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
                     </Brain>
                     <Clinical
                         title="Clinical Hours"
-                        sectionName="Clinical"
+                        sectionName="clinicalHours"
                         clinicalMetaData={clinicalMetaData}
                     >
                         <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
@@ -605,36 +647,41 @@ const AccordionCard = ({ certListUploadStatus}) => {
                             <div className="flex justify-center items-start pt-10">
                                 <div className="w-1/3">
                                     <ul className="pl-0">
-                                        {getSectionFileNames('Clinical').map(
-                                            (file, index) => (
-                                                <li
-                                                    key={index}
-                                                    className="flex gap-5 mb-2"
+                                        {getSectionFileNames(
+                                            'clinicalHours',
+                                        ).map((file, index) => (
+                                            <li
+                                                key={index}
+                                                className="flex gap-5 mb-2"
+                                            >
+                                                <button
+                                                    className="font-fira text-xl text-blue font-bold"
+                                                    onClick={showFile}
                                                 >
-                                                    <button
-                                                        className="font-fira text-xl text-blue font-bold"
-                                                        onClick={showFile}
-                                                    >
-                                                        {file}
-                                                        {''}
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setCurrentFileToDelete(
-                                                                file,
-                                                            );
-                                                            setDeleteModalOpen(
-                                                                true,
-                                                            );
-                                                        }}
-                                                    >
-                                                        X
-                                                    </button>
-                                                </li>
-                                            ),
-                                        )}
+                                                    {file}
+                                                    {''}
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setCurrentFileToDelete(
+                                                            file,
+                                                        );
+                                                        setDeleteModalOpen(
+                                                            true,
+                                                        );
+                                                    }}
+                                                >
+                                                    X
+                                                </button>
+                                            </li>
+                                        ))}
                                     </ul>
-
+                                    <div>
+                                        Status:
+                                        {
+                                            certListUploadStatus.clinicalHours
+                                        }{' '}
+                                    </div>
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -670,32 +717,20 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                                     Cancel
                                                 </button>
                                                 <button
-                                                    className="bg-red w-full py-2 rounded text-white"
+                                                    className="bg-red w-[100px] py-2 rounded text-white"
                                                     onClick={() => {
                                                         const publicId =
                                                             getPublicId(
                                                                 currentFileToDelete,
                                                             );
+                                                        const sectionName =
+                                                            'clinicalHours';
+
                                                         if (publicId) {
                                                             deleteFile(
                                                                 publicId,
-                                                            );
-                                                            setProgress(
-                                                                (
-                                                                    prevProgress,
-                                                                ) => {
-                                                                    const newProgress =
-                                                                        Math.max(
-                                                                            0,
-                                                                            prevProgress -
-                                                                                1,
-                                                                        );
-                                                                    updateUserProgress(
-                                                                        newProgress,
-                                                                    );
-                                                                    return newProgress;
-                                                                },
-                                                            ); // Closed the function here
+                                                                sectionName,
+                                                            ); // Pass both publicId and sectionName
                                                         } else {
                                                             console.error(
                                                                 'Public ID not found for file:',
@@ -730,7 +765,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                                 src={UploadBtn}
                                                 onClick={() =>
                                                     handleUploadClick(
-                                                        'Clinical',
+                                                        'clinicalHours',
                                                     )
                                                 }
                                                 alt="Upload Clinical"
@@ -743,7 +778,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
                     </Clinical>
                     <FirstAid
                         title="First Aid Certification"
-                        sectionName="FirstAid"
+                        sectionName="firstAidTraining"
                         firstAidMetaData={firstAidMetaData}
                     >
                         <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
@@ -761,34 +796,40 @@ const AccordionCard = ({ certListUploadStatus}) => {
                             <div className="flex justify-center items-start pt-20">
                                 <div className="w-1/3">
                                     <ul className="pl-0">
-                                        {getSectionFileNames('FirstAid').map(
-                                            (file, index) => (
-                                                <li
-                                                    key={index}
-                                                    className="flex gap-5 mb-2"
+                                        {getSectionFileNames(
+                                            'firstAidTraining',
+                                        ).map((file, index) => (
+                                            <li
+                                                key={index}
+                                                className="flex gap-5 mb-2"
+                                            >
+                                                <button
+                                                    className="font-fira text-xl text-blue font-bold"
+                                                    onClick={showFile}
                                                 >
-                                                    <button
-                                                        className="font-fira text-xl text-blue font-bold"
-                                                        onClick={showFile}
-                                                    >
-                                                        {file}{' '}
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setCurrentFileToDelete(
-                                                                file,
-                                                            );
-                                                            setDeleteModalOpen(
-                                                                true,
-                                                            );
-                                                        }}
-                                                    >
-                                                        X
-                                                    </button>
-                                                </li>
-                                            ),
-                                        )}
+                                                    {file}{' '}
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setCurrentFileToDelete(
+                                                            file,
+                                                        );
+                                                        setDeleteModalOpen(
+                                                            true,
+                                                        );
+                                                    }}
+                                                >
+                                                    X
+                                                </button>
+                                            </li>
+                                        ))}
                                     </ul>
+                                    <div>
+                                        Status:
+                                        {
+                                            certListUploadStatus.firstAidTraining
+                                        }{' '}
+                                    </div>
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -824,16 +865,20 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                                     Cancel
                                                 </button>
                                                 <button
-                                                    className="bg-red w-full py-2 rounded text-white"
+                                                    className="bg-red w-[100px] py-2 rounded text-white"
                                                     onClick={() => {
                                                         const publicId =
                                                             getPublicId(
                                                                 currentFileToDelete,
                                                             );
+                                                        const sectionName =
+                                                            'firstAidTraining'; // Replace 'Brain' with the dynamic section name as needed
+
                                                         if (publicId) {
                                                             deleteFile(
                                                                 publicId,
-                                                            );
+                                                                sectionName,
+                                                            ); // Pass both publicId and sectionName
                                                         } else {
                                                             console.error(
                                                                 'Public ID not found for file:',
@@ -868,7 +913,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                                 src={UploadBtn}
                                                 onClick={() =>
                                                     handleUploadClick(
-                                                        'FirstAid',
+                                                        'firstAidTraining',
                                                     )
                                                 }
                                                 alt="Upload FirstAid"
@@ -881,7 +926,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
                     </FirstAid>
                     <CPR
                         title="CPR Certification"
-                        sectionName="CPR"
+                        sectionName="cprCert"
                         cPRMetaData={cPRMetaData}
                     >
                         <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
@@ -911,7 +956,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
                             <div className="flex justify-center items-start pt-20">
                                 <div className="w-1/3">
                                     <ul className="pl-0">
-                                        {getSectionFileNames('CPR').map(
+                                        {getSectionFileNames('cprCert').map(
                                             (file, index) => (
                                                 <li
                                                     key={index}
@@ -940,6 +985,9 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                             ),
                                         )}
                                     </ul>
+                                    <div>
+                                        Status:{certListUploadStatus.cprCert}{' '}
+                                    </div>
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -975,16 +1023,20 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                                     Cancel
                                                 </button>
                                                 <button
-                                                    className="bg-red w-full py-2 rounded text-white"
+                                                    className="bg-red w-[100px] py-2 rounded text-white"
                                                     onClick={() => {
                                                         const publicId =
                                                             getPublicId(
                                                                 currentFileToDelete,
                                                             );
+                                                        const sectionName =
+                                                            'cprCert'; // Replace 'Brain' with the dynamic section name as needed
+
                                                         if (publicId) {
                                                             deleteFile(
                                                                 publicId,
-                                                            );
+                                                                sectionName,
+                                                            ); // Pass both publicId and sectionName
                                                         } else {
                                                             console.error(
                                                                 'Public ID not found for file:',
@@ -1016,7 +1068,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                             <img
                                                 src={UploadBtn}
                                                 onClick={() =>
-                                                    handleUploadClick('CPR')
+                                                    handleUploadClick('cprCert')
                                                 }
                                                 alt="Upload CPR"
                                             />
@@ -1028,7 +1080,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
                     </CPR>
                     <Video
                         title="Video Presentation"
-                        sectionName="Video"
+                        sectionName="videoPresentation"
                         videoMetaData={videoMetaData}
                     >
                         <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
@@ -1066,35 +1118,41 @@ const AccordionCard = ({ certListUploadStatus}) => {
                             <div className="flex justify-center items-start pt-20">
                                 <div className="w-1/3">
                                     <ul className="pl-0">
-                                        {getSectionFileNames('Video').map(
-                                            (file, index) => (
-                                                <li
-                                                    key={index}
-                                                    className="flex gap-5 mb-2"
+                                        {getSectionFileNames(
+                                            'videoPresentation',
+                                        ).map((file, index) => (
+                                            <li
+                                                key={index}
+                                                className="flex gap-5 mb-2"
+                                            >
+                                                <button
+                                                    className="font-fira text-xl text-blue font-bold"
+                                                    onClick={showFile}
                                                 >
-                                                    <button
-                                                        className="font-fira text-xl text-blue font-bold"
-                                                        onClick={showFile}
-                                                    >
-                                                        {file}
-                                                        {''}
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setCurrentFileToDelete(
-                                                                file,
-                                                            );
-                                                            setDeleteModalOpen(
-                                                                true,
-                                                            );
-                                                        }}
-                                                    >
-                                                        X
-                                                    </button>
-                                                </li>
-                                            ),
-                                        )}
+                                                    {file}
+                                                    {''}
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setCurrentFileToDelete(
+                                                            file,
+                                                        );
+                                                        setDeleteModalOpen(
+                                                            true,
+                                                        );
+                                                    }}
+                                                >
+                                                    X
+                                                </button>
+                                            </li>
+                                        ))}
                                     </ul>
+                                    <div>
+                                        Status:
+                                        {
+                                            certListUploadStatus.videoPresentation
+                                        }{' '}
+                                    </div>
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -1130,16 +1188,20 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                                     Cancel
                                                 </button>
                                                 <button
-                                                    className="bg-red w-full py-2 rounded text-white"
+                                                    className="bg-red w-[100px] py-2 rounded text-white"
                                                     onClick={() => {
                                                         const publicId =
                                                             getPublicId(
                                                                 currentFileToDelete,
                                                             );
+                                                        const sectionName =
+                                                            'videoPresentation'; // Replace 'Brain' with the dynamic section name as needed
+
                                                         if (publicId) {
                                                             deleteFile(
                                                                 publicId,
-                                                            );
+                                                                sectionName,
+                                                            ); // Pass both publicId and sectionName
                                                         } else {
                                                             console.error(
                                                                 'Public ID not found for file:',
@@ -1171,7 +1233,9 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                             <img
                                                 src={UploadBtn}
                                                 onClick={() =>
-                                                    handleUploadClick('Video')
+                                                    handleUploadClick(
+                                                        'videoPresentation',
+                                                    )
                                                 }
                                                 alt="Upload Video"
                                             />
@@ -1184,7 +1248,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
 
                     <Insurance
                         title="Insurance"
-                        sectionName="Insurance"
+                        sectionName="insurance"
                         insuranceMetaData={insuranceMetaData}
                     >
                         <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
@@ -1215,7 +1279,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
                             <div className="flex justify-center items-start pt-10">
                                 <div className="w-1/3">
                                     <ul className="pl-0">
-                                        {getSectionFileNames('Insurance').map(
+                                        {getSectionFileNames('insurance').map(
                                             (file, index) => (
                                                 <li
                                                     key={index}
@@ -1244,6 +1308,9 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                             ),
                                         )}
                                     </ul>
+                                    <div>
+                                        Status:{certListUploadStatus.insurance}{' '}
+                                    </div>
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -1279,26 +1346,30 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                                     Cancel
                                                 </button>
                                                 <button
-                                                    className="bg-red w-full py-2 rounded text-white"
-                                                    onClick={() => {
-                                                        const publicId =
-                                                            getPublicId(
-                                                                currentFileToDelete,
-                                                            );
-                                                        if (publicId) {
-                                                            deleteFile(
-                                                                publicId,
-                                                            );
-                                                        } else {
-                                                            console.error(
-                                                                'Public ID not found for file:',
-                                                                currentFileToDelete,
-                                                            );
-                                                        }
-                                                    }}
-                                                >
-                                                    Delete
-                                                </button>
+                                                        className="bg-red w-[100px] py-2 rounded text-white"
+                                                        onClick={() => {
+                                                            const publicId =
+                                                                getPublicId(
+                                                                    currentFileToDelete,
+                                                                );
+                                                            const sectionName =
+                                                                'insurance'; // Replace 'Brain' with the dynamic section name as needed
+
+                                                            if (publicId) {
+                                                                deleteFile(
+                                                                    publicId,
+                                                                    sectionName,
+                                                                ); // Pass both publicId and sectionName
+                                                            } else {
+                                                                console.error(
+                                                                    'Public ID not found for file:',
+                                                                    currentFileToDelete,
+                                                                );
+                                                            }
+                                                        }}
+                                                    >
+                                                        Delete
+                                                    </button>
                                             </div>
                                         </DeleteModal>
                                     )}
@@ -1323,7 +1394,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
                                                 src={UploadBtn}
                                                 onClick={() =>
                                                     handleUploadClick(
-                                                        'Insurance',
+                                                        'insurance',
                                                     )
                                                 }
                                                 alt="Upload Insurance"
@@ -1575,7 +1646,7 @@ const AccordionCard = ({ certListUploadStatus}) => {
 
                             <div className="form-flex gap-10 pt-20 pb-5 mt-4">
                                 <button
-                                    disabled={!isUploaded}
+                                    disabled={isUploaded}
                                     className={`${
                                         !isUploaded
                                             ? 'opacity-50 cursor-not-allowed'

@@ -26,7 +26,11 @@ export default {
                 'greyish-blue': '#bdcbdd80',
                 'pinky-pink': '#f0cabe80',
                 'mauve': '#e4b5c680',
-                'mediumish-green': '#D9E2B8'
+                'mediumish-green': '#D9E2B8',
+                'yet-another-light-grey': "#f7f7f7f7",
+                'charcoal': '#7b7b7b7b',
+                'school-bus-yellow': "#f0d171",
+                'green-is-good': "#38761d"
             },
             dropShadow: {
                 md: '0 4px 4px rgba(0, 0, 0, 0.25)',

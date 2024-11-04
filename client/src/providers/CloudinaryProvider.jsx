@@ -32,6 +32,7 @@ export const CloudinaryProvider = ({ children }) => {
     const [uploadError, setUploadError] = useState(null);
     const [imageUrl, setImageUrl] = useState(user?.userProfilePicture || '');
     const [profilePhotoUploaded, setProfilePhotoUploaded] = useState(false);
+    const [certListUploadStatus, setCertListUploadStatus] = useState({});
 
     const handleProfileUpload = () => {
         console.log('photo uploaded!');
@@ -255,7 +256,6 @@ export const CloudinaryProvider = ({ children }) => {
     };
 
     const updateUserDocumentStatus = async (newDocStatus) => {
-        console.log('updated user doc status with:', newDocStatus);
         if (user) {
             try {
                 const accessToken = await getAccessTokenSilently();
@@ -285,10 +285,9 @@ export const CloudinaryProvider = ({ children }) => {
 
                 const data = await response.json();
                 console.log('User doc status updated on the server:', data);
-                return data; 
+                return data;
             } catch (error) {
                 console.error('Error updating user doc status:', error);
-               
             }
         } else {
             console.error('User is not defined');
@@ -438,8 +437,37 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
+    const updateUserMetadata = async (newStatus) => {
+        try {
+            const accessToken = await getAccessTokenSilently();
+
+            const response = await fetch(
+                `http://localhost:8080/api/user/${email}/metadata`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        certListUploadStatus: newStatus, // Update with the new status
+                    }),
+                },
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to update user metadata');
+            }
+
+            const updatedUser = await response.json();
+            console.log('User metadata updated:', updatedUser);
+        } catch (error) {
+            console.error('Error updating user metadata:', error);
+        }
+    };
+
     //delete certification file
-    const deleteFile = async (publicId) => {
+    const deleteFile = async (publicId, sectionName) => {
         try {
             const accessToken = await getAccessTokenSilently();
             const response = await fetch(
@@ -454,13 +482,20 @@ export const CloudinaryProvider = ({ children }) => {
 
             if (response.ok) {
                 console.log('File and metadata deleted successfully.');
+                const updatedStatus = {
+                    ...certListUploadStatus,
+                    [sectionName]: 'Waiting for Upload', // Update status based on section
+                };
+                console.log('Updated status before PUT request:', updatedStatus);
+                await updateUserDocumentStatus(updatedStatus);
                 setFileMetaData((prevMetaData) =>
                     prevMetaData.filter((file) => file.publicId !== publicId),
                 );
-                setDeleteModalOpen(false);
                 setFiles((prevFiles) =>
                     prevFiles.filter((file) => file.publicId !== publicId),
                 );
+                setCertListUploadStatus(updatedStatus);
+                setDeleteModalOpen(false);
             } else {
                 console.error('Failed to delete file.');
             }
@@ -509,6 +544,9 @@ export const CloudinaryProvider = ({ children }) => {
                 setShowPayment,
                 showModal,
                 setShowModal,
+                certListUploadStatus,
+                setCertListUploadStatus,
+                updateUserDocumentStatus,
             }}
         >
             {loaded && children}

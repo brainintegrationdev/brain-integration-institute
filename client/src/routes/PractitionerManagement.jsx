@@ -19,8 +19,7 @@ const PractitionerManagement = () => {
     }, []);
     return (
         <div className="flex flex-col justify-center items-center gap-10 w-full">
-            <h2 className="text-2xl">Practitioner Management</h2>
-            <p>Manage practitioners' information here.</p>
+          
             {userId ? <Outlet /> : <UserList />}
         </div>
     );
