@@ -21,11 +21,11 @@ import video from '../assets/icons/video.png';
 // import graduationCap from '../asset/icons/graduation-cap.png'
 
 const UserSpecificAdminView = () => {
-    const { individualUser, setIndividualUser, users } =
+    const { individualUser, setIndividualUser, users, fetchProfileData, profileData, setProfileData } =
         useContext(AdminContext);
-    const { fetchProfileData, profileData } = useContext(UserContext);
+    // const { fetchProfileData, profileData } = useContext(UserContext);
     const { userId } = useParams();
-    const { user } = useAuth0();
+    // const { user } = useAuth0();
 
     const certProgressImages = [
         ProgressBar0,
@@ -43,12 +43,13 @@ const UserSpecificAdminView = () => {
         if (userId) {
             const foundUser = users.find((user) => user._id === userId);
             setIndividualUser(foundUser);
+            console.log(individualUser)
         }
     }, [userId, setIndividualUser, users]);
 
     useEffect(() => {
-        fetchProfileData(user);
-    }, [user, fetchProfileData]);
+        fetchProfileData(individualUser);
+    }, [individualUser]);
 
     if (!individualUser) return <p>Loading...</p>;
 
@@ -74,12 +75,13 @@ const UserSpecificAdminView = () => {
         }
     };
 
+    console.log(profileData)
 
     return (
         <div className="flex flex-col items-center w-full gap-6">
             <div className="flex items-center gap-8">
                 <div className="flex bg-yet-another-light-grey w-[739px] h-[355px] pt-10 pl-10 pb-10">
-                    {profileData ? (
+                    {profileData && Object.keys(profileData).length > 0 ? (
                         <>
                             {profileData.userId && (
                                 <img
@@ -92,9 +94,9 @@ const UserSpecificAdminView = () => {
                                     {profileData.firstName}{' '}
                                     {profileData.lastName}
                                 </p>
-                                <p className="text-xl">Software Engineer</p>
+                              
                                 <p className="text-xl">
-                                    {profileData.city}, {profileData.state}{' '}
+                                    {profileData.city} {profileData.state}{' '}
                                     {profileData.zip}
                                 </p>
                                 <p className="text-xl font-bold text-blue">
@@ -106,7 +108,9 @@ const UserSpecificAdminView = () => {
                             </div>
                         </>
                     ) : (
-                        <p>Loading user details...</p>
+                        <div className="flex flex-col justify-center items-center">
+                        <p className="font-bold text-3xl">No profile data found</p>
+                        </div>
                     )}
                 </div>
 
@@ -126,107 +130,63 @@ const UserSpecificAdminView = () => {
                 </div>
             </div>
 
-            {/* <div className="flex flex-col items-start w-[739px] mt-4">
+            <div className="flex flex-col items-start w-[739px] mt-4">
                 <ul className="pl-5">
-                    <div className="pb-5 flex border border-charcoal rounded-xl p-10 mb-10 items-center gap-20">
-                        <input type="checkbox" className="custom-checkbox" />
-                        <li>Video Presentation {videoPresentation}</li>{' '}
-                        <img src={video} className="w-[40px]" />
-                        <button className="border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]">
-                            View
-                        </button>
-                    </div>
-                    <div className="pb-5 flex border border-charcoal rounded-xl p-10 mb-10 items-center gap-20">
-                        <input type="checkbox" className="custom-checkbox" />
-
-                        <li>
-                            Brain Integration Training:{' '}
-                            {brainIntegrationTraining}
-                        </li>
-                        <img src={presentation} className="w-[40px]" />
-                        <button className="border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]">
-                            View
-                        </button>
-                    </div>
-                    <div className="pb-5 flex border border-charcoal rounded-xl p-10 mb-10 items-center gap-20">
-                        <input type="checkbox" className="custom-checkbox" />
-                        <li>CPR Certification: {cprCert}</li>{' '}
-                        <img src={heartPulse} className="w-[40px]" />
-                        <button className="border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]">
-                            View
-                        </button>
-                    </div>{' '}
-                    <div className="pb-5 flex border border-charcoal rounded-xl p-10 mb-10 items-center gap-20">
-                        <input type="checkbox" className="custom-checkbox" />
-                        <li>Clinical Hours: {clinicalHours}</li>
-                        <img src={clipboard} className="w-[40px]" />
-                        <button className="border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]">
-                            View
-                        </button>
-                    </div>
-                    <div className="pb-5 flex border border-charcoal rounded-xl p-10 mb-10 items-center gap-20">
-                        <input type="checkbox" className="custom-checkbox" />
-                        <li>First Aid Training: {firstAidTraining}</li>
-                        <img src={briefcase} className="w-[40px]" />
-                        <button className="border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]">
-                            View
-                        </button>
-                    </div>
-                    <div className="pb-5 flex border border-charcoal rounded-xl p-10 mb-10 items-center gap-20">
-                        <input type="checkbox" className="custom-checkbox" />
-                        <li>Insurance: {insurance}</li>
-                        <img src={shield} className="w-[40px]" />
-                        <button className="border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]">
-                            View
-                        </button>
-                    </div>
-                </ul>
-            </div>
-        </div>
-    );
-}; */}
-
-<div className="flex flex-col items-start w-[739px] mt-4">
-                <ul className="pl-5">
-                    {[{
-                        name: 'Video Presentation',
-                        status: videoPresentation,
-                        icon: video,
-                    }, {
-                        name: 'Brain Integration Training',
-                        status: brainIntegrationTraining,
-                        icon: presentation,
-                    }, {
-                        name: 'CPR Certification',
-                        status: cprCert,
-                        icon: heartPulse,
-                    }, {
-                        name: 'Clinical Hours',
-                        status: clinicalHours,
-                        icon: clipboard,
-                    }, {
-                        name: 'First Aid Training',
-                        status: firstAidTraining,
-                        icon: briefcase,
-                    }, {
-                        name: 'Insurance',
-                        status: insurance,
-                        icon: shield,
-                    }].map((doc, index) => (
+                    {[
+                        {
+                            name: 'Video Presentation',
+                            status: videoPresentation,
+                            icon: video,
+                        },
+                        {
+                            name: 'Brain Integration Training',
+                            status: brainIntegrationTraining,
+                            icon: presentation,
+                        },
+                        {
+                            name: 'CPR Certification',
+                            status: cprCert,
+                            icon: heartPulse,
+                        },
+                        {
+                            name: 'Clinical Hours',
+                            status: clinicalHours,
+                            icon: clipboard,
+                        },
+                        {
+                            name: 'First Aid Training',
+                            status: firstAidTraining,
+                            icon: briefcase,
+                        },
+                        {
+                            name: 'Insurance',
+                            status: insurance,
+                            icon: shield,
+                        },
+                    ].map((doc, index) => (
                         <div
                             key={index}
                             className="pb-5 flex border border-charcoal rounded-xl p-10 mb-10 items-center gap-20"
                         >
-                            <input type="checkbox" className="custom-checkbox" />
+                            <input
+                                type="checkbox"
+                                className="custom-checkbox"
+                            />
                             <li>
                                 {doc.name}:{' '}
                                 <span
-                                    className={`px-2 py-1 rounded-full text-sm font-semibold ${getStatusBadgeClass(doc.status)}`}
+                                    className={`px-2 py-1 rounded-full text-sm font-semibold ${getStatusBadgeClass(
+                                        doc.status,
+                                    )}`}
                                 >
                                     {doc.status}
                                 </span>
                             </li>
-                            <img src={doc.icon} className="w-[40px]" alt={`${doc.name} icon`} />
+                            <img
+                                src={doc.icon}
+                                className="w-[40px]"
+                                alt={`${doc.name} icon`}
+                            />
                             <button className="border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]">
                                 View
                             </button>

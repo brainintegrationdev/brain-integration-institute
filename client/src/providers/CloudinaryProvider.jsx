@@ -33,6 +33,7 @@ export const CloudinaryProvider = ({ children }) => {
     const [imageUrl, setImageUrl] = useState(user?.userProfilePicture || '');
     const [profilePhotoUploaded, setProfilePhotoUploaded] = useState(false);
     const [certListUploadStatus, setCertListUploadStatus] = useState({});
+    const [certificateData, setCertificateData] = useState({});
 
     const handleProfileUpload = () => {
         console.log('photo uploaded!');
@@ -199,9 +200,6 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
-    // console.log(email)
-    // console.log(user)
-
     const updateUserStudyGuide = async (email) => {
         console.log('updateUserStudyGuide called');
         if (!email) {
@@ -300,7 +298,7 @@ export const CloudinaryProvider = ({ children }) => {
                 {
                     cloudName: uwConfig.cloudName,
                     uploadPreset: uwConfig.uploadPreset,
-                    asset_folder: `users/${user.nickname}`,
+                    asset_folder: `users/${user.nickname}/${section}`,
                 },
                 async (error, result) => {
                     if (error) {
@@ -378,7 +376,7 @@ export const CloudinaryProvider = ({ children }) => {
                 {
                     cloudName: uwConfig.cloudName,
                     uploadPreset: uwConfig.uploadPreset,
-                    asset_folder: `users/${user.nickname}`,
+                    asset_folder: `users/${user.nickname}/profilePic`,
                 },
                 async (error, result) => {
                     if (error) {
@@ -392,11 +390,9 @@ export const CloudinaryProvider = ({ children }) => {
                             userProfilePicture: result.info.secure_url,
                         };
 
-                        // Update state with new profile picture URL
                         setImageUrl(result.info.secure_url);
                         setProfilePhotoUploaded(true);
 
-                        // Send metadata to the server
                         try {
                             const accessToken = await getAccessTokenSilently();
                             const response = await fetch(
@@ -426,7 +422,6 @@ export const CloudinaryProvider = ({ children }) => {
                                 error,
                             );
                         } finally {
-                            // Close the widget after processing
                             myWidget.close();
                         }
                     }
@@ -450,7 +445,7 @@ export const CloudinaryProvider = ({ children }) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        certListUploadStatus: newStatus, // Update with the new status
+                        certListUploadStatus: newStatus,
                     }),
                 },
             );
@@ -486,7 +481,10 @@ export const CloudinaryProvider = ({ children }) => {
                     ...certListUploadStatus,
                     [sectionName]: 'Waiting for Upload', // Update status based on section
                 };
-                console.log('Updated status before PUT request:', updatedStatus);
+                console.log(
+                    'Updated status before PUT request:',
+                    updatedStatus,
+                );
                 await updateUserDocumentStatus(updatedStatus);
                 setFileMetaData((prevMetaData) =>
                     prevMetaData.filter((file) => file.publicId !== publicId),
@@ -504,7 +502,123 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
-    console.log(progress, 'progress');
+    const uploadCompletionCertificate = (file) => {
+        if (user) {
+            const myWidget = window.cloudinary.createUploadWidget(
+                {
+                    cloudName: uwConfig.cloudName,
+                    uploadPreset: uwConfig.uploadPreset,
+                    asset_folder: `certificate`,
+                },
+                async (error, result) => {
+                    if (error) {
+                        console.error('Upload error:', error);
+                        return;
+                    }
+                    if (result.event === 'success') {
+                        console.log('Upload successful:', result.info);
+
+                        // Certificate data to send to the server
+                        const certificateData = {
+                            publicId: result.info.public_id,
+                            url: result.info.secure_url,
+                            uploadDate: result.info.created_at,
+                            filename: result.info.original_filename,
+                        };
+
+                        console.log(
+                            'Uploaded certificate URL:',
+                            result.info.secure_url,
+                        );
+
+                        try {
+                            const accessToken = await getAccessTokenSilently();
+                            const response = await fetch(
+                                'http://localhost:8080/api/images/certificate',
+                                {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        Authorization: `Bearer ${accessToken}`,
+                                    },
+                                    body: JSON.stringify(certificateData),
+                                },
+                            );
+
+                            if (response.ok) {
+                                console.log(
+                                    'Certificate data successfully sent to the server.',
+                                );
+                                setCertificateData(certificateData);
+                            } else {
+                                console.error(
+                                    'Failed to send certificate data to the server.',
+                                );
+                            }
+                        } catch (error) {
+                            console.error(
+                                'Error sending certificate data:',
+                                error,
+                            );
+                        }
+                    }
+                },
+            );
+
+            myWidget.open();
+        }
+    };
+
+    //get certificate file from cloudinary 
+
+    const getCertificate = async () => {
+        try {
+            const accessToken = await getAccessTokenSilently();
+            const response = await axios.get(
+                `http://localhost:8080/api/images/certificate`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                },
+            );
+            return response.data.certificate;
+        } catch (error) {
+            console.error('Error fetching files:', error);
+        }
+    };
+
+
+
+
+
+    const deleteCertificate = async (publicId) => {
+        try {
+            const accessToken = await getAccessTokenSilently();
+            const response = await fetch(
+                `http://localhost:8080/api/images/certificate/${publicId}`,
+                {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                },
+            );
+            if (response.ok) {
+                console.log('File and metadata deleted successfully.');
+
+                setCertificateData((prevCertificateData) =>
+                    prevCertificateData.filter(
+                        (cert) => cert.publicId !== publicId,
+                    ),
+                );
+            } else {
+                console.error('Failed to delete file.');
+            }
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+    };
 
     return (
         <CloudinaryContext.Provider
@@ -547,6 +661,11 @@ export const CloudinaryProvider = ({ children }) => {
                 certListUploadStatus,
                 setCertListUploadStatus,
                 updateUserDocumentStatus,
+                uploadCompletionCertificate,
+                deleteCertificate,
+                getCertificate,
+                certificateData,
+                setCertificateData
             }}
         >
             {loaded && children}

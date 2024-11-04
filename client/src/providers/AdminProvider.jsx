@@ -3,7 +3,7 @@
 import { AdminContext } from '../contexts';
 import axios from 'axios';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useState } from 'react'
+import { useState } from 'react';
 
 export const AdminProvider = ({ children }) => {
     const {
@@ -14,9 +14,12 @@ export const AdminProvider = ({ children }) => {
         getAccessTokenSilently,
     } = useAuth0();
 
-    const [users, setUsers] = useState([])
-    const [profiles, setProfiles] = useState([])
-    const [individualUser, setIndividualUser] = useState(null)
+    const [users, setUsers] = useState([]);
+    const [profiles, setProfiles] = useState([]);
+    const [individualUser, setIndividualUser] = useState(null);
+    const [profileData, setProfileData] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const getManagementToken = async () => {
         const response = await axios.post(
@@ -38,42 +41,35 @@ export const AdminProvider = ({ children }) => {
         // const token = await getManagementToken();
         try {
             const accessToken = await getAccessTokenSilently();
-            const response = await axios.get(
-                `http://localhost:8080/api/user`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                    params: {
-                        per_page: 50,
-                        page: 0,
-                    },
+            const response = await axios.get(`http://localhost:8080/api/user`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
                 },
-            );
-            setUsers(response.data)
-            return users
+                params: {
+                    per_page: 50,
+                    page: 0,
+                },
+            });
+            setUsers(response.data);
+            return users;
         } catch (error) {
             console.error('Error fetching users:', error);
         }
     }
     //get user by Id
     const getUserById = async (userId) => {
-       
         try {
             const accessToken = await getAccessTokenSilently();
-            const response = await axios.get(`/api/users/${userId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
+            const response = await axios.get(`/api/users/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
                 },
-            );
+            });
             setIndividualUser(response.data);
         } catch (error) {
             console.error('Error fetching user:', error);
         }
-    }
-
+    };
 
     const updateUserToAdmin = async (userId) => {
         const token = await getManagementToken();
@@ -94,9 +90,56 @@ export const AdminProvider = ({ children }) => {
             console.error('Error updating user metadata:', error);
         }
     };
+
+    const fetchProfileData = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(
+                `/api/profile/${individualUser.userEmail}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${await getAccessTokenSilently()}`,
+                    },
+                },
+            );
+
+            if (!response.ok) {
+                setProfileData({});
+                throw new Error('Network response was not ok');
+               
+            }
+            const data = await response.json();
+            if (!data || Object.keys(data).length === 0) {
+                setProfileData({});
+            } else {
+                setProfileData((prev) => ({ ...data }));
+                console.log(profileData);
+            }
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+            setError(error.message);
+        } finally {
+            setLoading(false); // Stop loading indicator once data is fetched
+        }
+    };
+
     return (
         <AdminContext.Provider
-            value={{ updateUserToAdmin, getManagementToken, getAllUsers, users, setUsers, getUserById, individualUser, setIndividualUser }}
+            value={{
+                updateUserToAdmin,
+                getManagementToken,
+                getAllUsers,
+                users,
+                setUsers,
+                getUserById,
+                individualUser,
+                setIndividualUser,
+                profileData,
+                setProfileData,
+                fetchProfileData,
+            }}
         >
             {children}
         </AdminContext.Provider>

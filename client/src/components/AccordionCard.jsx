@@ -248,7 +248,7 @@ const AccordionCard = ({ certStatus }) => {
         initializeCloudinaryWidget(section);
         const updatedStatus = {
             ...certListUploadStatus,
-            [sectionName]: 'PENDING', // Update status based on section
+            [sectionName]: 'pending',
         };
         await updateUserDocumentStatus(updatedStatus);
         setCertListUploadStatus(updatedStatus);
@@ -293,7 +293,7 @@ const AccordionCard = ({ certStatus }) => {
                     setProgress(userMetaData.userUploadProgress);
                     setCertListUploadStatus(userMetaData.certListUploadStatus);
                     setCloudinaryFiles(folderFiles); //user specific files (objects) from Cloudinary
-                    console.log(folderFiles[16]);
+                    console.log(folderFiles);
                     console.log(userMetaData);
                 } catch (error) {
                     console.error(
@@ -491,38 +491,45 @@ const AccordionCard = ({ certStatus }) => {
                                         <ul>
                                             {getSectionFileNames(
                                                 'brainIntegrationTraining',
-                                            ).map((file, index) => (
-                                                <li
-                                                    key={index}
-                                                    className="flex gap-5"
-                                                >
-                                                    <button
-                                                        className="font-fira text-xl text-blue font-bold text-left"
-                                                        onClick={showFile}
+                                            ).map((file, index) =>
+                                                file ? (
+                                                    <li
+                                                        key={index}
+                                                        className="flex gap-5"
                                                     >
-                                                        {file}{' '}
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setCurrentFileToDelete(
-                                                                file,
-                                                            );
-                                                            setDeleteModalOpen(
-                                                                true,
-                                                            );
-                                                        }}
-                                                    >
-                                                        X
-                                                    </button>
-                                                </li>
-                                            ))}
+                                                        <button
+                                                            className="font-fira text-xl text-blue font-bold text-left"
+                                                            onClick={showFile}
+                                                        >
+                                                            {file}{' '}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                setCurrentFileToDelete(
+                                                                    file,
+                                                                );
+                                                                setDeleteModalOpen(
+                                                                    true,
+                                                                );
+                                                            }}
+                                                        >
+                                                            X
+                                                        </button>
+                                                    </li>
+                                                ) : null,
+                                            )}
                                         </ul>
 
-                                        <div>
-                                            {
-                                                certListUploadStatus.brainIntegrationTraining
-                                            }{' '}
-                                        </div>
+                                        {getSectionFileNames(
+                                            'brainIntegrationTraining',
+                                        ).length > 0 && (
+                                            <div>
+                                                {
+                                                    certListUploadStatus.brainIntegrationTraining
+                                                }
+                                            </div>
+                                        )}
+
                                         {deleteModalOpen && (
                                             <DeleteModal
                                                 open={deleteModalOpen}
@@ -565,12 +572,12 @@ const AccordionCard = ({ certStatus }) => {
                                                                     currentFileToDelete,
                                                                 );
                                                             const sectionName =
-                                                                'brainIntegrationTraining'; 
+                                                                'brainIntegrationTraining';
                                                             if (publicId) {
                                                                 deleteFile(
                                                                     publicId,
                                                                     sectionName,
-                                                                ); 
+                                                                );
                                                             } else {
                                                                 console.error(
                                                                     'Public ID not found for file:',
@@ -585,11 +592,11 @@ const AccordionCard = ({ certStatus }) => {
                                             </DeleteModal>
                                         )}
                                     </div>
-                                    <p className="mt-2">
+                                    {/* <p className="mt-2">
                                         Status:{' '}
                                         {certListUploadStatus.brainIntegrationTraining ||
                                             'Not submitted'}
-                                    </p>
+                                    </p> */}
 
                                     <div className="flex justify-center items-center">
                                         <button>
@@ -644,134 +651,142 @@ const AccordionCard = ({ certStatus }) => {
                                 </li>
                             </ul>
 
-                            <div className="flex justify-center items-start pt-10">
-                                <div className="w-1/3">
-                                    <ul className="pl-0">
-                                        {getSectionFileNames(
-                                            'clinicalHours',
-                                        ).map((file, index) => (
-                                            <li
-                                                key={index}
-                                                className="flex gap-5 mb-2"
+                            <div className="flex flex-col gap-10 pt-10 pb-2">
+                                <div className="flex justify-center gap-10 pb-5">
+                                    <div className="flex flex-col justify-start items-start pl-0">
+                                        <ul>
+                                            {getSectionFileNames(
+                                                'clinicalHours',
+                                            ).map((file, index) =>
+                                                file ? (
+                                                    <li
+                                                        key={index}
+                                                        className="flex gap-5"
+                                                    >
+                                                        <button
+                                                            className="font-fira text-xl text-blue font-bold text-left"
+                                                            onClick={showFile}
+                                                        >
+                                                            {file}{' '}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                setCurrentFileToDelete(
+                                                                    file,
+                                                                );
+                                                                setDeleteModalOpen(
+                                                                    true,
+                                                                );
+                                                            }}
+                                                        >
+                                                            X
+                                                        </button>
+                                                    </li>
+                                                ) : null,
+                                            )}
+                                        </ul>
+
+                                        {getSectionFileNames('clinicalHours')
+                                            .length > 0 && (
+                                            <div>
+                                                {
+                                                    certListUploadStatus.clinicalHours
+                                                }
+                                            </div>
+                                        )}
+                                        {deleteModalOpen && (
+                                            <DeleteModal
+                                                open={deleteModalOpen}
+                                                onClose={() =>
+                                                    setDeleteModalOpen(false)
+                                                }
                                             >
-                                                <button
-                                                    className="font-fira text-xl text-blue font-bold"
-                                                    onClick={showFile}
-                                                >
-                                                    {file}
-                                                    {''}
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        setCurrentFileToDelete(
-                                                            file,
-                                                        );
-                                                        setDeleteModalOpen(
-                                                            true,
-                                                        );
-                                                    }}
-                                                >
-                                                    X
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <div>
-                                        Status:
-                                        {
-                                            certListUploadStatus.clinicalHours
-                                        }{' '}
-                                    </div>
-                                    {deleteModalOpen && (
-                                        <DeleteModal
-                                            open={deleteModalOpen}
-                                            onClose={() =>
-                                                setDeleteModalOpen(false)
-                                            }
-                                        >
-                                            <div className="text-center w-56 flex flex-col items-center gap-2 mb-10">
-                                                <img
-                                                    src={DeleteFileIcon}
-                                                    className="w-70px h-[70px]"
-                                                    alt="Delete File"
-                                                />
+                                                <div className="text-center w-56 flex flex-col items-center gap-2 mb-10">
+                                                    <img
+                                                        src={DeleteFileIcon}
+                                                        className="w-70px h-[70px]"
+                                                        alt="Delete File"
+                                                    />
 
-                                                <h3 className="text-lg text-gray-500 font-bold">
-                                                    Are you sure you want to
-                                                    delete?
-                                                </h3>
-                                                <p className="text-sm">
-                                                    This process cannot be
-                                                    undone.
-                                                </p>
-                                            </div>
-                                            <div className="flex flex-col gap-10">
-                                                <button
-                                                    className="bg-light-gray w-full py-2 rounded text-white"
-                                                    onClick={() =>
-                                                        setDeleteModalOpen(
-                                                            false,
-                                                        )
-                                                    }
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    className="bg-red w-[100px] py-2 rounded text-white"
-                                                    onClick={() => {
-                                                        const publicId =
-                                                            getPublicId(
-                                                                currentFileToDelete,
-                                                            );
-                                                        const sectionName =
-                                                            'clinicalHours';
-
-                                                        if (publicId) {
-                                                            deleteFile(
-                                                                publicId,
-                                                                sectionName,
-                                                            ); // Pass both publicId and sectionName
-                                                        } else {
-                                                            console.error(
-                                                                'Public ID not found for file:',
-                                                                currentFileToDelete,
-                                                            );
+                                                    <h3 className="text-lg text-gray-500 font-bold">
+                                                        Are you sure you want to
+                                                        delete?
+                                                    </h3>
+                                                    <p className="text-sm">
+                                                        This process cannot be
+                                                        undone.
+                                                    </p>
+                                                </div>
+                                                <div className="flex flex-col gap-10">
+                                                    <button
+                                                        className="bg-light-gray w-full py-2 rounded text-white"
+                                                        onClick={() =>
+                                                            setDeleteModalOpen(
+                                                                false,
+                                                            )
                                                         }
-                                                    }}
-                                                >
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </DeleteModal>
-                                    )}
-                                </div>
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        className="bg-red w-[100px] py-2 rounded text-white"
+                                                        onClick={() => {
+                                                            const publicId =
+                                                                getPublicId(
+                                                                    currentFileToDelete,
+                                                                );
+                                                            const sectionName =
+                                                                'clinicalHours';
 
-                                <div className="flex flex-col items-center w-1/3 pt-20">
-                                    <DeleteTooltip
-                                        text="Delete current file to upload new one"
-                                        disabled={clinicalMetaData.length > 0}
-                                    >
-                                        <button
+                                                            if (publicId) {
+                                                                deleteFile(
+                                                                    publicId,
+                                                                    sectionName,
+                                                                ); // Pass both publicId and sectionName
+                                                            } else {
+                                                                console.error(
+                                                                    'Public ID not found for file:',
+                                                                    currentFileToDelete,
+                                                                );
+                                                            }
+                                                        }}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </DeleteModal>
+                                        )}
+                                    </div>
+
+                                    <div className="flex flex-col items-center w-1/3 pt-20">
+                                        <DeleteTooltip
+                                            text="Delete current file to upload new one"
                                             disabled={
                                                 clinicalMetaData.length > 0
                                             }
-                                            className={`${
-                                                clinicalMetaData.length > 0
-                                                    ? 'opacity-50 cursor-not-allowed'
-                                                    : ''
-                                            }`}
                                         >
-                                            <img
-                                                src={UploadBtn}
-                                                onClick={() =>
-                                                    handleUploadClick(
-                                                        'clinicalHours',
-                                                    )
+                                            <button
+                                                disabled={
+                                                    clinicalMetaData.length > 0
                                                 }
-                                                alt="Upload Clinical"
-                                            />
-                                        </button>
-                                    </DeleteTooltip>
+                                                className={`${
+                                                    clinicalMetaData.length > 0
+                                                        ? 'opacity-50 cursor-not-allowed'
+                                                        : ''
+                                                }`}
+                                            >
+                                                <img
+                                                    src={UploadBtn}
+                                                    onClick={() =>
+                                                        handleUploadClick(
+                                                            'clinicalHours',
+                                                        )
+                                                    }
+                                                    alt="Upload Clinical"
+                                                />
+                                            </button>
+                                        </DeleteTooltip>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -798,38 +813,43 @@ const AccordionCard = ({ certStatus }) => {
                                     <ul className="pl-0">
                                         {getSectionFileNames(
                                             'firstAidTraining',
-                                        ).map((file, index) => (
-                                            <li
-                                                key={index}
-                                                className="flex gap-5 mb-2"
-                                            >
-                                                <button
-                                                    className="font-fira text-xl text-blue font-bold"
-                                                    onClick={showFile}
+                                        ).map((file, index) =>
+                                            file ? (
+                                                <li
+                                                    key={index}
+                                                    className="flex gap-5 mb-2"
                                                 >
-                                                    {file}{' '}
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        setCurrentFileToDelete(
-                                                            file,
-                                                        );
-                                                        setDeleteModalOpen(
-                                                            true,
-                                                        );
-                                                    }}
-                                                >
-                                                    X
-                                                </button>
-                                            </li>
-                                        ))}
+                                                    <button
+                                                        className="font-fira text-xl text-blue font-bold"
+                                                        onClick={showFile}
+                                                    >
+                                                        {file}{' '}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            setCurrentFileToDelete(
+                                                                file,
+                                                            );
+                                                            setDeleteModalOpen(
+                                                                true,
+                                                            );
+                                                        }}
+                                                    >
+                                                        X
+                                                    </button>
+                                                </li>
+                                            ) : null,
+                                        )}
                                     </ul>
-                                    <div>
-                                        Status:
-                                        {
-                                            certListUploadStatus.firstAidTraining
-                                        }{' '}
-                                    </div>
+                                    {getSectionFileNames('firstAidTraining')
+                                        .length > 0 && (
+                                        <div>
+                                            {
+                                                certListUploadStatus.firstAidTraining
+                                            }
+                                        </div>
+                                    )}
+
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -872,13 +892,12 @@ const AccordionCard = ({ certStatus }) => {
                                                                 currentFileToDelete,
                                                             );
                                                         const sectionName =
-                                                            'firstAidTraining'; // Replace 'Brain' with the dynamic section name as needed
-
+                                                            'firstAidTraining';
                                                         if (publicId) {
                                                             deleteFile(
                                                                 publicId,
                                                                 sectionName,
-                                                            ); // Pass both publicId and sectionName
+                                                            );
                                                         } else {
                                                             console.error(
                                                                 'Public ID not found for file:',
@@ -957,37 +976,41 @@ const AccordionCard = ({ certStatus }) => {
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('cprCert').map(
-                                            (file, index) => (
-                                                <li
-                                                    key={index}
-                                                    className="flex gap-5 mb-2"
-                                                >
-                                                    <button
-                                                        className="font-fira text-xl text-blue font-bold"
-                                                        onClick={showFile}
+                                            (file, index) =>
+                                                file ? (
+                                                    <li
+                                                        key={index}
+                                                        className="flex gap-5 mb-2"
                                                     >
-                                                        {file}
-                                                        {''}
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setCurrentFileToDelete(
-                                                                file,
-                                                            );
-                                                            setDeleteModalOpen(
-                                                                true,
-                                                            );
-                                                        }}
-                                                    >
-                                                        X
-                                                    </button>
-                                                </li>
-                                            ),
+                                                        <button
+                                                            className="font-fira text-xl text-blue font-bold"
+                                                            onClick={showFile}
+                                                        >
+                                                            {file}
+                                                            {''}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                setCurrentFileToDelete(
+                                                                    file,
+                                                                );
+                                                                setDeleteModalOpen(
+                                                                    true,
+                                                                );
+                                                            }}
+                                                        >
+                                                            X
+                                                        </button>
+                                                    </li>
+                                                ) : null,
                                         )}
                                     </ul>
-                                    <div>
-                                        Status:{certListUploadStatus.cprCert}{' '}
-                                    </div>
+                                    {getSectionFileNames('cprCert').length >
+                                        0 && (
+                                        <div>
+                                            {certListUploadStatus.cprCert}
+                                        </div>
+                                    )}
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -1117,42 +1140,46 @@ const AccordionCard = ({ certStatus }) => {
 
                             <div className="flex justify-center items-start pt-20">
                                 <div className="w-1/3">
-                                    <ul className="pl-0">
+                                    <ul>
                                         {getSectionFileNames(
                                             'videoPresentation',
-                                        ).map((file, index) => (
-                                            <li
-                                                key={index}
-                                                className="flex gap-5 mb-2"
-                                            >
-                                                <button
-                                                    className="font-fira text-xl text-blue font-bold"
-                                                    onClick={showFile}
+                                        ).map((file, index) =>
+                                            file ? ( // Only render if file is truthy
+                                                <li
+                                                    key={index}
+                                                    className="flex gap-5 mb-2"
                                                 >
-                                                    {file}
-                                                    {''}
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        setCurrentFileToDelete(
-                                                            file,
-                                                        );
-                                                        setDeleteModalOpen(
-                                                            true,
-                                                        );
-                                                    }}
-                                                >
-                                                    X
-                                                </button>
-                                            </li>
-                                        ))}
+                                                    <button
+                                                        className="font-fira text-xl text-blue font-bold"
+                                                        onClick={showFile}
+                                                    >
+                                                        {file}
+                                                        {''}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            setCurrentFileToDelete(
+                                                                file,
+                                                            );
+                                                            setDeleteModalOpen(
+                                                                true,
+                                                            );
+                                                        }}
+                                                    >
+                                                        X
+                                                    </button>
+                                                </li>
+                                            ) : null,
+                                        )}
                                     </ul>
-                                    <div>
-                                        Status:
-                                        {
-                                            certListUploadStatus.videoPresentation
-                                        }{' '}
-                                    </div>
+                                    {getSectionFileNames('videoPresentation')
+                                        .length > 0 && (
+                                        <div>
+                                            {
+                                                certListUploadStatus.videoPresentation
+                                            }
+                                        </div>
+                                    )}
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -1280,37 +1307,41 @@ const AccordionCard = ({ certStatus }) => {
                                 <div className="w-1/3">
                                     <ul className="pl-0">
                                         {getSectionFileNames('insurance').map(
-                                            (file, index) => (
-                                                <li
-                                                    key={index}
-                                                    className="flex gap-5 mb-2"
-                                                >
-                                                    <button
-                                                        className="font-fira text-xl text-blue font-bold"
-                                                        onClick={showFile}
+                                            (file, index) =>
+                                                file ? (
+                                                    <li
+                                                        key={index}
+                                                        className="flex gap-5 mb-2"
                                                     >
-                                                        {file}
-                                                        {''}
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            setCurrentFileToDelete(
-                                                                file,
-                                                            );
-                                                            setDeleteModalOpen(
-                                                                true,
-                                                            );
-                                                        }}
-                                                    >
-                                                        X
-                                                    </button>
-                                                </li>
-                                            ),
+                                                        <button
+                                                            className="font-fira text-xl text-blue font-bold"
+                                                            onClick={showFile}
+                                                        >
+                                                            {file}
+                                                            {''}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                setCurrentFileToDelete(
+                                                                    file,
+                                                                );
+                                                                setDeleteModalOpen(
+                                                                    true,
+                                                                );
+                                                            }}
+                                                        >
+                                                            X
+                                                        </button>
+                                                    </li>
+                                                ) : null,
                                         )}
                                     </ul>
-                                    <div>
-                                        Status:{certListUploadStatus.insurance}{' '}
-                                    </div>
+                                    {getSectionFileNames('insurance').length >
+                                        0 && (
+                                        <div>
+                                            {certListUploadStatus.insurance}
+                                        </div>
+                                    )}
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -1346,30 +1377,30 @@ const AccordionCard = ({ certStatus }) => {
                                                     Cancel
                                                 </button>
                                                 <button
-                                                        className="bg-red w-[100px] py-2 rounded text-white"
-                                                        onClick={() => {
-                                                            const publicId =
-                                                                getPublicId(
-                                                                    currentFileToDelete,
-                                                                );
-                                                            const sectionName =
-                                                                'insurance'; // Replace 'Brain' with the dynamic section name as needed
+                                                    className="bg-red w-[100px] py-2 rounded text-white"
+                                                    onClick={() => {
+                                                        const publicId =
+                                                            getPublicId(
+                                                                currentFileToDelete,
+                                                            );
+                                                        const sectionName =
+                                                            'insurance'; // Replace 'Brain' with the dynamic section name as needed
 
-                                                            if (publicId) {
-                                                                deleteFile(
-                                                                    publicId,
-                                                                    sectionName,
-                                                                ); // Pass both publicId and sectionName
-                                                            } else {
-                                                                console.error(
-                                                                    'Public ID not found for file:',
-                                                                    currentFileToDelete,
-                                                                );
-                                                            }
-                                                        }}
-                                                    >
-                                                        Delete
-                                                    </button>
+                                                        if (publicId) {
+                                                            deleteFile(
+                                                                publicId,
+                                                                sectionName,
+                                                            ); // Pass both publicId and sectionName
+                                                        } else {
+                                                            console.error(
+                                                                'Public ID not found for file:',
+                                                                currentFileToDelete,
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    Delete
+                                                </button>
                                             </div>
                                         </DeleteModal>
                                     )}
