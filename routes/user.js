@@ -7,6 +7,7 @@ const {
     getAllUserMetaData,
 } = require('../services/user');
 const { UserModel } = require('../models/User');
+const { ProfileModel } = require('../models/profile');
 
 const userRouter = ex.Router();
 
@@ -44,11 +45,27 @@ userRouter.get('/:email', async (req, res) => {
     const { email } = req.params;
     console.log('Received email param:', email);
     try {
+        const profile = await ProfileModel.findOne({ email });
+        if (!profile) {
+            return res.status(404).json({ message: 'Profile not found' });
+        }
+        const user = await UserModel.findOne({ userEmail: profile.email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const userWithProfileData = {
+            ...user.toObject(), // Convert Mongoose document to plain object
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+        };
+
         const userMetaData = await getUserMetaData(email);
         if (!userMetaData) {
             return res.status(404).json({ message: 'user not found' });
         }
-        return res.status(200).json(userMetaData);
+        const response = { ...userWithProfileData, ...userMetaData };
+
+        return res.status(200).json(response);
     } catch (error) {
         console.error('Error fetching user metadata', error);
         res.status(500).json({ error: 'Failed to send user metadata' });
@@ -62,7 +79,14 @@ userRouter.get('/', async (req, res) => {
         if (!allUserMetaData) {
             return res.status(404).json({ message: 'no user metadata found' });
         }
-        return res.status(200).json(allUserMetaData);
+        const usersWithProfileData = await Promise.all(allUserMetaData.map(async (user) => {
+            const profile = await ProfileModel.findOne({ userId: user._id }).select('firstName lastName');
+            
+            // Spread firstName and lastName into user if profile is found
+            return profile ? { ...user.toObject(), firstName: profile.firstName, lastName: profile.lastName } : user;
+        }));
+
+        return res.status(200).json(usersWithProfileData);
     } catch (error) {
         console.error('Error fetching all users metadata', error);
         res.status(500).json({ error: 'Failed to send all users metadata' });
@@ -168,11 +192,12 @@ userRouter.put('/:email/study-guide', async (req, res) => {
 
 userRouter.put('/:email/document-status', async (req, res) => {
     const email = req.params.email; // Get the email from the URL parameters
-    const { certListUploadStatus } = req.body; 
-    
+    const { certListUploadStatus } = req.body;
 
     try {
-        const updatedUser = await editUserMetaData(email, { certListUploadStatus });
+        const updatedUser = await editUserMetaData(email, {
+            certListUploadStatus,
+        });
         if (!updatedUser) {
             return res.status(404).send({ message: 'User not found' });
         }

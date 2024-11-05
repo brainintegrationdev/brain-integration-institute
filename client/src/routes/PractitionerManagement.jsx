@@ -12,7 +12,7 @@ const PractitionerManagement = () => {
     const { getAllUsers, users } = useContext(AdminContext);
     const { userId } = useParams();
 
-    console.log(users);
+    // console.log(users.userEmail.firstName);
 
     useEffect(() => {
         getAllUsers();

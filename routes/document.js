@@ -39,10 +39,15 @@ documentRouter.get('/:nickname', validateAuthToken, async (req, res) => {
 });
 
 //get docs by doc type/folder
-documentRouter.get('/:nickname/:documentType', validateAuthToken, async (req, res) => {
-    const nickname = req.params.nickname;
-    const documentType = req.params.documentType; 
-    const folder = `users/${nickname}/${documentType}`; 
+documentRouter.get('/:userEmail/:documentType', validateAuthToken, async (req, res) => {
+    // Extract userEmail and documentType from request params
+    const { userEmail, documentType } = req.params;
+
+    // Remove the domain from userEmail
+    const nickname = userEmail.split('@')[0];
+    
+    // Construct the folder path
+    const folder = `users/${nickname}/${documentType}`;
     console.log('Fetching images from folder:', folder);
     
     try {

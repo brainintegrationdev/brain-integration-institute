@@ -72,17 +72,10 @@ export const Admin = () => {
 
                         <div className="w-[189px] h-[102px] rounded-xl bg-sky-blue shadow-md font-fira font-bold flex p-4 items-end">
                             Video Presentation
-                            <span className=" justify-end items-start px-2 py-1 my-[60px] text-xl font-bold leading-none text-black transform translate-x-1/2 -translate-y-1/2 bg-gray rounded-full">
-                                3
-                            </span>
+                          
                         </div>
                         <div className="relative w-[189px] h-[102px] rounded-xl bg-mauve shadow-md font-fira font-bold flex p-4 items-end">
-                            <Circle
-                                color="white"
-                                fill="#dadadf80"
-                                size={32}
-                                className="absolute top-2 right-2"
-                            />
+                       
                             Brain Integration Training
                         </div>
 

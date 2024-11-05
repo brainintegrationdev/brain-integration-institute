@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { AdminContext } from '../contexts';
-// import { CloudinaryContext } from '../contexts';
-// import { UserContext } from '../contexts';
+
+import { UserContext } from '../contexts';
 import { useAuth0 } from '@auth0/auth0-react';
 import ProgressBar0 from '../assets/icons/ProgressBar0.png';
 import ProgressBar1 from '../assets/icons/ProgressBar1.png';
@@ -16,15 +16,21 @@ import GreenRedDot from '../assets/icons/GreenRedDots.png';
 import Trashcan from '../assets/icons/Trashcan.png';
 import Pracsearch from '../assets/icons/Pracsearch.svg';
 // import { CircleUserRound } from 'lucide-react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 function UserList() {
-    const {  getAllUsers, users,  setIndividualUser  } =
-        useContext(AdminContext);
-
-    // const { fetchProfileData, profileData } = useContext(UserContext);
+    const {
+        getAllUsers,
+        users,
+        setIndividualUser,
+        individualUser,
+        fetchProfileData,
+        profileData,
+    } = useContext(AdminContext);
 
     const { user } = useAuth0();
+
+    console.log(profileData);
 
     // const { progress } = useContext(CloudinaryContext);
 
@@ -33,7 +39,7 @@ function UserList() {
     console.log('Is Admin:', isAdmin);
 
     const [searchInput, setSearchInput] = useState('');
-    const navigate =useNavigate()
+    const navigate = useNavigate();
 
     const certProgressImages = [
         ProgressBar0,
@@ -56,7 +62,12 @@ function UserList() {
         fetchUsers();
     }, []);
 
-    console.log(users);
+    useEffect(() => {
+        fetchProfileData(individualUser);
+    }, [individualUser]);
+
+    console.log(individualUser);
+    console.log(profileData);
 
     const handleChange = (e) => {
         console.log('change handled');
@@ -69,14 +80,16 @@ function UserList() {
     };
 
     const handleViewProfileClick = (userId) => {
-        setIndividualUser(users.find((user) => user._id === userId)); 
+        setIndividualUser(users.find((user) => user._id === userId));
         navigate(`/admin/practitioner-management/${userId}`);
-    }
+    };
 
     // const handlePromote = async (userId) => {
     //     await updateUserToAdmin(userId); // Call your promotion function here
     //     alert('User promoted to admin!');
     // };
+
+    console.log(users);
 
     return (
         <div>
@@ -108,7 +121,9 @@ function UserList() {
                         <li className="flex items-center justify-between w-full gap-[150px]">
                             <div className="flex items-center">
                                 <span className="font-bold text-l px-2">
-                                    {user.userName}
+                                    {user.firstName && user.lastName
+                                        ? `${user.firstName} ${user.lastName}`
+                                        : user.userEmail}
                                 </span>
                                 <img
                                     src={GreenRedDot}
@@ -131,7 +146,13 @@ function UserList() {
                                 />
                             </div>
                             <div className="flex justify-center items-center">
-                                <button className="border border-black rounded px-4 py-1 ml-4 font-bold"   type="submit"  onClick={() => handleViewProfileClick(user._id)}>
+                                <button
+                                    className="border border-black rounded px-4 py-1 ml-4 font-bold"
+                                    type="submit"
+                                    onClick={() =>
+                                        handleViewProfileClick(user._id)
+                                    }
+                                >
                                     {/* <CircleUserRound className=' ml-4 '/> */}
                                     View Profile
                                 </button>

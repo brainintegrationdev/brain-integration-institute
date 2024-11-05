@@ -16,23 +16,23 @@ export default function ViewFileModal({ open, onClose, children }) {
         };
     }, [open]);
 
-    const getSectionFile = async () => {
-        try {
-            const accessToken = await getAccessTokenSilently();
+    // const getSectionFile = async () => {
+    //     try {
+    //         const accessToken = await getAccessTokenSilently();
 
-            const response = await axios.get(
-                `http://localhost:8080/api/images/${user.nickname}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                },
-            );
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching files:', error);
-        }
-    };
+    //         const response = await axios.get(
+    //             `http://localhost:8080/api/images/${user.nickname}`,
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${accessToken}`,
+    //                 },
+    //             },
+    //         );
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error('Error fetching files:', error);
+    //     }
+    // };
 
     
     return (

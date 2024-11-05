@@ -1,4 +1,5 @@
 const mg = require('mongoose');
+const Schema = mg.Schema;
 
 const UploadStatus = {
     WAITINGFORUPLOAD: 'waiting for upload',
@@ -27,6 +28,16 @@ const UserSchema = new mg.Schema({
         required: true,
         unique: true,
         default: ''// first and last name
+    },
+
+    firstName: {
+        type: Schema.Types.ObjectId,
+        ref: 'ProfileModel',
+    },
+
+    lastName: {
+        type: Schema.Types.ObjectId,
+        ref: 'ProfileModel'
     },
     // User's password
 

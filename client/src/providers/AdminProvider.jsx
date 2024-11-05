@@ -63,7 +63,7 @@ export const AdminProvider = ({ children }) => {
     const getUserById = async (userId) => {
         try {
             const accessToken = await getAccessTokenSilently();
-            const response = await axios.get(`/api/users/${userId}`, {
+            const response = await axios.get(`/api/user/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
