@@ -7,6 +7,7 @@ const {
     getImagesFromCloudinary,
     getCertificateFromCloudinary,
     createCertificate,
+    getThumbnailImages
 } = require('../services/document');
 const Certificate = require('../models/certificate.js');
 const documentRouter = ex.Router();
@@ -23,11 +24,30 @@ cloudinary.config({
 
 documentRouter.get('/:nickname', validateAuthToken, async (req, res) => {
     const nickname = req.params.nickname;
-    const folder = `users/${nickname}/cprCert`;
+    const folder = `users/${nickname}/brainIntegrationTraining`;
     console.log('Fetching images from folder:', folder);
     try {
         const images = await getImagesFromCloudinary(folder);
         console.log('fetching images');
+        res.json(images);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Failed to fetch images from Cloudinary',
+        });
+    }
+});
+
+//get docs by doc type/folder
+documentRouter.get('/:nickname/:documentType', validateAuthToken, async (req, res) => {
+    const nickname = req.params.nickname;
+    const documentType = req.params.documentType; 
+    const folder = `users/${nickname}/${documentType}`; 
+    console.log('Fetching images from folder:', folder);
+    
+    try {
+        const images = await getImagesFromCloudinary(folder);
+        console.log('Fetching images');
         res.json(images);
     } catch (error) {
         console.error(error);

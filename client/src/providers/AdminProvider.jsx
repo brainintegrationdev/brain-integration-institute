@@ -20,6 +20,9 @@ export const AdminProvider = ({ children }) => {
     const [profileData, setProfileData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [fileModalOpen, setFileModalOpen] = useState(false);
+    const [selectedDocumentName, setSelectedDocumentName] = useState('')
 
     const getManagementToken = async () => {
         const response = await axios.post(
@@ -139,6 +142,12 @@ export const AdminProvider = ({ children }) => {
                 profileData,
                 setProfileData,
                 fetchProfileData,
+                showModal,
+                setShowModal,
+                fileModalOpen,
+                setFileModalOpen,
+                selectedDocumentName,
+                setSelectedDocumentName
             }}
         >
             {children}

@@ -1,8 +1,11 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import { AdminContext, UserContext } from '../contexts';
+import { AdminContext } from '../contexts';
+import { CloudinaryContext } from '../contexts';
+import ViewFileModal from './ViewFileModal';
+
 import ProgressBar0 from '../assets/icons/ProgressBar0.png';
 import ProgressBar1 from '../assets/icons/ProgressBar1.png';
 import ProgressBar2 from '../assets/icons/ProgressBar2.png';
@@ -20,12 +23,28 @@ import clipboard from '../assets/icons/clipboard-list.png';
 import video from '../assets/icons/video.png';
 // import graduationCap from '../asset/icons/graduation-cap.png'
 
-const UserSpecificAdminView = () => {
-    const { individualUser, setIndividualUser, users, fetchProfileData, profileData, setProfileData } =
-        useContext(AdminContext);
+const UserSpecificAdminView = (props) => {
+    const {
+        individualUser,
+        setIndividualUser,
+        users,
+        fetchProfileData,
+        profileData,
+        showModal,
+        setShowModal,
+        fileModalOpen,
+        setFileModalOpen,
+        selectedDocumentName,
+        setSelectedDocumentName,
+    } = useContext(AdminContext);
+
+    // const { getFilesByDocType, } = useContext(CloudinaryContext)
     // const { fetchProfileData, profileData } = useContext(UserContext);
     const { userId } = useParams();
     // const { user } = useAuth0();
+    const [imagesByDocType, setImagesByDocType] = useState([]);
+    const { user, getAccessTokenSilently, isAuthenticated } = useAuth0();
+    // const [selectedDocUrl, setSelectDocUrl] = useState('')
 
     const certProgressImages = [
         ProgressBar0,
@@ -43,9 +62,35 @@ const UserSpecificAdminView = () => {
         if (userId) {
             const foundUser = users.find((user) => user._id === userId);
             setIndividualUser(foundUser);
-            console.log(individualUser)
+            console.log(individualUser);
         }
     }, [userId, setIndividualUser, users]);
+
+    useEffect(() => {
+        console.log('Updated imagesByDocType:', imagesByDocType);
+    }, [imagesByDocType]);
+
+    const getFilesByDocType = async (nickname, documentType) => {
+        try {
+            const accessToken = await getAccessTokenSilently();
+            const response = await fetch(
+                `/api/images/${nickname}/${documentType}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                },
+            );
+            if (!response.ok) {
+                throw new Error('Failed to fetch images');
+            }
+            const images = await response.json();
+            console.log('API Response:', images);
+            setImagesByDocType(images);
+        } catch (error) {
+            console.error('Error fetching images:', error);
+        }
+    };
 
     useEffect(() => {
         fetchProfileData(individualUser);
@@ -65,6 +110,7 @@ const UserSpecificAdminView = () => {
     const getStatusBadgeClass = (status) => {
         switch (status) {
             case 'pending approval':
+            case 'pending':
                 return 'bg-school-bus-yellow text-black';
             case 'declined':
                 return 'bg-red text-white';
@@ -75,7 +121,23 @@ const UserSpecificAdminView = () => {
         }
     };
 
-    console.log(profileData)
+    const nickname = user.nickname;
+
+    const handleClick = async (documentName, documentType) => {
+        console.log(`File opened for: ${documentName}`);
+        setSelectedDocumentName(documentName);
+
+        try {
+            setFileModalOpen(false); // Ensure modal is closed initially
+            await getFilesByDocType(nickname, documentType); // Fetch images
+            setFileModalOpen(true); // Open modal after data is fetched
+        } catch (error) {
+            console.error('Error fetching document data:', error);
+        }
+    };
+
+    console.log(profileData);
+    console.log(imagesByDocType);
 
     return (
         <div className="flex flex-col items-center w-full gap-6">
@@ -94,7 +156,6 @@ const UserSpecificAdminView = () => {
                                     {profileData.firstName}{' '}
                                     {profileData.lastName}
                                 </p>
-                              
                                 <p className="text-xl">
                                     {profileData.city} {profileData.state}{' '}
                                     {profileData.zip}
@@ -109,11 +170,12 @@ const UserSpecificAdminView = () => {
                         </>
                     ) : (
                         <div className="flex flex-col justify-center items-center">
-                        <p className="font-bold text-3xl">No profile data found</p>
+                            <p className="font-bold text-3xl">
+                                No profile data found
+                            </p>
                         </div>
                     )}
                 </div>
-
                 <div>
                     <img
                         src={
@@ -187,13 +249,75 @@ const UserSpecificAdminView = () => {
                                 className="w-[40px]"
                                 alt={`${doc.name} icon`}
                             />
-                            <button className="border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]">
-                                View
+                            <button
+                                className="border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]"
+                                onClick={() =>
+                                    handleClick(
+                                        doc.name,
+                                        doc.name
+                                            .toLowerCase()
+                                            .replace(/ /g, ''),
+                                    )
+                                } // Example transformation
+                            >
+                                View File
                             </button>
                         </div>
                     ))}
                 </ul>
             </div>
+
+            {fileModalOpen && (
+                <ViewFileModal
+                    open={fileModalOpen}
+                    onClose={() => setFileModalOpen(false)}
+                    nickname={nickname}
+                    selectedDocumentName={selectedDocumentName}
+                    imagesByDocType={imagesByDocType}
+                >
+                    <div className="text-center w-100 flex flex-col items-center gap-2 mb-10">
+                        <h3 className="text-lg text-gray-500 font-bold">
+                            View file for: {selectedDocumentName}
+                        </h3>
+                        {imagesByDocType.length > 0 &&
+                        imagesByDocType[0].url ? (
+                            <img
+                                src={imagesByDocType[0].url}
+                                alt="Document file"
+                            />
+                        ) : (
+                            <p>No image available</p>
+                        )}
+                        <form className="mt-4">
+                            <div className="flex flex-col items-center gap-4">
+                                <label className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="approvalStatus"
+                                        value="approve"
+                                        className="mr-2"
+                                    />
+                                    Approve
+                                </label>
+                                <label className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="approvalStatus"
+                                        value="decline"
+                                        className="mr-2"
+                                    />
+                                    Decline
+                                </label>
+                                <textarea
+                                    placeholder="Reason for denial (if applicable)"
+                                    className="border border-black rounded-xl  p-5 mt-10 w-[300px]"
+                                ></textarea>
+                                <button className='border border-black rounded-xl px-5 py-2 bg-green-is-good text-white'>Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </ViewFileModal>
+            )}
         </div>
     );
 };

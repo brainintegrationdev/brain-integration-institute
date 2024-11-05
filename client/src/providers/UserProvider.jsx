@@ -183,7 +183,7 @@ export const UserProvider = ({ children }) => {
                 handleInputChange,
                 createProfileData,
                 resetInputs,
-             
+                fetchProfileData,
                 error,
                 setError,
                 loading,

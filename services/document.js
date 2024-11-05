@@ -39,6 +39,45 @@ const getImagesFromCloudinary = async (folder) => {
     }
 };
 
+const getThumbnailImages = async (folders) => {
+    const requestURL = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/search`;
+    const authHeader = Buffer.from(
+        `${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}`
+    ).toString('base64');
+    try {
+        // Fetch resources with transformation for thumbnail size
+        const results = await Promise.all(
+            folders.map(async (folder) => {
+                const searchParams = {
+                    expression: `folder=${folder}`,
+                    // Add transformations for thumbnails (width, height, crop, and quality)
+                    max_results: 20, // Limits to 20 results per folder
+                    transformation: {
+                        width: 150,   // Thumbnail width
+                        height: 150,  // Thumbnail height
+                        crop: "fill", // Crop to fill thumbnail dimensions
+                        quality: "auto" // Optimize quality
+                    }
+                };
+                const response = await axios.post(requestURL, searchParams, {
+                    headers: {
+                        Authorization: `Basic ${authHeader}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                return response.data.resources;
+            })
+        );
+
+        return results.flat();
+    } catch (error) {
+        console.error('Error fetching images from Cloudinary:', error.response?.data || error.message);
+        throw new Error('Failed to fetch images');
+    }
+};
+
+
+
 const getCertificateFromCloudinary = async () => {
     try {
         const requestURL = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/search`;
@@ -77,4 +116,5 @@ module.exports = {
     getImagesFromCloudinary,
     getCertificateFromCloudinary,
     createCertificate,
+    getThumbnailImages
 };

@@ -34,6 +34,7 @@ export const CloudinaryProvider = ({ children }) => {
     const [profilePhotoUploaded, setProfilePhotoUploaded] = useState(false);
     const [certListUploadStatus, setCertListUploadStatus] = useState({});
     const [certificateData, setCertificateData] = useState({});
+    // const [imagesByDocType, setImagesByDocType] = useState([]);
 
     const handleProfileUpload = () => {
         console.log('photo uploaded!');
@@ -71,6 +72,8 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('Error fetching files:', error);
         }
     };
+
+    console.log(user);
 
     //gets files from Cloudinary via callback/cors proxy
     const getFilesInFolder = async () => {
@@ -112,6 +115,27 @@ export const CloudinaryProvider = ({ children }) => {
             return metaData;
         } catch (error) {
             console.error('Error fetching user metadata:', error);
+        }
+    };
+
+    const getFilesByDocType = async (nickname, documentType) => {
+        try {
+            const accessToken = await getAccessTokenSilently();
+            const response = await fetch(
+                `/api/images/${nickname}/${documentType}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                },
+            );
+            if (!response.ok) {
+                throw new Error('Failed to fetch images');
+            }
+            const images = await response.json();
+            setImagesByDocType(images);
+        } catch (error) {
+            console.error('Error fetching images:', error);
         }
     };
 
@@ -569,7 +593,7 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
-    //get certificate file from cloudinary 
+    //get certificate file from cloudinary
 
     const getCertificate = async () => {
         try {
@@ -587,10 +611,6 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('Error fetching files:', error);
         }
     };
-
-
-
-
 
     const deleteCertificate = async (publicId) => {
         try {
@@ -665,7 +685,9 @@ export const CloudinaryProvider = ({ children }) => {
                 deleteCertificate,
                 getCertificate,
                 certificateData,
-                setCertificateData
+                setCertificateData,
+                getFilesByDocType,
+              
             }}
         >
             {loaded && children}
