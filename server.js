@@ -2,6 +2,7 @@ const ex = require('express');
 const path = require('path');
 const { apiRouter } = require('./routes/api');
 const { adminRouter } = require('./routes/admin')
+const { notifyRouter } = require('./routes/notify')
 const { enableCors, validateAuthToken } = require('./middleware/auth');
 const { staticSiteRouter } = require('./routes/static');
 // const { errorHandler, logger } = require('./middleware/log');

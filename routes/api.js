@@ -6,6 +6,7 @@ const { checkoutRouter } = require('./checkout');
 const signedUrlRouter = require('./signedUrl');
 const { profileRouter } = require('./profile')
 const { adminRouter } = require('./admin')
+const { notifyRouter } = require('./notify')
 // const { exampleRouter } = require('./example');
 
 
@@ -19,6 +20,7 @@ apiRouter.use('/', checkoutRouter)
 apiRouter.use('/', signedUrlRouter)
 apiRouter.use('/profile', profileRouter)
 apiRouter.use('/admin', adminRouter)
+apiRouter.use('/notify', notifyRouter)
 
 
 
