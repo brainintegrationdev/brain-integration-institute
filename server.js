@@ -35,6 +35,23 @@ server.get('/api/files', (req, res) => {
     res.json({ message: 'CORS enabled!' });
 });
 
+server.post('/assessment', async (req, res) => {
+    try {
+        const { userId, status } = req.body;
+        if (!userId || !status) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const notificationData = await createNotification({
+        timestamp, isAshAwesome, name
+        });
+        res.status(201).json({ success: true, notificationData });
+    } catch (error) {
+        console.error('Error processing request:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 
 
 server.post('/webhook', (req, res) => {
