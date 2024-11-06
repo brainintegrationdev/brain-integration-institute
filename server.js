@@ -1,6 +1,7 @@
 const ex = require('express');
 const path = require('path');
 const { apiRouter } = require('./routes/api');
+// const { notifyRouter } = require('./routes/notify.js')
 const { enableCors, validateAuthToken } = require('./middleware/auth');
 const { staticSiteRouter } = require('./routes/static');
 // const { errorHandler, logger } = require('./middleware/log');
@@ -16,6 +17,8 @@ server.use(ex.urlencoded({ extended: true }));
 
 
 server.use('/api', validateAuthToken, apiRouter)
+
+
 server.use(ex.static(path.resolve(__dirname, 'client', 'dist')))
 // server.get('*', staticSiteRouter)
 
@@ -35,22 +38,22 @@ server.get('/api/files', (req, res) => {
     res.json({ message: 'CORS enabled!' });
 });
 
-server.post('/assessment', async (req, res) => {
-    try {
-        const { userId, status } = req.body;
-        if (!userId || !status) {
-            return res.status(400).json({ error: 'Missing required fields' });
-        }
+// server.post('/assessment', async (req, res) => {
+//     try {
+//         const { userId, status } = req.body;
+//         if (!userId || !status) {
+//             return res.status(400).json({ error: 'Missing required fields' });
+//         }
 
-        const notificationData = await createNotification({
-        timestamp, isAshAwesome, name
-        });
-        res.status(201).json({ success: true, notificationData });
-    } catch (error) {
-        console.error('Error processing request:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
+//         const notificationData = await createNotification({
+//         timestamp, isAshAwesome, name
+//         });
+//         res.status(201).json({ success: true, notificationData });
+//     } catch (error) {
+//         console.error('Error processing request:', error);
+//         res.status(500).json({ error: 'Server error' });
+//     }
+// });
 
 
 

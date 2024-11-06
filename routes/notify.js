@@ -2,7 +2,7 @@ const ex = require('express');
 const { createNotification } = require('../services/notify');
 // const { processFile } = require('../middleware/cdn');
 // const { getAllFilesByOwner, createFile } = require('../services/file');
-// const File  = require('../models/file');
+const Notify  = require('../models/notify');
 // const cloudinary = require('cloudinary').v2;
 
 const notifyRouter = ex.Router();
@@ -25,10 +25,10 @@ notifyRouter.post('/assessment', async (req, res) => {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
-        const notificationData = await createNotification({
-        timestamp, isAshAwesome, name
+        const notification = await createNotification({
+        timestamp, isAshAwesome, testName
         });
-        res.status(201).json({ success: true, notificationData });
+        res.status(201).json({ success: true, notification });
     } catch (error) {
         console.error('Error processing request:', error);
         res.status(500).json({ error: 'Server error' });

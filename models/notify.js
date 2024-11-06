@@ -10,7 +10,7 @@ const notifySchema = new Schema({
         type: String,
     },
 
-    name: {
+    testName: {
         type: String,
     },
 });
