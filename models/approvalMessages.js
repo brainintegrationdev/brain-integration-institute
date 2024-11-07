@@ -1,5 +1,5 @@
 const mg = require('mongoose');
-const Schema = mongoose.Schema;
+const Schema = mg.Schema;
 
 const ApprovalMessageSchema = new mg.Schema({
     message: {
@@ -15,6 +15,8 @@ const ApprovalMessageSchema = new mg.Schema({
         default: Date.now
     }
 });
+
+// const ApprovalModel = mg.model('approvalMessages', ApprovalMessageSchema);
 
 module.exports = {
     ApprovalMessageSchema
