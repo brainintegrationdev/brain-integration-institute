@@ -40,13 +40,13 @@ const fetchAllProfiles = async () => {
 
 
 
-useEffect(() => {
-  fetchAllProfiles()
-}, [])
+// useEffect(() => {
+//   fetchAllProfiles()
+// }, [])
 
-if(allProfiles) {
-  console.log(allProfiles)
-}
+// if(allProfiles) {
+//   console.log(allProfiles)
+// }
 
 
 useEffect(() => {

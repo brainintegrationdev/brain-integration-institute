@@ -178,6 +178,7 @@ export const Navbar = () => {
                     >
                         About Us
                     </Link>
+                   
                     <Link
                         className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         to="/practitioner"

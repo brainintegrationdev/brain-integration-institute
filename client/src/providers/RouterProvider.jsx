@@ -18,7 +18,7 @@ import PractitionerManagement from '../routes/PractitionerManagement';
 import AdminUploadManagement from '../routes/AdminUploadManagement';
 import MessagingHub from '../routes/MessagingHub';
 import UserList from '../components/UserList';
-import UserSpecificAdminView from '../components/UserSpecificAdminView'
+import UserSpecificAdminView from '../components/UserSpecificAdminView';
 // import PaymentSuccessPage from "../routes/PaymentSuccessPage";
 
 const router = createBrowserRouter([
@@ -38,10 +38,10 @@ const router = createBrowserRouter([
                 path: '/profile',
                 element: <Profile />,
             },
-            {
-                path: '/about',
-                element: <AboutUs />,
-            },
+            // {
+            //     path: '/about',
+            //     element: <AboutUs />,
+            // },
             {
                 path: '/certification',
                 element: <Certification />,
@@ -63,7 +63,7 @@ const router = createBrowserRouter([
                         element: <PractitionerManagement />,
                         children: [
                             {
-                                path: ':userId', 
+                                path: ':userId',
                                 element: <UserSpecificAdminView />,
                             },
                         ],
@@ -82,6 +82,8 @@ const router = createBrowserRouter([
         path: '*',
         element: <NotFound />,
     },
+    { path: '/about', element: <AboutUs /> },
+    { path: '/', element: <Home />}
 ]);
 
 //changed back to Home component.  Auth0 should handle authentication, but we can add secondary way to authenticate/register using this Auth route.

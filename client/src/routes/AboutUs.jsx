@@ -1,10 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
 import paleBanner from '../assets/icons/PaleGreenPractitionerBackground.png';
 import banner from '../assets/icons/PractitionerBackground.png';
+import { Navbar } from '../components/header/Navbar';
 
 export const AboutUs = () => {
     return (
         <>
+        <Navbar />
             <div
                 className="w-full h-64 sm:h-80 md:h-96 relative bg-white"
                 style={{

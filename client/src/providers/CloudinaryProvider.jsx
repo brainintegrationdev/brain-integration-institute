@@ -73,7 +73,7 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
-    console.log(user);
+    // console.log(user);
 
     //gets files from Cloudinary via callback/cors proxy
     const getFilesInFolder = async () => {
