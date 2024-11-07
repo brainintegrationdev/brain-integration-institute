@@ -10,7 +10,7 @@ const getAllFilesByOwner = async (user) => await File.find({
  * @param {Object} metadata - The file metadata to save
  */
 const createFile = async (metadata) => {
-    const file = new File(metadata);
+    const file = new File(metadata);                           
     await file.save();
     return file;
 };

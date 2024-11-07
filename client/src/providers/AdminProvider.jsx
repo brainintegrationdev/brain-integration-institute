@@ -22,7 +22,7 @@ export const AdminProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [fileModalOpen, setFileModalOpen] = useState(false);
-    const [selectedDocumentName, setSelectedDocumentName] = useState('')
+    const [selectedDocumentName, setSelectedDocumentName] = useState('');
 
     const getManagementToken = async () => {
         const response = await axios.post(
@@ -111,7 +111,6 @@ export const AdminProvider = ({ children }) => {
             if (!response.ok) {
                 setProfileData({});
                 throw new Error('Network response was not ok');
-               
             }
             const data = await response.json();
             if (!data || Object.keys(data).length === 0) {
@@ -128,6 +127,54 @@ export const AdminProvider = ({ children }) => {
         }
     };
 
+    const updateDocumentStatusbyAdmin = async (
+        individualUser,
+        newDocStatus,
+        selectedDocumentType,
+    ) => {
+        if (user) {
+            try {
+                const accessToken = await getAccessTokenSilently();
+
+                // Dynamically construct the request body
+                const updateBody = {
+                    certListUploadStatus: {
+                        [selectedDocumentType]: newDocStatus,
+                    },
+                };
+
+                const response = await fetch(
+                    `http://localhost:8080/api/user/${individualUser.userEmail}/document-status`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                        body: JSON.stringify(updateBody),
+                    },
+                );
+
+                console.log('Response Status:', response.status);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error(
+                        'Failed to update user doc status:',
+                        errorData,
+                    );
+                    throw new Error('Failed to update user doc status');
+                }
+
+                const data = await response.json();
+                console.log('User doc status updated on the server:', data);
+                return data;
+            } catch (error) {
+                console.error('Error updating user doc status:', error);
+            }
+        } else {
+            console.error('User is not defined');
+        }
+    };
     return (
         <AdminContext.Provider
             value={{
@@ -147,7 +194,8 @@ export const AdminProvider = ({ children }) => {
                 fileModalOpen,
                 setFileModalOpen,
                 selectedDocumentName,
-                setSelectedDocumentName
+                setSelectedDocumentName,
+                updateDocumentStatusbyAdmin,
             }}
         >
             {children}

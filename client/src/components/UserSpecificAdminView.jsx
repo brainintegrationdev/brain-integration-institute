@@ -1,6 +1,4 @@
-
 // export default UserSpecificAdminView;
-
 
 /* eslint-disable react/prop-types */
 import { useEffect, useContext, useState } from 'react';
@@ -27,19 +25,19 @@ import clipboard from '../assets/icons/clipboard-list.png';
 import video from '../assets/icons/video.png';
 // import graduationCap from '../asset/icons/graduation-cap.png'
 
-const UserSpecificAdminView = (props) => {
+const UserSpecificAdminView = () => {
     const {
         individualUser,
         setIndividualUser,
         users,
         fetchProfileData,
         profileData,
-        showModal,
-        setShowModal,
+       
         fileModalOpen,
         setFileModalOpen,
         selectedDocumentName,
         setSelectedDocumentName,
+        updateDocumentStatusbyAdmin,
     } = useContext(AdminContext);
 
     // const { getFilesByDocType, } = useContext(CloudinaryContext)
@@ -47,8 +45,10 @@ const UserSpecificAdminView = (props) => {
     const { userId } = useParams();
     // const { user } = useAuth0();
     const [imagesByDocType, setImagesByDocType] = useState([]);
-    const { user, getAccessTokenSilently, isAuthenticated } = useAuth0();
+    const { getAccessTokenSilently } = useAuth0();
+    const [newDocStatus, setNewDocStatus] = useState('');
     // const [selectedDocUrl, setSelectDocUrl] = useState('')
+    const [selectedDocumentType, setSelectedDocumentType] = useState('');
 
     const docTypeMapping = {
         'Brain Integration Training': 'brainIntegrationTraining',
@@ -110,16 +110,18 @@ const UserSpecificAdminView = (props) => {
         fetchProfileData(individualUser);
     }, [individualUser]);
 
+    console.log(imagesByDocType)
+
     if (!individualUser) return <p>Loading...</p>;
 
-    const {
-        brainIntegrationTraining,
-        clinicalHours,
-        firstAidTraining,
-        cprCert,
-        videoPresentation,
-        insurance,
-    } = individualUser.certListUploadStatus;
+    // const {
+    //     brainIntegrationTraining,
+    //     clinicalHours,
+    //     firstAidTraining,
+    //     cprCert,
+    //     videoPresentation,
+    //     insurance,
+    // } = individualUser.certListUploadStatus;
 
     const getStatusBadgeClass = (status) => {
         switch (status) {
@@ -141,21 +143,38 @@ const UserSpecificAdminView = (props) => {
     const handleClick = async (documentName) => {
         const documentType = docTypeMapping[documentName];
         setSelectedDocumentName(documentName);
+        setSelectedDocumentType(documentType); 
         console.log(documentName);
 
         try {
-            setFileModalOpen(false); // Ensure modal is closed initially
+            setFileModalOpen(false); 
             await getFilesByDocType(individualUser.userEmail, documentType);
-            setFileModalOpen(true); // Open modal after data is fetched
+            setFileModalOpen(true); 
         } catch (error) {
             console.error('Error fetching document data:', error);
         }
     };
 
-    const handleSubmit =  async (e) => {
+    const handleChange = (e) => {
+        setNewDocStatus(e.target.value);
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('admin doc review form submitted')
-    }
+        if (!individualUser) {
+            console.error("Individual user is not defined");
+            return;
+        }
+
+        console.log('Admin doc review form submitted');
+        try {
+            await updateDocumentStatusbyAdmin(individualUser, newDocStatus, selectedDocumentType);
+            console.log("Document status updated successfully");
+            setFileModalOpen(false); 
+        } catch (error) {
+            console.log("Error updating document status:", error);
+        }
+    };
 
     console.log(profileData);
     console.log(imagesByDocType);
@@ -294,6 +313,9 @@ const UserSpecificAdminView = (props) => {
                     nickname={individualUser.userEmail.split('@')[0]}
                     selectedDocumentName={selectedDocumentName}
                     imagesByDocType={imagesByDocType}
+                    onSubmit={handleSubmit}
+                    onChange={handleChange}
+                    newDocStatus={newDocStatus}
                 >
                     <div className="text-center w-100 flex flex-col items-center gap-2 mb-10">
                         <h3 className="text-lg text-gray-500 font-bold">
@@ -307,7 +329,7 @@ const UserSpecificAdminView = (props) => {
                         ) : (
                             <p>No image available</p>
                         )}
-                         <form className="mt-4" onSubmit={handleSubmit}>
+                        <form className="mt-4" onSubmit={handleSubmit}>
                             <div className="flex flex-col items-center gap-4">
                                 <label className="flex items-center">
                                     <input
@@ -331,7 +353,9 @@ const UserSpecificAdminView = (props) => {
                                     placeholder="Reason for denial (if applicable)"
                                     className="border border-black rounded-xl  p-5 mt-10 w-[300px]"
                                 ></textarea>
-                                <button className='border border-black rounded-xl px-5 py-2 bg-green-is-good text-white'>Submit</button>
+                                <button className="border border-black rounded-xl px-5 py-2 bg-green-is-good text-white">
+                                    Submit
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -342,4 +366,3 @@ const UserSpecificAdminView = (props) => {
 };
 
 export default UserSpecificAdminView;
-
