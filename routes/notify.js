@@ -26,7 +26,7 @@ notifyRouter.post('/assessment', async (req, res) => {
         }
 
         const notificationData = await createNotification({
-        timestamp, isAshAwesome, name
+        timestamp, isAshAwesome, testName
         });
         res.status(201).json({ success: true, notificationData });
     } catch (error) {
