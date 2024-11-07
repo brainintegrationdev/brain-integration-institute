@@ -25,6 +25,7 @@ userRouter.post('/createuser', async (req, res) => {
                 userProfilePicture: userProfilePicture || '',
                 userUploadProgress: 0,
                 isAdmin: false,
+                sub: req.auth.payload.sub
             });
 
             await userMetaData.save();

@@ -280,6 +280,8 @@ const AccordionCard = ({ certStatus }) => {
         getPublishableKey();
     }, []);
 
+    console.log(user.sub)
+
     useEffect(() => {
         const fetchData = async () => {
             if (user) {

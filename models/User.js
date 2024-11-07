@@ -1,7 +1,7 @@
 const mg = require('mongoose');
 const Schema = mg.Schema;
 
-const ApprovalMessageSchema = require('./approvalMessages'); 
+const ApprovalModel = require('./approvalMessages'); 
 
 const UploadStatus = {
     WAITINGFORUPLOAD: 'waiting for upload',
@@ -17,6 +17,8 @@ const UserSchema = new mg.Schema({
         type: String,
         required: true,
     },
+
+    sub: { type: String, required: true, unique: true },
     // User Profile Picture which a custom hook on the profile side will
     // use the userId to pull the user's file from Cloudinary in a generated
     // AdvanceImage.
@@ -121,12 +123,12 @@ const UserSchema = new mg.Schema({
     },
 
     approvalMessages: {
-        brainIntegrationTraining: [ApprovalMessageSchema],
-        clinicalHours: [ApprovalMessageSchema],
-        firstAidTraining: [ApprovalMessageSchema],
-        cprCert: [ApprovalMessageSchema],
-        videoPresentation: [ApprovalMessageSchema],
-        insurance: [ApprovalMessageSchema],
+        brainIntegrationTraining: [{ type: Schema.Types.ObjectId, ref: 'Approval' }],
+        clinicalHours: [{ type: Schema.Types.ObjectId, ref: 'Approval' }],
+        firstAidTraining: [{ type: Schema.Types.ObjectId, ref: 'Approval' }],
+        cprCert: [{ type: Schema.Types.ObjectId, ref: 'Approval' }],
+        videoPresentation: [{ type: Schema.Types.ObjectId, ref: 'Approval' }],
+        insurance: [{ type: Schema.Types.ObjectId, ref: 'Approval' }],
     },
     // After the Stripe API confirms the successful payment for the Study Guide
     studyGuideAccess: {
@@ -151,5 +153,5 @@ const UserSchema = new mg.Schema({
 const UserModel = mg.model('User', UserSchema);
 
 module.exports = {
-    UserModel,
+    UserModel
 };

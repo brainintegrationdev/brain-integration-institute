@@ -4,22 +4,23 @@ const Schema = mg.Schema;
 const ApprovalMessageSchema = new mg.Schema({
     message: {
         type: [String],
-        required: true
+        required: true,
     },
     admin: {
-        type: String,  
-        required: true
+        type: String,
+       
     },
     timestamp: {
         type: Date,
-        default: Date.now
-    }
+        default: Date.now,
+    },
+    userEmail: { type: Schema.Types.String, ref: 'User'},
 });
 
 // const ApprovalModel = mg.model('approvalMessages', ApprovalMessageSchema);
 
-module.exports = {
-    ApprovalMessageSchema
-}
+const ApprovalModel = mg.model('Approval', ApprovalMessageSchema);
 
+module.exports = 
+     ApprovalModel
 
