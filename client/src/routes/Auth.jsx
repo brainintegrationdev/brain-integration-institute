@@ -52,6 +52,8 @@ const Auth = () => {
     } 
     const handleSignUp = (e) => {
         e.preventDefault()
+        createUserMetadata()
+        console.log('user created!')
         // signup
     }
     const handleLogin = (e) => {

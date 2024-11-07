@@ -118,26 +118,26 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
-    const getFilesByDocType = async (nickname, documentType) => {
-        try {
-            const accessToken = await getAccessTokenSilently();
-            const response = await fetch(
-                `/api/images/${nickname}/${documentType}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                },
-            );
-            if (!response.ok) {
-                throw new Error('Failed to fetch images');
-            }
-            const images = await response.json();
-            setImagesByDocType(images);
-        } catch (error) {
-            console.error('Error fetching images:', error);
-        }
-    };
+    // const getFilesByDocType = async (nickname, documentType) => {
+    //     try {
+    //         const accessToken = await getAccessTokenSilently();
+    //         const response = await fetch(
+    //             `/api/images/${nickname}/${documentType}`,
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${accessToken}`,
+    //                 },
+    //             },
+    //         );
+    //         if (!response.ok) {
+    //             throw new Error('Failed to fetch images');
+    //         }
+    //         const images = await response.json();
+    //         setImagesByDocType(images);
+    //     } catch (error) {
+    //         console.error('Error fetching images:', error);
+    //     }
+    // };
 
     // eslint-disable-next-line no-unused-vars
     const cld = new Cloudinary({
@@ -685,8 +685,7 @@ export const CloudinaryProvider = ({ children }) => {
                 deleteCertificate,
                 getCertificate,
                 certificateData,
-                setCertificateData,
-                getFilesByDocType,
+                setCertificateData
               
             }}
         >

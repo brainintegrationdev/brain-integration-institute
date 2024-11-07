@@ -39,6 +39,11 @@ const UserSchema = new mg.Schema({
         type: Schema.Types.ObjectId,
         ref: 'ProfileModel'
     },
+
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
     // User's password
 
 

@@ -24,6 +24,7 @@ userRouter.post('/createuser', async (req, res) => {
                 userName,
                 userProfilePicture: userProfilePicture || '',
                 userUploadProgress: 0,
+                isAdmin: false,
             });
 
             await userMetaData.save();
@@ -46,23 +47,19 @@ userRouter.get('/:email', async (req, res) => {
     console.log('Received email param:', email);
     try {
         const profile = await ProfileModel.findOne({ email });
-        if (!profile) {
-            return res.status(404).json({ message: 'Profile not found' });
-        }
-        const user = await UserModel.findOne({ userEmail: profile.email });
+      
+        const user = await UserModel.findOne({ userEmail: email });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
         const userWithProfileData = {
-            ...user.toObject(), // Convert Mongoose document to plain object
-            firstName: profile.firstName,
-            lastName: profile.lastName,
+            ...user.toObject(),
+            firstName: profile ? profile.firstName : null,
+            lastName: profile ? profile.lastName : null,
         };
 
         const userMetaData = await getUserMetaData(email);
-        if (!userMetaData) {
-            return res.status(404).json({ message: 'user not found' });
-        }
+      
         const response = { ...userWithProfileData, ...userMetaData };
 
         return res.status(200).json(response);
@@ -79,12 +76,22 @@ userRouter.get('/', async (req, res) => {
         if (!allUserMetaData) {
             return res.status(404).json({ message: 'no user metadata found' });
         }
-        const usersWithProfileData = await Promise.all(allUserMetaData.map(async (user) => {
-            const profile = await ProfileModel.findOne({ userId: user._id }).select('firstName lastName');
-            
-            // Spread firstName and lastName into user if profile is found
-            return profile ? { ...user.toObject(), firstName: profile.firstName, lastName: profile.lastName } : user;
-        }));
+        const usersWithProfileData = await Promise.all(
+            allUserMetaData.map(async (user) => {
+                const profile = await ProfileModel.findOne({
+                    userId: user._id,
+                }).select('firstName lastName');
+
+                // Spread firstName and lastName into user if profile is found
+                return profile
+                    ? {
+                          ...user.toObject(),
+                          firstName: profile.firstName,
+                          lastName: profile.lastName,
+                      }
+                    : user;
+            }),
+        );
 
         return res.status(200).json(usersWithProfileData);
     } catch (error) {
@@ -176,6 +183,30 @@ userRouter.put('/:email/study-guide', async (req, res) => {
         res.json(user);
     } catch (error) {
         console.error('Error updating study guide access:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+userRouter.put('/:email/is-admin', async (req, res) => {
+    const { isAdmin } = req.body;
+    const { email } = req.params;
+    if (typeof isAdmin !== 'boolean') {
+        return res.status(400).json({
+            error: 'isAdmin is required and must be a boolean',
+        });
+    }
+    try {
+        const user = await UserModel.findOneAndUpdate(
+            { userEmail: email },
+            { isAdmin },
+            { new: true, runValidators: true },
+        );
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.json(user);
+    } catch (error) {
+        console.error('Error updating admin status:', error);
         res.status(500).json({ error: error.message });
     }
 });

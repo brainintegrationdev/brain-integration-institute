@@ -5,6 +5,7 @@ import BrainIntegrationSeal from '../../assets/icons/BrainIntegrationSeal.png';
 import bell from '../../assets/icons/bell.png';
 import placeholderProfilePic from '../../assets/icons/placeholderProfilePic.png';
 import { CloudinaryContext } from '../../contexts';
+import { AdminContext } from '../../contexts';
 import { Menu, X } from 'lucide-react';
 import axios from 'axios';
 
@@ -16,8 +17,13 @@ export const Navbar = () => {
         user,
         getAccessTokenSilently,
     } = useAuth0();
-    const { imageUrl } = useContext(CloudinaryContext);
+    const { imageUrl, getUserMetaData, userMetaData, setUserMetaData } =
+        useContext(CloudinaryContext);
+
+    const { getUserById, individualUser, setIndividualUser } =
+        useContext(AdminContext);
     const [isOpen, setIsOpen] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [isLargeScreen, setIsLargeScreen] = useState(
         window.innerWidth >= 768,
     );
@@ -29,9 +35,15 @@ export const Navbar = () => {
         });
     };
 
-    const isAdmin = user?.['https://brainintegration.com/isAdmin'];
+    // const isAdmin = user?.['https://brainintegration.com/isAdmin'];
 
+    const checkForAdmin = () => {
+        if (userMetaData && userMetaData.isAdmin) {
+            setIsAdmin(true);
+        }
+    };
     console.log('Is Admin:', isAdmin);
+    console.log(userMetaData, 'user metadata');
 
     // const roles = user['https://brainintegration.institute/roles']; // Adjust the URL based on your configuration
 
@@ -66,8 +78,6 @@ export const Navbar = () => {
     //     }
     // };
 
-
-    
     const getAuth0Token = async (targetAudience, scope) => {
         try {
             return await getAccessTokenSilently({
@@ -89,13 +99,15 @@ export const Navbar = () => {
         console.log('logged out');
     };
 
-    const { getUserMetaData } = useContext(CloudinaryContext);
-
     useEffect(() => {
         if (user?.email) {
             getUserMetaData(user.email);
         }
     }, [user]);
+
+    useEffect(() => {
+        checkForAdmin();
+    }, [userMetaData]); 
 
     const fetchUserRoles = async () => {
         try {
@@ -177,8 +189,15 @@ export const Navbar = () => {
                         to="/certification"
                     >
                         Certification
-                    </Link >
-                    {isAdmin && <Link className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"to="/admin">Admin Portal</Link>}
+                    </Link>
+                    {isAdmin && (
+                        <Link
+                            className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                            to="/admin"
+                        >
+                            Admin Portal
+                        </Link>
+                    )}
                     <button
                         className="py-2 px-10 transition duration-200 border-b-2 border-transparent hover:bg-red rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         onClick={handleLogout}

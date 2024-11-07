@@ -122,6 +122,7 @@ const AccordionCard = ({ certStatus }) => {
     };
 
     console.log(cloudinaryFiles, 'user specific cloudinary files');
+    console.log(fileMetaData)
     // console.log(stripePromise);
 
     //will need to add put request to user metadata route to change studyGuideAccess to true, just saving in state for now
@@ -1390,6 +1391,7 @@ const AccordionCard = ({ certStatus }) => {
                                                             deleteFile(
                                                                 publicId,
                                                                 sectionName,
+                                                                console.log('deleted file')
                                                             ); // Pass both publicId and sectionName
                                                         } else {
                                                             console.error(

@@ -16,7 +16,7 @@ const AddAdmins = (userId) => {
     const handlePromote = async () => {
         try {
             await updateUserToAdmin(userId);
-            setIsAdmin(true); // Update UI to reflect new admin status
+            setIsAdmin(true);
             alert('User promoted to admin!');
         } catch (error) {
             console.error('Failed to promote user to admin:', error);
@@ -27,7 +27,7 @@ const AddAdmins = (userId) => {
     getAllUsers()
  }, [])
 
-//  console.log(users)
+ console.log(users)
 
     return (
         <div className="flex gap-10 justify-around">
@@ -47,9 +47,9 @@ const AddAdmins = (userId) => {
                 
             </div>
             <div>
-            {users ? (
+            {users.length > 0 ? (
                 <div>
-                <h2>{users[0].certListUploadStatus[0]}</h2>
+                {/* <h2>{users[0].certListUploadStatus}</h2> */}
                 <h2>{users[1].userEmail}</h2>
                 </div>
                 ) : <div><h2>No users found</h2> </div>}
