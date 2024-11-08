@@ -5,7 +5,7 @@ import BrainIntegrationSeal from '../../assets/icons/BrainIntegrationSeal.png';
 import bell from '../../assets/icons/bell.png';
 import placeholderProfilePic from '../../assets/icons/placeholderProfilePic.png';
 import { CloudinaryContext } from '../../contexts';
-import { AdminContext } from '../../contexts';
+
 import { Menu, X } from 'lucide-react';
 import axios from 'axios';
 

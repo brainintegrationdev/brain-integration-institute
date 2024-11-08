@@ -23,6 +23,8 @@ export const AdminProvider = ({ children }) => {
     const [showModal, setShowModal] = useState(false);
     const [fileModalOpen, setFileModalOpen] = useState(false);
     const [selectedDocumentName, setSelectedDocumentName] = useState('');
+    const [adminMessages, setAdminMessages] = useState([]);
+    const [inputs, setInputs] = useState(''); //inputs for textarea form for admin messages
 
     const getManagementToken = async () => {
         const response = await axios.post(
@@ -136,7 +138,6 @@ export const AdminProvider = ({ children }) => {
             try {
                 const accessToken = await getAccessTokenSilently();
 
-                // Dynamically construct the request body
                 const updateBody = {
                     certListUploadStatus: {
                         [selectedDocumentType]: newDocStatus,
@@ -175,6 +176,45 @@ export const AdminProvider = ({ children }) => {
             console.error('User is not defined');
         }
     };
+
+    //function to post message to user from admin regarding doc status
+    const resetInputs = () => {
+        console.log('inputs reset!');
+        setInputs('');
+    };
+    const createAdminMessage = async (messageData) => {
+        console.log('Inputs being sent:', messageData);
+
+        try {
+            const response = await fetch(
+                'http://localhost:8080/api/approvalmessages',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${await getAccessTokenSilently()}`,
+                    },
+                    body: JSON.stringify(messageData),
+                },
+            );
+            if (!response.ok) {
+                throw new Error(
+                    `Server responded with status: ${response.status}`,
+                );
+            }
+            const data = await response.json();
+
+            console.log('Response from backend:', data);
+            if (!data.success) throw new Error(data.error);
+            setAdminMessages((prev) => [...prev, data]);
+            resetInputs();
+            return data;
+        } catch (error) {
+            console.error('Failed to create message:', error);
+            throw error;
+        }
+    };
+
     return (
         <AdminContext.Provider
             value={{
@@ -196,6 +236,9 @@ export const AdminProvider = ({ children }) => {
                 selectedDocumentName,
                 setSelectedDocumentName,
                 updateDocumentStatusbyAdmin,
+                adminMessages,
+                setAdminMessages,
+                createAdminMessage,
             }}
         >
             {children}

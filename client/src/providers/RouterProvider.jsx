@@ -17,7 +17,7 @@ import AddAdmins from '../routes/AddAdmins';
 import PractitionerManagement from '../routes/PractitionerManagement';
 import AdminUploadManagement from '../routes/AdminUploadManagement';
 import MessagingHub from '../routes/MessagingHub';
-import UserList from '../components/UserList';
+
 import UserSpecificAdminView from '../components/UserSpecificAdminView';
 // import PaymentSuccessPage from "../routes/PaymentSuccessPage";
 

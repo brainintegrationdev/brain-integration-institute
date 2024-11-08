@@ -9,7 +9,10 @@ export default function ViewFileModal({
     imagesByDocType,
     onSubmit,
     onChange,
-    newDocStatus
+    newDocStatus,
+    handleInputChange,
+    inputs,
+    setInputs,
 }) {
     useEffect(() => {
         if (open) {
@@ -22,6 +25,8 @@ export default function ViewFileModal({
             document.body.classList.remove('overflow-hidden');
         };
     }, [open]);
+
+    console.log(inputs);  
 
     return (
         <div
@@ -73,14 +78,15 @@ export default function ViewFileModal({
                                     className="mr-2"
                                     onChange={onChange}
                                     checked={newDocStatus === 'declined'}
-
                                 />
                                 Decline
                             </label>
                             <textarea
-                            onChange={onChange}
+                                onChange={handleInputChange}
                                 placeholder="Reason for denial (if applicable)"
                                 className="border border-black rounded-xl p-5 mt-10 w-[300px]"
+                                name="message"
+                                value={inputs.message}
                             ></textarea>
                             <button className="border border-black rounded-xl px-5 py-2 bg-green-is-good text-white">
                                 Submit

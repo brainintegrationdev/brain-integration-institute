@@ -23,53 +23,14 @@ approvalMessagesRouter.get('/:useremail', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch messages' });
 }
 });
-//create post message route
 
-// message: {
-//     type: [String],
-//     required: true,
-// },
-// admin: {
-//     type: String,
-//     required: true,
-// },
-// timestamp: {
-//     type: Date,
-//     default: Date.now,
-// },
-// user: { type: Schema.Types.String, ref: 'User', required: true },
-// });
-
-// fileRouter.post('/', async (req, res) => {
-//     try {
-//         const { publicId, url, uploadDate, filename, sectionName } = req.body;
-
-//         if (!publicId || !url || !uploadDate || !filename) {
-//             return res.status(400).json({ error: 'Missing required fields' });
-//         }
-
-//         const fileMetadata = await createFile({
-//             filename,
-//             user: req.auth.payload.sub,
-//             publicId,
-//             url,
-//             uploadDate,
-//             isApproved: false,
-//             sectionName
-//         });
-
-//         res.status(201).json({ success: true, fileMetadata  });
-//     } catch (error) {
-//         console.error('Error processing request:', error);
-//         res.status(500).json({ error: 'Server error' });
-//     }
-// });
 
 // const ApprovalModel = require('../models/approvalMessages');
 const { UserModel } = require('../models/User'); // Import your user model
 
 approvalMessagesRouter.post('/', async (req, res) => {
     try {
+        console.log('Request Body:', req.body);
         const { message, userEmail } = req.body;
         console.log('JWT sub:', req.auth.payload.sub);
 
@@ -95,7 +56,7 @@ approvalMessagesRouter.post('/', async (req, res) => {
 
         // Create the message
         const messageMetadata = await createMessage({
-            message,
+            message: message, 
             admin: adminEmail,  // Store the email of the authenticated user as admin
             timestamp: Date.now(),
             userEmail,  // Send the userEmail from the request body

@@ -38,17 +38,26 @@ const UserSpecificAdminView = () => {
         selectedDocumentName,
         setSelectedDocumentName,
         updateDocumentStatusbyAdmin,
+        adminMessages,
+        setAdminMessages,
+        
+        createAdminMessage
     } = useContext(AdminContext);
 
     // const { getFilesByDocType, } = useContext(CloudinaryContext)
     // const { fetchProfileData, profileData } = useContext(UserContext);
     const { userId } = useParams();
-    // const { user } = useAuth0();
+    const { user } = useAuth0();
     const [imagesByDocType, setImagesByDocType] = useState([]);
+    // const [inputs, setInputs] = useState('')  //input for message text area on modal
     const { getAccessTokenSilently } = useAuth0();
     const [newDocStatus, setNewDocStatus] = useState('');
     // const [selectedDocUrl, setSelectDocUrl] = useState('')
     const [selectedDocumentType, setSelectedDocumentType] = useState('');
+    const [inputs, setInputs] = useState('')
+    const [docStatus, setDocStatus] = useState('')
+
+    console.log(inputs)
 
     const docTypeMapping = {
         'Brain Integration Training': 'brainIntegrationTraining',
@@ -82,6 +91,10 @@ const UserSpecificAdminView = () => {
     useEffect(() => {
         console.log('Updated imagesByDocType:', imagesByDocType);
     }, [imagesByDocType]);
+
+    useEffect(() => {
+        console.log("docStatus updated to:", docStatus);
+    }, [docStatus]);
 
     const getFilesByDocType = async (userEmail, documentType) => {
         try {
@@ -159,6 +172,13 @@ const UserSpecificAdminView = () => {
         setNewDocStatus(e.target.value);
     };
 
+
+    const handleInputChange = (e) => {
+        console.log('change handled');
+        
+        setInputs(e.target.value)
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!individualUser) {
@@ -168,8 +188,22 @@ const UserSpecificAdminView = () => {
 
         console.log('Admin doc review form submitted');
         try {
-            await updateDocumentStatusbyAdmin(individualUser, newDocStatus, selectedDocumentType);
+            const newStatus = await updateDocumentStatusbyAdmin(individualUser, newDocStatus, selectedDocumentType);
+            setNewDocStatus(newStatus)
             console.log("Document status updated successfully");
+            const messageData = {
+                message: inputs, 
+                userEmail: individualUser.userEmail, 
+                admin: user.email,
+                timestamp: Date.now()
+            };
+    
+        
+            await createAdminMessage(messageData);
+    
+        
+            console.log("Admin message created successfully");
+    
             setFileModalOpen(false); 
         } catch (error) {
             console.log("Error updating document status:", error);
@@ -315,7 +349,10 @@ const UserSpecificAdminView = () => {
                     imagesByDocType={imagesByDocType}
                     onSubmit={handleSubmit}
                     onChange={handleChange}
+                    handleInputChange={handleInputChange} 
                     newDocStatus={newDocStatus}
+                    inputs={inputs}
+                    setInputs={setInputs}
                 >
                     <div className="text-center w-100 flex flex-col items-center gap-2 mb-10">
                         <h3 className="text-lg text-gray-500 font-bold">
@@ -349,10 +386,10 @@ const UserSpecificAdminView = () => {
                                     />
                                     Decline
                                 </label>
-                                <textarea
+                                {/* <textarea
                                     placeholder="Reason for denial (if applicable)"
                                     className="border border-black rounded-xl  p-5 mt-10 w-[300px]"
-                                ></textarea>
+                                ></textarea> */}
                                 <button className="border border-black rounded-xl px-5 py-2 bg-green-is-good text-white">
                                     Submit
                                 </button>

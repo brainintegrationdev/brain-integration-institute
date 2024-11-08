@@ -3,7 +3,7 @@ const Schema = mg.Schema;
 
 const ApprovalMessageSchema = new mg.Schema({
     message: {
-        type: [String],
+        type: String,
         required: true,
     },
     admin: {
