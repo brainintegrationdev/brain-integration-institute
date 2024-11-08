@@ -49,6 +49,7 @@ const UserSpecificAdminView = () => {
     const [newDocStatus, setNewDocStatus] = useState('');
     // const [selectedDocUrl, setSelectDocUrl] = useState('')
     const [selectedDocumentType, setSelectedDocumentType] = useState('');
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const docTypeMapping = {
         'Brain Integration Training': 'brainIntegrationTraining',

@@ -5,6 +5,7 @@ const {
     createUserMetaData,
     editUserMetaData,
     getAllUserMetaData,
+    deleteUserMetaData,
 } = require('../services/user');
 const { UserModel } = require('../models/User');
 const { ProfileModel } = require('../models/profile');
@@ -25,7 +26,7 @@ userRouter.post('/createuser', async (req, res) => {
                 userProfilePicture: userProfilePicture || '',
                 userUploadProgress: 0,
                 isAdmin: false,
-                sub: req.auth.payload.sub
+                sub: req.auth.payload.sub,
             });
 
             await userMetaData.save();
@@ -48,7 +49,7 @@ userRouter.get('/:email', async (req, res) => {
     console.log('Received email param:', email);
     try {
         const profile = await ProfileModel.findOne({ email });
-      
+
         const user = await UserModel.findOne({ userEmail: email });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -60,7 +61,7 @@ userRouter.get('/:email', async (req, res) => {
         };
 
         const userMetaData = await getUserMetaData(email);
-      
+
         const response = { ...userWithProfileData, ...userMetaData };
 
         return res.status(200).json(response);
@@ -239,6 +240,44 @@ userRouter.put('/:email/document-status', async (req, res) => {
         res.status(500).send({
             message: 'An error occurred while updating user metadata.',
         });
+    }
+});
+
+// try {
+//     console.log('Attempting to delete file with publicId:', publicId);
+//     const result = await cloudinary.uploader.destroy(publicId);
+//     console.log(result, "cloudinary delete")
+//     if (result.result === 'ok') {
+//         await File.findOneAndDelete({ publicId: publicId });
+//         res.status(200).json({ message: 'File deleted successfully' });
+//     } else {
+//         res.status(404).json({ message: 'File not found' });
+//     }
+// } catch (error) {
+//     console.error('Error deleting file from Cloudinary:', error);
+//     res.status(500).json({ message: 'Error deleting file', error });
+// }
+//});
+//delete user route - can only be accessed by admins
+userRouter.delete('/:email', async (req, res) => {
+    const email = req.params.email
+    console.log(email, "email")
+    try {
+        const deletedUser = await UserModel.findOneAndDelete({ userEmail: email });
+
+        if (!deletedUser) {
+            console.log('[Delete Route] User not found');
+            return res.status(404).json({ message: 'User not found' });
+        }
+        console.log('[Delete Route] User deleted successfully');
+        return res
+            .status(200)
+            .json({ message: 'User and metadata deleted successfully' });
+    } catch (error) {
+        console.error('[Delete Route] Error:', error);
+        return res
+            .status(500)
+            .json({ message: 'An error occurred while deleting the user' });
     }
 });
 

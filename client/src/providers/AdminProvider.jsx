@@ -94,6 +94,25 @@ export const AdminProvider = ({ children }) => {
         }
     };
 
+    //create delete user route
+    const deleteUser = async (userEmail) => {
+        try {
+            const accessToken = await getAccessTokenSilently();
+            const response = await axios.delete(`/api/user/${userEmail}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            console.log(
+                `User with ID ${userEmail} has been successfully deleted.`,
+            );
+            console.log(response.data); 
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    };
+
     const fetchProfileData = async () => {
         try {
             setLoading(true);
@@ -196,6 +215,7 @@ export const AdminProvider = ({ children }) => {
                 selectedDocumentName,
                 setSelectedDocumentName,
                 updateDocumentStatusbyAdmin,
+                deleteUser
             }}
         >
             {children}
