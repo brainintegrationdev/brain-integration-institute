@@ -1,3 +1,9 @@
+//this is intended to generate signed URL for study guide once user has made successful payment via Stripe Payment API
+//ultimately, I don't think this file will be used as we are moving the study guide to Google docs and making it read-only 
+//so that the user can't copy or download it and share
+
+
+
 const cloudinary = require('cloudinary').v2;
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 

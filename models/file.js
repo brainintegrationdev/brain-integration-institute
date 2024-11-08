@@ -15,9 +15,4 @@ const File = mongoose.model('File', fileSchema);
 
 module.exports =  File ;
 
-// // filename,
-// owner: req.auth.payload.sub,
-// publicId,
-// url,
-// uploadDate,
-// isApproved: false,
+

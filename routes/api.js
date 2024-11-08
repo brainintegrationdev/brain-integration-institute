@@ -8,7 +8,7 @@ const { profileRouter } = require('./profile')
 const { adminRouter } = require('./admin')
 const { notifyRouter } = require('./notify')
 const { approvalMessagesRouter } = require('./approvalMessages')
-// const { exampleRouter } = require('./example');
+
 
 
 const apiRouter = ex.Router();

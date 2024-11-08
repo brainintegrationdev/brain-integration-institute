@@ -1,3 +1,8 @@
+//this is intended to generate signed URL for study guide once user has made successful payment via Stripe Payment API
+//ultimately, I don't think this file will be used as we are moving the study guide to Google docs and making it read-only 
+//so that the user can't copy or download it and share
+
+
 const ex = require('express');
 const cloudinary = require('cloudinary').v2;
 
@@ -22,14 +27,14 @@ signedUrlRouter.post('/get-signed-url', async (req, res) => {
         }
         
 
-        // Generate a signed URL for the Cloudinary asset
+      
         const signedUrl = cloudinary.url(publicId, {
             secure: true,
             sign_url: true,
-             // Use 'authenticated' for private/secure assets
-            format: 'pdf', // or 'video', 'raw' depending on the type of the asset
            
-            expires_at: Math.floor(Date.now() / 1000) + 3600, // Expiry time (1 hour)
+            format: 'pdf', 
+           
+            expires_at: Math.floor(Date.now() / 1000) + 3600, // (1 hour)
         });
 
         res.json({ signedUrl });

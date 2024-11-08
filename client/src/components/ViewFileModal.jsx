@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
 
 export default function ViewFileModal({
     open,
     onClose,
+    // eslint-disable-next-line no-unused-vars
     nickname,
     selectedDocumentName,
     imagesByDocType,

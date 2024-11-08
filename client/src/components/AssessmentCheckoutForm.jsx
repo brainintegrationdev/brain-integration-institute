@@ -11,7 +11,7 @@ export default function AssessmentCheckoutForm() {
     const [message, setMessage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [showModal, setShowModal] = useState(false); 
-    // const {  email } = useContext(CloudinaryContext);
+
     
 
     const handleSubmit = async (e) => {

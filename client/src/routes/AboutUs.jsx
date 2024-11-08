@@ -3,6 +3,9 @@ import paleBanner from '../assets/icons/PaleGreenPractitionerBackground.png';
 import banner from '../assets/icons/PractitionerBackground.png';
 import { Navbar } from '../components/header/Navbar';
 
+
+//this is placeholder text/copy until the component is completed with copy provided by the client
+
 export const AboutUs = () => {
     return (
         <>

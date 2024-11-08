@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useState, useContext, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
+
 import { loadStripe } from '@stripe/stripe-js';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
@@ -34,67 +35,48 @@ import ProfilePhotoUpload from './ProfilePhotoUpload.jsx';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { Accordion } from 'react-accessible-accordion';
-import e from 'cors';
+
 import { CloudinaryContext } from '../contexts';
 import Payment from './Payment.jsx';
 
 const AccordionCard = ({ certStatus }) => {
     // eslint-disable-next-line no-unused-vars
     const {
-        uwConfig,
         initializeCloudinaryWidget,
-        filename,
         getFilesInFolder,
-        getCloudinaryFiles,
         getFiles,
-        files,
         progress,
         setProgress,
         updateUserProgress,
-        isSubmitted,
-        setIsSubmitted,
         fileMetaData,
         setFileMetaData,
-        isLoading,
-        setIsLoading,
         getUserMetaData,
         deleteFile,
         deleteModalOpen,
         setDeleteModalOpen,
-        updateUserStudyGuide,
         studyGuideAccess,
         setStudyGuideAccess,
-        email,
         showPayment,
         setShowPayment,
-        showModal,
         setShowModal,
         certListUploadStatus,
         setCertListUploadStatus,
         updateUserDocumentStatus,
     } = useContext(CloudinaryContext);
 
-    const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+    const { user, getAccessTokenSilently } = useAuth0();
 
     const [sectionName, setSectionName] = useState('');
 
-    const [selectedFile, setSelectedFile] = useState(null);
+ 
     const [userMetaData, setUserMetaData] = useState({}); // move this to context
     const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
     const [stripePromise, setStripePromise] = useState(null);
     const [cloudinaryFiles, setCloudinaryFiles] = useState([]);
-    // const [certListUploadStatus, setCertListUploadStatus] = useState({});
 
     //checks to see if every section has an uploaded file, if so returns true
     const [isUploaded, setIsUploaded] = useState(false);
 
-    const handleDeleteClick = (publicId) => {
-        const sectionName = 'Brain'; // or dynamically get section name based on the accordion section
-        deleteFile(publicId, sectionName); // Pass section name here
-    };
-
-    // const [showPayment, setShowPayment] = useState(false);
-    // const [showModal, setShowModal] = useState(false);
 
     const certProgressImages = [
         ProgressBar0,
@@ -108,6 +90,8 @@ const AccordionCard = ({ certStatus }) => {
         ProgressBar8,
     ];
 
+    //moved this function to User Context
+    //will use this to set colored badges on each accordion section to show if the doc's been approved, waiting for upload, declined, pending review
     const getStatusBadgeClass = (status) => {
         switch (status) {
             case 'pending approval':
@@ -121,22 +105,7 @@ const AccordionCard = ({ certStatus }) => {
         }
     };
 
-    console.log(cloudinaryFiles, 'user specific cloudinary files');
-    console.log(fileMetaData)
-    // console.log(stripePromise);
-
-    //will need to add put request to user metadata route to change studyGuideAccess to true, just saving in state for now
-
-    // const closeModal = () => {
-    //     setShowModal(false);
-    // };
-
-    // const redirectToAssessment = () => {
-    //     window.open('https://forms.gle/uL6ySYPDuwuXQj487', '_blank');
-    // };
-
     const getStudyGuide = async () => {
-        console.log('getStudyGuide function invoked');
         try {
             const accessToken = await getAccessTokenSilently();
             console.log('Access token retrieved:', accessToken);
@@ -238,7 +207,6 @@ const AccordionCard = ({ certStatus }) => {
         }
     };
 
-    // console.log(progress);
 
     const showFile = () => {
         console.log('file shown');
@@ -256,23 +224,6 @@ const AccordionCard = ({ certStatus }) => {
         console.log('Calling updateUserProgress with value:', 1);
     };
 
-    // if (isAuthenticated) {
-    //     console.log('User Data:', user);
-    // }
-
-    // const checkAllSectionsUploaded = () => {
-    //     const sections = [
-    //         brainIntegrationTraining,
-    //         clinicalHours,
-    //         firstAidTraining,
-    //         cprCert,
-    //         videoPresentation,
-    //         insurance,
-    //     ];
-    //     const allUploaded = sections.every((section) => section.length > 0);
-    //     setIsUploaded(allUploaded);
-    // };
-
     useEffect(() => {
         console.log('Fetching publishable key...');
         // Fetch the publishable key and set the stripePromise
@@ -280,7 +231,7 @@ const AccordionCard = ({ certStatus }) => {
         getPublishableKey();
     }, []);
 
-    console.log(user.sub)
+    console.log(user.sub);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -289,15 +240,14 @@ const AccordionCard = ({ certStatus }) => {
                 try {
                     const folderFiles = await getFilesInFolder(token); //docs themselves - user specific
                     const metadataFiles = await getFiles(token);
-                    console.log(metadataFiles); //metadata
+            
                     const userMetaData = await getUserMetaData(token);
                     setFileMetaData(metadataFiles);
                     setUserMetaData(userMetaData);
                     setProgress(userMetaData.userUploadProgress);
                     setCertListUploadStatus(userMetaData.certListUploadStatus);
-                    setCloudinaryFiles(folderFiles); //user specific files (objects) from Cloudinary
-                    console.log(folderFiles);
-                    console.log(userMetaData);
+                    setCloudinaryFiles(folderFiles); //user specific files/docs (objects) from Cloudinary
+                 
                 } catch (error) {
                     console.error(
                         'Error fetching files:',
@@ -309,10 +259,6 @@ const AccordionCard = ({ certStatus }) => {
 
         fetchData();
     }, [user]);
-
-    // useEffect(() => {
-    //     checkAllSectionsUploaded();
-    // }, [fileMetaData]);
 
     const getSectionFileNames = (sectionName) => {
         const filteredFiles = fileMetaData.filter(
@@ -355,12 +301,6 @@ const AccordionCard = ({ certStatus }) => {
     const insuranceMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'insurance';
     });
-
-    // const certListUploadStatus = userMetaData.certListUploadStatus
-
-    console.log(fileMetaData, 'file metadata');
-    console.log(userMetaData, 'user metadata');
-    console.log(certListUploadStatus);
 
     return (
         <div>
@@ -1393,7 +1333,9 @@ const AccordionCard = ({ certStatus }) => {
                                                             deleteFile(
                                                                 publicId,
                                                                 sectionName,
-                                                                console.log('deleted file')
+                                                                console.log(
+                                                                    'deleted file',
+                                                                ),
                                                             ); // Pass both publicId and sectionName
                                                         } else {
                                                             console.error(

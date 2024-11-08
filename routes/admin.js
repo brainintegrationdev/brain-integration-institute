@@ -4,6 +4,9 @@ require('dotenv').config();
 const { validateAuthToken } = require('../middleware/auth.js');
 const { validateAuthTokenMiddleware } = require('../middleware/auth.js');
 
+
+//this router isn't being used any more since no longer using Auth) roles
+
 const adminRouter = ex.Router();
 
 const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN;
@@ -15,14 +18,14 @@ const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE
 const getAuth0Token = async () => {
     const { data } = await axios.post(`https://${AUTH0_DOMAIN}/oauth/token`, {
         client_id: AUTH0_M2M_CLIENT_ID,
-        //t2E6pSuAhciCWH343iErq92hL7WXjmKm
+      
         client_secret: AUTH0_CLIENT_SECRET,
-        //EqwdWx_2unhkM9kvRNbcRLxeV8LGg4ySj9UWgFTAgWmobLBhfKxHjSC8Uz33CZN7
+     
         audience: AUTH0_MANAGEMENT_API_AUDIENCE,
 
-        //https://dev-ugmxdnpnwrk8mk5v.us.auth0.com/api/v2/
+     
         grant_type: 'client_credentials'
-        // scope: 'read:users update:users read:roles update:roles',
+       
     });
     return data.access_token;
 };
@@ -47,11 +50,8 @@ const getUserRoles = async (userId) => {
 };
 
 
-adminRouter.use((req, res, next) => {
-    console.log("Admin router accessed");
-    next();
-});
-// api/admin/assign-admin-role/:userId
+
+
 
 adminRouter.get('/', async (req, res) => {
     console.log('get route')

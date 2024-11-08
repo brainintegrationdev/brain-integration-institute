@@ -2,7 +2,7 @@ const ex = require('express');
 // const { processFile } = require('../middleware/cdn');
 const { getAllApprovalMessagesByUser, createMessage } = require('../services/approvalMessages');
 const ApprovalModel  = require('../models/approvalMessages');
-
+const UserModel  = require('../models/User'); 
 
 const approvalMessagesRouter = ex.Router();
 
@@ -25,8 +25,8 @@ approvalMessagesRouter.get('/:useremail', async (req, res) => {
 });
 
 
-// const ApprovalModel = require('../models/approvalMessages');
-const { UserModel } = require('../models/User'); // Import your user model
+
+
 
 approvalMessagesRouter.post('/', async (req, res) => {
     try {

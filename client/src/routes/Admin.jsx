@@ -1,7 +1,7 @@
 import { Link, Outlet } from 'react-router-dom';
 import paleBanner from '../assets/icons/PaleGreenPractitionerBackground.png';
 import banner from '../assets/icons/PractitionerBackground.png';
-import { Circle } from 'lucide-react';
+
 
 export const Admin = () => {
     return (

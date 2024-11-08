@@ -486,6 +486,8 @@ export const CloudinaryProvider = ({ children }) => {
     };
 
     //delete certification file
+    //deletes both the file itself from cloudinary (via a callback) and the file metadata from backend
+
     const deleteFile = async (publicId, sectionName) => {
         try {
             const accessToken = await getAccessTokenSilently();

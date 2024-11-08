@@ -1,6 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
 import ProfileEditIcon from '../assets/icons/profileEditIcon.png';
-
 import { CloudinaryContext } from '../contexts';
 import { UserContext } from '../contexts';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -16,7 +15,6 @@ export const ProfilePhotoUpload = () => {
     const { profileData } =useContext(UserContext)
     const { isAuthenticated, user } = useAuth0();
 
-    // const { userMetaData, setUserMetaData } = props;
 
     // Local state for profile picture URL
     const [profilePictureUrl, setProfilePictureUrl] = useState(user?.picture);

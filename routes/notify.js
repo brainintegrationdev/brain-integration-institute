@@ -1,8 +1,9 @@
 const ex = require('express');
-// const { processFile } = require('../middleware/cdn');
-// const { getAllFilesByOwner, createFile } = require('../services/file');
-// const File  = require('../models/file');
-// const cloudinary = require('cloudinary').v2; 
+
+//this router is intended to have post endpoint so that Google Apps Script function can make post request with assessment results
+//this router will only be enabled on the deployment branch since Apps Script requires a public (deployed) URL for the API endpoint
+//this is just a test component on dev branch
+
 
 const notifyRouter = ex.Router();
 

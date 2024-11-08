@@ -50,12 +50,12 @@ const getThumbnailImages = async (folders) => {
             folders.map(async (folder) => {
                 const searchParams = {
                     expression: `folder=${folder}`,
-                    // Add transformations for thumbnails (width, height, crop, and quality)
-                    max_results: 20, // Limits to 20 results per folder
+                   
+                    max_results: 20, 
                     transformation: {
-                        width: 150,   // Thumbnail width
-                        height: 150,  // Thumbnail height
-                        crop: "fill", // Crop to fill thumbnail dimensions
+                        width: 150,  
+                        height: 150,  
+                        crop: "fill", 
                         quality: "auto" // Optimize quality
                     }
                 };
@@ -77,7 +77,9 @@ const getThumbnailImages = async (folders) => {
 };
 
 
-
+//fetches certificate template (uploaded by admin) from cloudinary
+//will apply transformation once user passes assessment
+//which will add their name and date
 const getCertificateFromCloudinary = async () => {
     try {
         const requestURL = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/search`;

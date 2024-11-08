@@ -1,8 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
 import { AdminContext } from '../contexts';
-
-import { UserContext } from '../contexts';
-import { useAuth0 } from '@auth0/auth0-react';
 import ProgressBar0 from '../assets/icons/ProgressBar0.png';
 import ProgressBar1 from '../assets/icons/ProgressBar1.png';
 import ProgressBar2 from '../assets/icons/ProgressBar2.png';
@@ -27,16 +24,6 @@ function UserList() {
         fetchProfileData,
         profileData,
     } = useContext(AdminContext);
-
-    const { user } = useAuth0();
-
-    console.log(profileData);
-
-    // const { progress } = useContext(CloudinaryContext);
-
-    const isAdmin = user?.['https://brainintegration.com/isAdmin'];
-
-    console.log('Is Admin:', isAdmin);
 
     const [searchInput, setSearchInput] = useState('');
     const navigate = useNavigate();
@@ -83,11 +70,6 @@ function UserList() {
         setIndividualUser(users.find((user) => user._id === userId));
         navigate(`/admin/practitioner-management/${userId}`);
     };
-
-    // const handlePromote = async (userId) => {
-    //     await updateUserToAdmin(userId); // Call your promotion function here
-    //     alert('User promoted to admin!');
-    // };
 
     console.log(users);
 

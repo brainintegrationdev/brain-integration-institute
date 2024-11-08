@@ -76,25 +76,25 @@ export const AdminProvider = ({ children }) => {
         }
     };
 
-    const updateUserToAdmin = async (userId) => {
-        const token = await getManagementToken();
-        try {
-            const response = await axios.patch(
-                `https://${process.env.AUTH0_DOMAIN}/api/v2/users/${userId}`,
-                {
-                    app_metadata: { isAdmin: true },
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                },
-            );
-            console.log('User promoted to admin:', response.data);
-        } catch (error) {
-            console.error('Error updating user metadata:', error);
-        }
-    };
+    // const updateUserToAdmin = async (userId) => {
+    //     const token = await getManagementToken();
+    //     try {
+    //         const response = await axios.patch(
+    //             `https://${process.env.AUTH0_DOMAIN}/api/v2/users/${userId}`,
+    //             {
+    //                 app_metadata: { isAdmin: true },
+    //             },
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             },
+    //         );
+    //         console.log('User promoted to admin:', response.data);
+    //     } catch (error) {
+    //         console.error('Error updating user metadata:', error);
+    //     }
+    // };
 
     const fetchProfileData = async () => {
         try {
@@ -112,7 +112,7 @@ export const AdminProvider = ({ children }) => {
 
             if (!response.ok) {
                 setProfileData({});
-                throw new Error('Network response was not ok');
+                throw new Error('No profile data found');
             }
             const data = await response.json();
             if (!data || Object.keys(data).length === 0) {
@@ -218,7 +218,7 @@ export const AdminProvider = ({ children }) => {
     return (
         <AdminContext.Provider
             value={{
-                updateUserToAdmin,
+               
                 getManagementToken,
                 getAllUsers,
                 users,

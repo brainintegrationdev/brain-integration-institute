@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { useState, useContext, useEffect } from 'react';
 import banner from '../assets/icons/PractitionerBackground.png';
@@ -66,13 +67,7 @@ export const Profile = withAuthenticationRequired(() => {
             {/* Content Section */}
             <div className="flex flex-col px-4 sm:px-8 mt-10">
                 <ProfilePhotoUpload />
-                {/* <h3 className="text-center font-poppins text-xl sm:text-2xl mb-4">
-                    {profileData
-                        ? `${profileData.firstName} ${profileData.lastName}`
-                        : user.email}
-                </h3> */}
-
-                {/* Profile Section */}
+              
                 {(!sectionName || sectionName === 'profile') && (
                     <div className="flex flex-col items-center gap-6 p-6   mx-auto bg-white shadow-md rounded-lg">
                         {profileData ? (

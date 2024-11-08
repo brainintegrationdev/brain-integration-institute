@@ -4,6 +4,9 @@ import { useEffect, useState } from "react"
 // import { Auth0Provider } from '@auth0/auth0-react';
 import { useAuth0 } from '@auth0/auth0-react';
 
+
+//i don't think this component is actually being used, auth is handled by auth0 
+
 const Auth = () => {
     const initValues = {
         username: '',

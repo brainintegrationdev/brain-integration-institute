@@ -11,7 +11,7 @@ import AccordionRadioUnfilled from '../assets/icons/AccordionRadioUnfilled.png';
 import CheckedRadio from '../assets/icons/checkedRadio.png';
 
 import { useState } from 'react';
-// import { video } from '@cloudinary/url-gen/qualifiers/source';
+
 
 export default function Video(props) {
     const [isExpanded, setIsExpanded] = useState(false);

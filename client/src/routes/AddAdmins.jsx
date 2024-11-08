@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 
 //create get request to get all active practitioner profiles
@@ -11,17 +12,16 @@ import { AdminContext } from '../contexts';
 
 const AddAdmins = (userId) => {
     const [isAdmin, setIsAdmin] = useState(false);
-    const { updateUserToAdmin, users, getAllUsers } = useContext(AdminContext)
+    const {  users, getAllUsers } = useContext(AdminContext)
 
-    const handlePromote = async () => {
-        try {
-            await updateUserToAdmin(userId);
-            setIsAdmin(true);
-            alert('User promoted to admin!');
-        } catch (error) {
-            console.error('Failed to promote user to admin:', error);
-        }
-    };
+
+
+
+    //create function in admin context which makes put request to 'user/:email/is-admin' route to edit isAdmin on metadata object to true
+    //then set isAdmin to true for selected user
+    //import into this component and call here on button click
+
+    
 
  useEffect (() => {
     getAllUsers()
@@ -34,7 +34,7 @@ const AddAdmins = (userId) => {
             <div className="flex flex-col justify-center items-center gap-10 border border-black rounded-xl">
                 <h2 className="text-2xl">Add New Admins</h2>
                 return (
-                <button onClick={handlePromote} disabled={isAdmin}>
+                <button disabled={isAdmin}>
                     {isAdmin ? 'Revoke Admin Access' : 'Promote to Admin'}
                 </button>
                 );

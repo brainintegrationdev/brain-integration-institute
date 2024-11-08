@@ -21,14 +21,11 @@ export const ProfileEditForm = (props) => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [requiredFieldError, setRequiredFieldError] = useState('');
     const [hasRequiredError, setHasRequiredError] = useState(false);
-    const [stateInputError, setStateInputError] =useState(false)
+    const [stateInputError, setStateInputError] = useState(false);
     const [validationError, setValidationError] = useState('');
-    // const [showModal, setShowModal] = useState(false);
+
     const [profileModalOpen, setProfileModalOpen] = useState(false);
     const regex = /^[0-9]+$/;
-
-    // console.log(showModal);
-    console.log(hasRequiredError);
 
     const validateRequiredFields = () => {
         if (!profileData) {
@@ -65,14 +62,13 @@ export const ProfileEditForm = (props) => {
             return;
         }
         if (inputs.country === 'US' && !inputs.state) {
-            setStateInputError(true)
-            
+            setStateInputError(true);
         }
         setInputs((prevInputs) => ({
             ...prevInputs,
             [name]: value,
         }));
-       
+
         if (!profileData) {
             validateRequiredFields();
         }
@@ -82,8 +78,7 @@ export const ProfileEditForm = (props) => {
     const handleSubmit = async (event) => {
         console.log('submitting new profile');
         event.preventDefault();
-        
-       
+
         try {
             const result = await createProfileData();
             console.log(result);
@@ -104,7 +99,6 @@ export const ProfileEditForm = (props) => {
     const onSubmitWithProfileData = async (event) => {
         event.preventDefault();
         validateRequiredFields();
-       
 
         if (hasRequiredError) {
             alert('Please fill in all required fields.');
@@ -150,12 +144,11 @@ export const ProfileEditForm = (props) => {
                     'Please enter a value in required fields.',
                 );
                 setHasRequiredError(true);
-                if(!inputs.state){
+                if (!inputs.state) {
                     setRequiredFieldError(
                         'State is required for US addresses.',
                     );
                 }
-                // Set error if the field is empty
             } else {
                 setRequiredFieldError('');
                 setHasRequiredError(false);
@@ -436,9 +429,7 @@ export const ProfileEditForm = (props) => {
                                         onChange={handleInputChange}
                                         className="border rounded px-3 py-2 w-full"
                                     >
-                                        <option value="">
-                                            -- Country --
-                                        </option>
+                                        <option value="">-- Country --</option>
                                         <option value="AF">AF</option>
                                         <option value="AL">AL</option>
                                         <option value="DZ">DZ</option>
@@ -661,12 +652,9 @@ export const ProfileEditForm = (props) => {
                                         <option value="ZM">ZM</option>
                                         <option value="ZW">ZW</option>
                                     </select>
-                                    
                                 </div>
                             </div>
-                            <div className="flex flex-wrap -mx-2">
-                                
-                            </div>
+                            <div className="flex flex-wrap -mx-2"></div>
                             <div className="flex ">
                                 <div className="mb-4 px-2 w-full">
                                     <textarea
@@ -685,7 +673,7 @@ export const ProfileEditForm = (props) => {
                                         {validationError}
                                     </p>
                                 )}
-                               
+
                                 {hasRequiredError && (
                                     <p className="pl-10 pb-10 text-2xl text-red font-bold">
                                         {requiredFieldError}

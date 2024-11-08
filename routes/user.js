@@ -6,8 +6,8 @@ const {
     editUserMetaData,
     getAllUserMetaData,
 } = require('../services/user');
-const { UserModel } = require('../models/User');
-const { ProfileModel } = require('../models/profile');
+const  UserModel  = require('../models/User');
+const  ProfileModel  = require('../models/profile');
 
 const userRouter = ex.Router();
 
@@ -188,6 +188,9 @@ userRouter.put('/:email/study-guide', async (req, res) => {
     }
 });
 
+//put request to promote user to admin if an admin chooses to promote them within the admin dashboard
+
+
 userRouter.put('/:email/is-admin', async (req, res) => {
     const { isAdmin } = req.body;
     const { email } = req.params;
@@ -223,7 +226,7 @@ userRouter.put('/:email/is-admin', async (req, res) => {
 //once user uploads a doc, the status for that doc type will be toggled to pending approval
 
 userRouter.put('/:email/document-status', async (req, res) => {
-    const email = req.params.email; // Get the email from the URL parameters
+    const email = req.params.email; 
     const { certListUploadStatus } = req.body;
 
     try {
@@ -233,7 +236,7 @@ userRouter.put('/:email/document-status', async (req, res) => {
         if (!updatedUser) {
             return res.status(404).send({ message: 'User not found' });
         }
-        res.status(200).send(updatedUser); // Send back the updated user document
+        res.status(200).send(updatedUser); 
     } catch (error) {
         console.error(error);
         res.status(500).send({

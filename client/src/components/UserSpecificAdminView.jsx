@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // export default UserSpecificAdminView;
 
 /* eslint-disable react/prop-types */
@@ -5,6 +6,7 @@ import { useEffect, useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { AdminContext } from '../contexts';
+import { UserContext } from '../contexts';
 // import { CloudinaryContext } from '../contexts';
 import ViewFileModal from './ViewFileModal';
 
@@ -23,7 +25,7 @@ import shield from '../assets/icons/shield-half.png';
 import briefcase from '../assets/icons/briefcase-medical.png';
 import clipboard from '../assets/icons/clipboard-list.png';
 import video from '../assets/icons/video.png';
-// import graduationCap from '../asset/icons/graduation-cap.png'
+
 
 const UserSpecificAdminView = () => {
     const {
@@ -32,7 +34,6 @@ const UserSpecificAdminView = () => {
         users,
         fetchProfileData,
         profileData,
-       
         fileModalOpen,
         setFileModalOpen,
         selectedDocumentName,
@@ -40,24 +41,25 @@ const UserSpecificAdminView = () => {
         updateDocumentStatusbyAdmin,
         adminMessages,
         setAdminMessages,
-        
-        createAdminMessage
+        createAdminMessage,
     } = useContext(AdminContext);
+
+    const { getStatusBadgeClass } = useContext(UserContext);
 
     // const { getFilesByDocType, } = useContext(CloudinaryContext)
     // const { fetchProfileData, profileData } = useContext(UserContext);
     const { userId } = useParams();
     const { user } = useAuth0();
     const [imagesByDocType, setImagesByDocType] = useState([]);
-    // const [inputs, setInputs] = useState('')  //input for message text area on modal
+  
     const { getAccessTokenSilently } = useAuth0();
     const [newDocStatus, setNewDocStatus] = useState('');
-    // const [selectedDocUrl, setSelectDocUrl] = useState('')
+  
     const [selectedDocumentType, setSelectedDocumentType] = useState('');
-    const [inputs, setInputs] = useState('')
-    const [docStatus, setDocStatus] = useState('')
+    const [inputs, setInputs] = useState('');
+    const [docStatus, setDocStatus] = useState('');
 
-    console.log(inputs)
+    console.log(inputs);
 
     const docTypeMapping = {
         'Brain Integration Training': 'brainIntegrationTraining',
@@ -93,7 +95,7 @@ const UserSpecificAdminView = () => {
     }, [imagesByDocType]);
 
     useEffect(() => {
-        console.log("docStatus updated to:", docStatus);
+        console.log('docStatus updated to:', docStatus);
     }, [docStatus]);
 
     const getFilesByDocType = async (userEmail, documentType) => {
@@ -123,32 +125,9 @@ const UserSpecificAdminView = () => {
         fetchProfileData(individualUser);
     }, [individualUser]);
 
-    console.log(imagesByDocType)
+    console.log(imagesByDocType);
 
     if (!individualUser) return <p>Loading...</p>;
-
-    // const {
-    //     brainIntegrationTraining,
-    //     clinicalHours,
-    //     firstAidTraining,
-    //     cprCert,
-    //     videoPresentation,
-    //     insurance,
-    // } = individualUser.certListUploadStatus;
-
-    const getStatusBadgeClass = (status) => {
-        switch (status) {
-            case 'pending approval':
-            case 'pending':
-                return 'bg-school-bus-yellow text-black';
-            case 'declined':
-                return 'bg-red text-white';
-            case 'approved':
-                return 'bg-green-is-good text-white';
-            default:
-                return 'bg-gray text-black';
-        }
-    };
 
     const nickname = individualUser.userEmail.split('@')[0];
     console.log(nickname);
@@ -156,13 +135,13 @@ const UserSpecificAdminView = () => {
     const handleClick = async (documentName) => {
         const documentType = docTypeMapping[documentName];
         setSelectedDocumentName(documentName);
-        setSelectedDocumentType(documentType); 
+        setSelectedDocumentType(documentType);
         console.log(documentName);
 
         try {
-            setFileModalOpen(false); 
+            setFileModalOpen(false);
             await getFilesByDocType(individualUser.userEmail, documentType);
-            setFileModalOpen(true); 
+            setFileModalOpen(true);
         } catch (error) {
             console.error('Error fetching document data:', error);
         }
@@ -172,41 +151,42 @@ const UserSpecificAdminView = () => {
         setNewDocStatus(e.target.value);
     };
 
-
     const handleInputChange = (e) => {
         console.log('change handled');
-        
-        setInputs(e.target.value)
+
+        setInputs(e.target.value);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!individualUser) {
-            console.error("Individual user is not defined");
+            console.error('Individual user is not defined');
             return;
         }
 
         console.log('Admin doc review form submitted');
         try {
-            const newStatus = await updateDocumentStatusbyAdmin(individualUser, newDocStatus, selectedDocumentType);
-            setNewDocStatus(newStatus)
-            console.log("Document status updated successfully");
+            const newStatus = await updateDocumentStatusbyAdmin(
+                individualUser,
+                newDocStatus,
+                selectedDocumentType,
+            );
+            setNewDocStatus(newStatus);
+            console.log('Document status updated successfully');
             const messageData = {
-                message: inputs, 
-                userEmail: individualUser.userEmail, 
+                message: inputs,
+                userEmail: individualUser.userEmail,
                 admin: user.email,
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
-    
-        
+
             await createAdminMessage(messageData);
-    
-        
-            console.log("Admin message created successfully");
-    
-            setFileModalOpen(false); 
+
+            console.log('Admin message created successfully');
+
+            setFileModalOpen(false);
         } catch (error) {
-            console.log("Error updating document status:", error);
+            console.log('Error updating document status:', error);
         }
     };
 
@@ -349,7 +329,7 @@ const UserSpecificAdminView = () => {
                     imagesByDocType={imagesByDocType}
                     onSubmit={handleSubmit}
                     onChange={handleChange}
-                    handleInputChange={handleInputChange} 
+                    handleInputChange={handleInputChange}
                     newDocStatus={newDocStatus}
                     inputs={inputs}
                     setInputs={setInputs}

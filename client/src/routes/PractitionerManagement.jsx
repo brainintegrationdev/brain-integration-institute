@@ -9,10 +9,10 @@ import UserList from '../components/UserList';
 import { Outlet, useParams } from 'react-router-dom';
 
 const PractitionerManagement = () => {
-    const { getAllUsers, users } = useContext(AdminContext);
+    const { getAllUsers } = useContext(AdminContext);
     const { userId } = useParams();
 
-    // console.log(users.userEmail.firstName);
+  
 
     useEffect(() => {
         getAllUsers();

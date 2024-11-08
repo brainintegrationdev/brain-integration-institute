@@ -17,7 +17,7 @@ const ApprovalMessageSchema = new mg.Schema({
     userEmail: { type: Schema.Types.String, ref: 'User'},
 });
 
-// const ApprovalModel = mg.model('approvalMessages', ApprovalMessageSchema);
+
 
 const ApprovalModel = mg.model('Approval', ApprovalMessageSchema);
 

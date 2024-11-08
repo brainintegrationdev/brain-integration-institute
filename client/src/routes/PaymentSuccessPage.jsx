@@ -6,6 +6,9 @@ import { useLocation } from 'react-router-dom';
 import { CloudinaryContext } from '../contexts';
 import { useAuth0 } from '@auth0/auth0-react';
 
+
+//make this a modal instead
+
 export const PaymentSuccessPage = ({ setStudyGuideAccess }) => {
     const [showModal, setShowModal] = useState(true);
     const location = useLocation();

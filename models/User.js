@@ -10,7 +10,7 @@ const UploadStatus = {
     DECLINED: 'declined',
 };
 
-// User Model Blueprint
+
 const UserSchema = new mg.Schema({
     // User's Email
     userEmail: {
@@ -31,7 +31,7 @@ const UserSchema = new mg.Schema({
         type: String,
         required: true,
         unique: true,
-        default: '', // first and last name
+        default: '', 
     },
 
     firstName: {
