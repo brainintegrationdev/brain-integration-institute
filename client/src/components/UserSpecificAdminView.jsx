@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useContext, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { AdminContext } from '../contexts';
 import ViewFileModal from './ViewFileModal';
@@ -42,6 +42,7 @@ const UserSpecificAdminView = () => {
     const [newDocStatus, setNewDocStatus] = useState('');
     // const [selectedDocUrl, setSelectDocUrl] = useState('')
     const [selectedDocumentType, setSelectedDocumentType] = useState('');
+    const navigate = useNavigate();
 
     const docTypeMapping = {
         'Brain Integration Training': 'brainIntegrationTraining',
@@ -162,9 +163,14 @@ const UserSpecificAdminView = () => {
         }
     };
 
+    const handleBackButton = () => {
+        navigate('/admin/practitioner-management')
+    }
+
     return (
         <div className="flex flex-col items-center w-full gap-6">
             <div className="flex items-center gap-8">
+                <button className="back-button" onClick={handleBackButton}>&lt; Back</button>
                 <div className="flex bg-yet-another-light-grey w-[739px] h-[355px] pt-10 pl-10 pb-10">
                     {profileData && Object.keys(profileData).length > 0 ? (
                         <>
@@ -307,7 +313,7 @@ const UserSpecificAdminView = () => {
                     onChange={handleChange}
                     newDocStatus={newDocStatus}
                 >
-                   
+
                 </ViewFileModal>
             )}
         </div>
