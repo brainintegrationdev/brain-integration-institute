@@ -43,6 +43,7 @@ const UserSpecificAdminView = () => {
     // const [selectedDocUrl, setSelectDocUrl] = useState('')
     const [selectedDocumentType, setSelectedDocumentType] = useState('');
     const navigate = useNavigate();
+    const [filesToDelete, setFilesToDelete] = useState([])
 
     const docTypeMapping = {
         'Brain Integration Training': 'brainIntegrationTraining',
@@ -167,6 +168,21 @@ const UserSpecificAdminView = () => {
         navigate('/admin/practitioner-management')
     }
 
+    const handleCheckboxClick = (documentName) => {
+        const documentType = docTypeMapping[documentName];
+        if (filesToDelete.includes(documentType)) {
+            setFilesToDelete(filesToDelete.filter(file => file !== documentType))
+        } else {
+            setFilesToDelete([...filesToDelete, documentType])
+        }
+    }
+
+    const handleDeleteFiles = () => {
+        if (confirm('Delete Selected Files?')) {
+            console.log('foo')
+        }
+    }
+
     return (
         <div className="flex flex-col items-center w-full gap-6">
             <div className="flex items-center gap-8">
@@ -227,6 +243,7 @@ const UserSpecificAdminView = () => {
                         src={Trashcan}
                         alt="Trash can"
                         className="pb-10 pl-10"
+                        onClick={handleDeleteFiles}
                     />
                 </button>
                 <ul className="pl-5">
@@ -274,6 +291,8 @@ const UserSpecificAdminView = () => {
                             <input
                                 type="checkbox"
                                 className="custom-checkbox"
+                                disabled={doc.status.toLowerCase() === "waiting for upload"}
+                                onClick={() => handleCheckboxClick(doc.name)}
                             />
                             <li>
                                 {doc.name}:
@@ -290,12 +309,22 @@ const UserSpecificAdminView = () => {
                                 className="w-[40px]"
                                 alt={`${doc.name} icon`}
                             />
-                            <button
-                                className="border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]"
-                                onClick={() => handleClick(doc.name)}
-                            >
-                                View File
-                            </button>
+                            {doc.status.toLowerCase() === "waiting for upload"
+                                ?
+                                (<button
+                                    className={"border border-gray text-gray rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]"}
+                                    disabled={true}
+                                >
+                                    View File
+                                </button>)
+                                :
+                                (<button
+                                    className={"border border-black rounded px-4 py-1 ml-4 font-bold shadow-lg w-[116px]"}
+                                    onClick={() => handleClick(doc.name)}
+                                >
+                                    View File
+                                </button>)
+                            }
                         </div>
                     ))}
                 </ul>
