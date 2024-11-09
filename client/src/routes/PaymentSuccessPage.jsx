@@ -14,12 +14,9 @@ export const PaymentSuccessPage = ({ setStudyGuideAccess }) => {
     const cloudinaryUrl = queryParams.get('cloudinaryUrl');
     const assessmentUrl = queryParams.get('assessmentUrl');
     const { email } = useContext(CloudinaryContext);
-    const { getAccessTokenSilently, user } = useAuth0();
+    const { getAccessTokenSilently } = useAuth0();
 
-    console.log(showModal);
-    console.log(studyGuideAccess);
-    console.log(user)
-    console.log(email)
+ 
 
     useEffect(() => {
         if (showModal) {

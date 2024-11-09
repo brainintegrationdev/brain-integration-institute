@@ -18,9 +18,6 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-//will need get route for user profile pic
-
-//create delete route
 
 documentRouter.get('/:nickname', validateAuthToken, async (req, res) => {
     const nickname = req.params.nickname;
@@ -40,13 +37,11 @@ documentRouter.get('/:nickname', validateAuthToken, async (req, res) => {
 
 //get docs by doc type/folder
 documentRouter.get('/:userEmail/:documentType', validateAuthToken, async (req, res) => {
-    // Extract userEmail and documentType from request params
     const { userEmail, documentType } = req.params;
 
     // Remove the domain from userEmail
     const nickname = userEmail.split('@')[0];
     
-    // Construct the folder path
     const folder = `users/${nickname}/${documentType}`;
     console.log('Fetching images from folder:', folder);
     
@@ -64,7 +59,7 @@ documentRouter.get('/:userEmail/:documentType', validateAuthToken, async (req, r
 
 documentRouter.get('/certificate', validateAuthToken, async (req, res) => {
     try {
-        const certificates = await getCertificateFromCloudinary('certificate'); // specify folder
+        const certificates = await getCertificateFromCloudinary('certificate');
         console.log('Fetched certificates from certificate folder');
         res.json(certificates);
     } catch (error) {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
@@ -5,7 +6,6 @@ import BrainIntegrationSeal from '../../assets/icons/BrainIntegrationSeal.png';
 import bell from '../../assets/icons/bell.png';
 import placeholderProfilePic from '../../assets/icons/placeholderProfilePic.png';
 import { CloudinaryContext } from '../../contexts';
-import { AdminContext } from '../../contexts';
 import { Menu, X } from 'lucide-react';
 import axios from 'axios';
 
@@ -20,22 +20,17 @@ export const Navbar = () => {
     const { imageUrl, getUserMetaData, userMetaData } =
         useContext(CloudinaryContext);
 
-    // const { getUserById, individualUser, setIndividualUser } =
-    //     useContext(AdminContext);
     const [isOpen, setIsOpen] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [isLargeScreen, setIsLargeScreen] = useState(
         window.innerWidth >= 768,
     );
-    // const AUTH0_DOMAIN = import.meta.env.VITE_AUTH0_DOMAIN
 
     const handleLogin = async () => {
         await loginWithRedirect({
             authorizationParams: { redirect_uri: location.origin + '/profile' },
         });
     };
-
-    // const isAdmin = user?.['https://brainintegration.com/isAdmin'];
 
     const checkForAdmin = () => {
         if (userMetaData && userMetaData.isAdmin) {
@@ -223,7 +218,6 @@ export const Navbar = () => {
                     )}
                 </div>
 
-                {/* Navigation links */}
                 <div
                     className={`${
                         isOpen || isLargeScreen ? 'flex' : 'hidden'

@@ -10,7 +10,6 @@ const { staticSiteRouter } = require('./routes/static');
 
 const server = ex();
 
-// server.use(logger)
 server.use(enableCors)
 
 server.use(ex.json());
@@ -30,12 +29,12 @@ server.get('/api/files', (req, res) => {
 
 
 server.post('/webhook', (req, res) => {
-    const payload = req.body; // Handle webhook payload
+    const payload = req.body; 
     console.log('Webhook received:', payload);
     res.status(200).send({ message: 'Webhook received successfully' });
 });
 
-// server.use(errorHandler);
+
 
 
 module.exports = {

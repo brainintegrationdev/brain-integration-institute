@@ -4,7 +4,6 @@ import {
 } from 'react-router-dom';
 import { Profile } from '../routes/Profile';
 import { Root } from '../routes/Root';
-// import { Auth } from '../routes/Auth';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Home } from '../routes/Home';
 import { AboutUs } from '../routes/AboutUs';
@@ -17,9 +16,8 @@ import AddAdmins from '../routes/AddAdmins';
 import PractitionerManagement from '../routes/PractitionerManagement';
 import AdminUploadManagement from '../routes/AdminUploadManagement';
 import MessagingHub from '../routes/MessagingHub';
-import UserList from '../components/UserList';
 import UserSpecificAdminView from '../components/UserSpecificAdminView';
-// import PaymentSuccessPage from "../routes/PaymentSuccessPage";
+
 
 const router = createBrowserRouter([
     {
@@ -30,18 +28,12 @@ const router = createBrowserRouter([
                 index: true,
                 element: <Home />,
             },
-            // {
-            //   path: '/about',
-            //   element: <About />
-            // },
+           
             {
                 path: '/profile',
                 element: <Profile />,
             },
-            // {
-            //     path: '/about',
-            //     element: <AboutUs />,
-            // },
+         
             {
                 path: '/certification',
                 element: <Certification />,

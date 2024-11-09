@@ -1,10 +1,7 @@
 const ex = require('express');
 const axios = require('axios');
-require('dotenv').config();
-
-const cors = require('cors');
+require('dotenv').config()
 const { validateAuthToken } = require('../middleware/auth.js');
-const { validateAuthTokenMiddleware } = require('../middleware/auth.js');
 
 const adminRouter = ex.Router();
 
@@ -12,7 +9,7 @@ const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN;
 const AUTH0_M2M_CLIENT_ID = process.env.AUTH0_M2M_CLIENT_ID;
 const AUTH0_CLIENT_SECRET = process.env.AUTH0_CLIENT_SECRET;
 const AUTH0_MANAGEMENT_API_AUDIENCE = process.env.AUTH0_MANAGEMENT_API_AUDIENCE;
-const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE;
+// const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE;
 
 const getAuth0Token = async () => {
     const { data } = await axios.post(`https://${AUTH0_DOMAIN}/oauth/token`, {
@@ -36,29 +33,32 @@ const checkAdminRole = (req, res, next) => {
     }
 };
 
-const getUserRoles = async (userId) => {
-    const token = await getAuth0Token();
-    const response = await axios.get(
-        `https://${AUTH0_DOMAIN}/api/v2/users/${userId}/roles`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        },
-    );
-    return response.data; // This will contain the roles of the user
-};
+
+//no longer using below function, retaining for possible future use
+// const getUserRoles = async (userId) => {
+//     const token = await getAuth0Token();
+//     const response = await axios.get(
+//         `https://${AUTH0_DOMAIN}/api/v2/users/${userId}/roles`,
+//         {
+//             headers: {
+//                 Authorization: `Bearer ${token}`,
+//             },
+//         },
+//     );
+//     return response.data; // This will contain the roles of the user
+// };
 
 adminRouter.use((req, res, next) => {
     console.log('Admin router accessed');
     next();
 });
-// api/admin/assign-admin-role/:userId
 
 adminRouter.get('/', async (req, res) => {
     console.log('get route');
 });
 
+
+//post request to obtain token for managment api
 adminRouter.post('/get-management-token', async (req, res) => {
     try {
         const response = await axios.post(
@@ -73,7 +73,7 @@ adminRouter.post('/get-management-token', async (req, res) => {
             },
             {
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded', // Proper content type
+                    'Content-Type': 'application/x-www-form-urlencoded', 
                 },
             }
         );
@@ -87,6 +87,8 @@ adminRouter.post('/get-management-token', async (req, res) => {
 });
 
 //delete user with Auth0 admin api
+//FE makes request to this endpoint, which in turn mains request to auth0 api
+//cors proxy route
 adminRouter.delete('/delete-user/:userId', async (req, res) => {
     try {
         const { userId } = req.params;

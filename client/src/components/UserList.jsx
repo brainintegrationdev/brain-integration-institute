@@ -1,7 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
 import { AdminContext } from '../contexts';
-
-import { useAuth0 } from '@auth0/auth0-react';
 import ProgressBar0 from '../assets/icons/ProgressBar0.png';
 import ProgressBar1 from '../assets/icons/ProgressBar1.png';
 import ProgressBar2 from '../assets/icons/ProgressBar2.png';
@@ -15,7 +13,6 @@ import GreenRedDot from '../assets/icons/GreenRedDots.png';
 import Trashcan from '../assets/icons/Trashcan.png';
 import Pracsearch from '../assets/icons/Pracsearch.svg';
 import DeleteUserModal from './DeleteUserModal';
-// import { CircleUserRound } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 function UserList() {
@@ -29,20 +26,13 @@ function UserList() {
         deleteUser,
     } = useContext(AdminContext);
 
-    const { user } = useAuth0();
+    // const { user } = useAuth0();
 
-    console.log(profileData);
-
-    // const { progress } = useContext(CloudinaryContext);
-
-    const isAdmin = user?.['https://brainintegration.com/isAdmin'];
-
-    console.log('Is Admin:', isAdmin);
+    // const isAdmin = user?.['https://brainintegration.com/isAdmin'];
 
     const [searchInput, setSearchInput] = useState('');
     const [usersToDelete, setUsersToDelete] = useState([]);
     const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
-
     const [confirmationText, setConfirmationText] = useState('');
     const navigate = useNavigate();
 
@@ -57,8 +47,6 @@ function UserList() {
         ProgressBar7,
         ProgressBar8,
     ];
-
-    // const { user } = useAuth0()
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -89,9 +77,6 @@ function UserList() {
         navigate(`/admin/practitioner-management/${userId}`);
     };
 
-    //find individual user based on checked input box.
-    //setindividualUser like the above function
-
     const handleUserCheckboxClick = (userEmail) => {
         setUsersToDelete((prevUsersToDelete) => {
             if (prevUsersToDelete.includes(userEmail)) {
@@ -121,19 +106,6 @@ function UserList() {
         }
     };
 
-    //make a function to call delete user and update state
-    //call delete user with usersToDelete as an argument
-    //then inside that function, clear usersToDelete
-
-    //call handleusercheckbox click to set the user
-
-    // const handlePromote = async (userId) => {
-    //     await updateUserToAdmin(userId); // Call your promotion function here
-    //     alert('User promoted to admin!');
-    // };
-
-    console.log(users);
-
     return (
         <div>
             <div className="flex items-center border border-none rounded-xl w-[660px] bg-gray mb-10">
@@ -149,7 +121,6 @@ function UserList() {
                 <img src={Pracsearch} alt={'magnifying glass'} />
             </div>
             <div className="flex items-center w-full">
-              
                 <button onClick={handleDeleteUserClick} className="mr-auto">
                     <img
                         src={Trashcan}
@@ -157,10 +128,8 @@ function UserList() {
                         className="pb-10 pl-10"
                     />
                 </button>
-
-              
                 {confirmationText && (
-                     <h3 className="font-bold text-xl text-red mx-auto ml-4 pb-10">
+                    <h3 className="font-bold text-xl text-red mx-auto ml-4 pb-10">
                         {confirmationText}
                     </h3>
                 )}

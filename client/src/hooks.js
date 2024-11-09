@@ -42,7 +42,6 @@ export const useHttpAuthClient = () => {
             );
 
             const data = await response.json();
-            // console.log(data);
 
             if (!response.ok) {
                 console.error(
@@ -118,7 +117,6 @@ export const useFileAPI = () => {
 export const useProfileForm = (initialValues) => {
     const [inputs, setInputs] = useState(initialValues);
     const { getAccessTokenSilently, user } = useAuth0();
-    // const [profileData, setProfileData] = useState(null)
 
     const handleInputChange = (e) => {
         console.log('change handled');
@@ -230,11 +228,7 @@ const useProfileData = (user) => {
             
         }, [user]);
         
-       
-        
-  
 
-    console.log(profileData)
 
     return { profileData, loading, error, fetchProfileData, setProfileData }; 
 };

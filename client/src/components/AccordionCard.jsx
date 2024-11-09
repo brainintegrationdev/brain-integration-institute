@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useState, useContext, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import UploadBtn from '../assets/icons/UploadBtn.png';
 import GetStudyGuideBtn from '../assets/icons/GetStudyGuideBtn.png';
@@ -16,7 +15,6 @@ import ProgressBar7 from '../assets/icons/ProgressBar7.png';
 import ProgressBar8 from '../assets/icons/ProgressBar8.png';
 import StudyGuidePages from '../assets/icons/StudyGuidePages.png';
 import PayforandStart from '../assets/icons/PayforandStart.png';
-
 import Assessment from './Assessment';
 import Insurance from './Insurance';
 import Brain from './Brain';
@@ -34,37 +32,27 @@ import ProfilePhotoUpload from './ProfilePhotoUpload.jsx';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { Accordion } from 'react-accessible-accordion';
-import e from 'cors';
+
 import { CloudinaryContext } from '../contexts';
 import Payment from './Payment.jsx';
 
 const AccordionCard = ({ certStatus }) => {
     // eslint-disable-next-line no-unused-vars
     const {
-        uwConfig,
         initializeCloudinaryWidget,
-        filename,
         getFilesInFolder,
-        getCloudinaryFiles,
         getFiles,
-        files,
         progress,
         setProgress,
         updateUserProgress,
-        isSubmitted,
-        setIsSubmitted,
         fileMetaData,
         setFileMetaData,
-        isLoading,
-        setIsLoading,
         getUserMetaData,
         deleteFile,
         deleteModalOpen,
         setDeleteModalOpen,
-        updateUserStudyGuide,
         studyGuideAccess,
         setStudyGuideAccess,
-        email,
         showPayment,
         setShowPayment,
         showModal,
@@ -75,26 +63,14 @@ const AccordionCard = ({ certStatus }) => {
     } = useContext(CloudinaryContext);
 
     const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
-
     const [sectionName, setSectionName] = useState('');
-
-    const [selectedFile, setSelectedFile] = useState(null);
     const [userMetaData, setUserMetaData] = useState({}); // move this to context
     const [currentFileToDelete, setCurrentFileToDelete] = useState(null);
     const [stripePromise, setStripePromise] = useState(null);
     const [cloudinaryFiles, setCloudinaryFiles] = useState([]);
-    // const [certListUploadStatus, setCertListUploadStatus] = useState({});
 
     //checks to see if every section has an uploaded file, if so returns true
     const [isUploaded, setIsUploaded] = useState(false);
-
-    const handleDeleteClick = (publicId) => {
-        const sectionName = 'Brain'; // or dynamically get section name based on the accordion section
-        deleteFile(publicId, sectionName); // Pass section name here
-    };
-
-    // const [showPayment, setShowPayment] = useState(false);
-    // const [showModal, setShowModal] = useState(false);
 
     const certProgressImages = [
         ProgressBar0,
@@ -108,6 +84,7 @@ const AccordionCard = ({ certStatus }) => {
         ProgressBar8,
     ];
 
+    //will use this to set badge colors based on status
     const getStatusBadgeClass = (status) => {
         switch (status) {
             case 'pending approval':
@@ -121,19 +98,7 @@ const AccordionCard = ({ certStatus }) => {
         }
     };
 
-    console.log(cloudinaryFiles, 'user specific cloudinary files');
-    console.log(fileMetaData)
-    // console.log(stripePromise);
-
     //will need to add put request to user metadata route to change studyGuideAccess to true, just saving in state for now
-
-    // const closeModal = () => {
-    //     setShowModal(false);
-    // };
-
-    // const redirectToAssessment = () => {
-    //     window.open('https://forms.gle/uL6ySYPDuwuXQj487', '_blank');
-    // };
 
     const getStudyGuide = async () => {
         console.log('getStudyGuide function invoked');
@@ -238,8 +203,6 @@ const AccordionCard = ({ certStatus }) => {
         }
     };
 
-    // console.log(progress);
-
     const showFile = () => {
         console.log('file shown');
     };
@@ -249,38 +212,18 @@ const AccordionCard = ({ certStatus }) => {
         initializeCloudinaryWidget(section);
         const updatedStatus = {
             ...certListUploadStatus,
-            [sectionName]: 'pending',
+            [sectionName]: 'pending approval',
         };
         await updateUserDocumentStatus(updatedStatus);
         setCertListUploadStatus(updatedStatus);
+        console.log(certListUploadStatus)
         console.log('Calling updateUserProgress with value:', 1);
     };
 
-    // if (isAuthenticated) {
-    //     console.log('User Data:', user);
-    // }
-
-    // const checkAllSectionsUploaded = () => {
-    //     const sections = [
-    //         brainIntegrationTraining,
-    //         clinicalHours,
-    //         firstAidTraining,
-    //         cprCert,
-    //         videoPresentation,
-    //         insurance,
-    //     ];
-    //     const allUploaded = sections.every((section) => section.length > 0);
-    //     setIsUploaded(allUploaded);
-    // };
-
     useEffect(() => {
-        console.log('Fetching publishable key...');
-        // Fetch the publishable key and set the stripePromise
-
+        console.log('Fetching publishable key');
         getPublishableKey();
     }, []);
-
-    console.log(user.sub)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -310,10 +253,6 @@ const AccordionCard = ({ certStatus }) => {
         fetchData();
     }, [user]);
 
-    // useEffect(() => {
-    //     checkAllSectionsUploaded();
-    // }, [fileMetaData]);
-
     const getSectionFileNames = (sectionName) => {
         const filteredFiles = fileMetaData.filter(
             (file) => file.sectionName === sectionName,
@@ -328,7 +267,6 @@ const AccordionCard = ({ certStatus }) => {
         const foundFile = fileMetaData.find(
             (file) => file.filename === fileName,
         );
-
         return foundFile ? foundFile.publicId : null;
     };
 
@@ -355,12 +293,6 @@ const AccordionCard = ({ certStatus }) => {
     const insuranceMetaData = fileMetaData.filter((metadata) => {
         return metadata.sectionName === 'insurance';
     });
-
-    // const certListUploadStatus = userMetaData.certListUploadStatus
-
-    console.log(fileMetaData, 'file metadata');
-    console.log(userMetaData, 'user metadata');
-    console.log(certListUploadStatus);
 
     return (
         <div>
@@ -395,7 +327,6 @@ const AccordionCard = ({ certStatus }) => {
                         alt={`Progress level ${user.userUploadProgress}`}
                     />
                 </div>
-
                 <Accordion
                     allowMultipleExpanded={true}
                     allowZeroExpanded={true}
@@ -413,7 +344,6 @@ const AccordionCard = ({ certStatus }) => {
                                 Complete 500 hours of relevant brain integration
                                 training.
                             </h1>
-
                             <br></br>
                             <p className="font-fira text-black text-sm md:text-base font-normal mt-4">
                                 The Brain Integration Training program requires
@@ -424,7 +354,6 @@ const AccordionCard = ({ certStatus }) => {
                                 and Competency Base. Below is a detailed
                                 breakdown of each component:
                             </p>
-
                             <h3 className="font-fira text-black text-sm md:text-base font-bold mt-4">
                                 Standard Knowledge Base Standard Knowledge Base
                             </h3>
@@ -446,7 +375,6 @@ const AccordionCard = ({ certStatus }) => {
                                 brain integration and their practical
                                 applications in clinical settings.
                             </p>
-
                             <h3 className="font-fira text-black text-sm md:text-base font-bold mt-4">
                                 Professional Training
                             </h3>
@@ -464,7 +392,6 @@ const AccordionCard = ({ certStatus }) => {
                                 business practices, including client management,
                                 record-keeping, and financial responsibilities.
                             </p>
-
                             <h3 className="font-fira text-black text-sm md:text-base font-bold mt-4">
                                 Competency Base
                             </h3>
@@ -487,7 +414,6 @@ const AccordionCard = ({ certStatus }) => {
                                 standards required to provide high-quality brain
                                 integration services.
                             </p>
-
                             <div className="flex flex-col gap-10 pt-10 pb-2">
                                 <div className="flex justify-center gap-10 pb-5">
                                     <div className="flex flex-col justify-start items-start pl-0">
@@ -522,7 +448,6 @@ const AccordionCard = ({ certStatus }) => {
                                                 ) : null,
                                             )}
                                         </ul>
-
                                         {getSectionFileNames(
                                             'brainIntegrationTraining',
                                         ).length > 0 && (
@@ -532,7 +457,6 @@ const AccordionCard = ({ certStatus }) => {
                                                 }
                                             </div>
                                         )}
-
                                         {deleteModalOpen && (
                                             <DeleteModal
                                                 open={deleteModalOpen}
@@ -546,7 +470,6 @@ const AccordionCard = ({ certStatus }) => {
                                                         className="w-70px h-[70px]"
                                                         alt="Delete File"
                                                     />
-
                                                     <h3 className="text-lg text-gray-500 font-bold">
                                                         Are you sure you want to
                                                         delete?
@@ -595,12 +518,6 @@ const AccordionCard = ({ certStatus }) => {
                                             </DeleteModal>
                                         )}
                                     </div>
-                                    {/* <p className="mt-2">
-                                        Status:{' '}
-                                        {certListUploadStatus.brainIntegrationTraining ||
-                                            'Not submitted'}
-                                    </p> */}
-
                                     <div className="flex justify-center items-center">
                                         <button>
                                             <img
@@ -653,7 +570,6 @@ const AccordionCard = ({ certStatus }) => {
                                     special needs
                                 </li>
                             </ul>
-
                             <div className="flex flex-col gap-10 pt-10 pb-2">
                                 <div className="flex justify-center gap-10 pb-5">
                                     <div className="flex flex-col justify-start items-start pl-0">
@@ -688,7 +604,6 @@ const AccordionCard = ({ certStatus }) => {
                                                 ) : null,
                                             )}
                                         </ul>
-
                                         {getSectionFileNames('clinicalHours')
                                             .length > 0 && (
                                             <div>
@@ -745,7 +660,7 @@ const AccordionCard = ({ certStatus }) => {
                                                                 deleteFile(
                                                                     publicId,
                                                                     sectionName,
-                                                                ); // Pass both publicId and sectionName
+                                                                );
                                                             } else {
                                                                 console.error(
                                                                     'Public ID not found for file:',
@@ -760,7 +675,6 @@ const AccordionCard = ({ certStatus }) => {
                                             </DeleteModal>
                                         )}
                                     </div>
-
                                     <div className="flex flex-col items-center w-1/3 pt-20">
                                         <DeleteTooltip
                                             text="Delete current file to upload new one"
@@ -810,7 +724,6 @@ const AccordionCard = ({ certStatus }) => {
                                 JPEG. Click the “Upload” button and select your
                                 files.
                             </p>
-
                             <div className="flex justify-center items-start pt-20">
                                 <div className="w-1/3">
                                     <ul className="pl-0">
@@ -852,7 +765,6 @@ const AccordionCard = ({ certStatus }) => {
                                             }
                                         </div>
                                     )}
-
                                     {deleteModalOpen && (
                                         <DeleteModal
                                             open={deleteModalOpen}
@@ -866,7 +778,6 @@ const AccordionCard = ({ certStatus }) => {
                                                     className="w-70px h-[70px]"
                                                     alt="Delete File"
                                                 />
-
                                                 <h3 className="text-lg text-gray-500 font-bold">
                                                     Are you sure you want to
                                                     delete?
@@ -915,7 +826,6 @@ const AccordionCard = ({ certStatus }) => {
                                         </DeleteModal>
                                     )}
                                 </div>
-
                                 <div className="flex flex-col items-center w-1/3 pt-20">
                                     <DeleteTooltip
                                         text="Delete current file to upload new one"
@@ -974,7 +884,6 @@ const AccordionCard = ({ certStatus }) => {
                                 Once completed, copy the certificate and upload
                                 the documents.
                             </p>
-
                             <div className="flex justify-center items-start pt-20">
                                 <div className="w-1/3">
                                     <ul className="pl-0">
@@ -1027,7 +936,6 @@ const AccordionCard = ({ certStatus }) => {
                                                     className="w-70px h-[70px]"
                                                     alt="Delete File"
                                                 />
-
                                                 <h3 className="text-lg text-gray-500 font-bold">
                                                     Are you sure you want to
                                                     delete?
@@ -1056,13 +964,13 @@ const AccordionCard = ({ certStatus }) => {
                                                                 currentFileToDelete,
                                                             );
                                                         const sectionName =
-                                                            'cprCert'; // Replace 'Brain' with the dynamic section name as needed
+                                                            'cprCert';
 
                                                         if (publicId) {
                                                             deleteFile(
                                                                 publicId,
                                                                 sectionName,
-                                                            ); // Pass both publicId and sectionName
+                                                            );
                                                         } else {
                                                             console.error(
                                                                 'Public ID not found for file:',
@@ -1077,7 +985,6 @@ const AccordionCard = ({ certStatus }) => {
                                         </DeleteModal>
                                     )}
                                 </div>
-
                                 <div className="flex flex-col items-center w-1/3 pt-20">
                                     <DeleteTooltip
                                         text="Delete current file to upload new one"
@@ -1140,14 +1047,13 @@ const AccordionCard = ({ certStatus }) => {
                                     Pause-lock procedure
                                 </li>
                             </ul>
-
                             <div className="flex justify-center items-start pt-20">
                                 <div className="w-1/3">
                                     <ul>
                                         {getSectionFileNames(
                                             'videoPresentation',
                                         ).map((file, index) =>
-                                            file ? ( // Only render if file is truthy
+                                            file ? (
                                                 <li
                                                     key={index}
                                                     className="flex gap-5 mb-2"
@@ -1196,7 +1102,6 @@ const AccordionCard = ({ certStatus }) => {
                                                     className="w-70px h-[70px]"
                                                     alt="Delete File"
                                                 />
-
                                                 <h3 className="text-lg text-gray-500 font-bold">
                                                     Are you sure you want to
                                                     delete?
@@ -1225,13 +1130,13 @@ const AccordionCard = ({ certStatus }) => {
                                                                 currentFileToDelete,
                                                             );
                                                         const sectionName =
-                                                            'videoPresentation'; // Replace 'Brain' with the dynamic section name as needed
+                                                            'videoPresentation';
 
                                                         if (publicId) {
                                                             deleteFile(
                                                                 publicId,
                                                                 sectionName,
-                                                            ); // Pass both publicId and sectionName
+                                                            );
                                                         } else {
                                                             console.error(
                                                                 'Public ID not found for file:',
@@ -1246,7 +1151,6 @@ const AccordionCard = ({ certStatus }) => {
                                         </DeleteModal>
                                     )}
                                 </div>
-
                                 <div className="flex flex-col items-center w-1/3 pt-20">
                                     <DeleteTooltip
                                         text="Delete current file to upload new one"
@@ -1275,7 +1179,6 @@ const AccordionCard = ({ certStatus }) => {
                             </div>
                         </div>
                     </Video>
-
                     <Insurance
                         title="Insurance"
                         sectionName="insurance"
@@ -1305,7 +1208,6 @@ const AccordionCard = ({ certStatus }) => {
                                     button below and select your file.
                                 </li>
                             </ul>
-
                             <div className="flex justify-center items-start pt-10">
                                 <div className="w-1/3">
                                     <ul className="pl-0">
@@ -1387,14 +1289,15 @@ const AccordionCard = ({ certStatus }) => {
                                                                 currentFileToDelete,
                                                             );
                                                         const sectionName =
-                                                            'insurance'; // Replace 'Brain' with the dynamic section name as needed
-
+                                                            'insurance';
                                                         if (publicId) {
                                                             deleteFile(
                                                                 publicId,
                                                                 sectionName,
-                                                                console.log('deleted file')
-                                                            ); // Pass both publicId and sectionName
+                                                                console.log(
+                                                                    'deleted file',
+                                                                ),
+                                                            );
                                                         } else {
                                                             console.error(
                                                                 'Public ID not found for file:',
@@ -1409,7 +1312,6 @@ const AccordionCard = ({ certStatus }) => {
                                         </DeleteModal>
                                     )}
                                 </div>
-
                                 <div className="flex flex-col items-center w-1/3 pt10 pb-10">
                                     <DeleteTooltip
                                         text="Delete current file to upload new one"
@@ -1440,7 +1342,6 @@ const AccordionCard = ({ certStatus }) => {
                             </div>
                         </div>
                     </Insurance>
-
                     <StudyGuide title={'Study Guide'}>
                         <div className="flex flex-col p-4 md:pl-6 md:pr-6 border rounded-lg border-t-0 border-solid border-black rounded-tr-none rounded-tl-none mb-5">
                             <h1 className="font-fira text-dark-green font-bold text-lg md:text-xl pt-6 md:pt-10">
@@ -1450,7 +1351,6 @@ const AccordionCard = ({ certStatus }) => {
                                 Having knowledge of Structure, Function, and
                                 Processes.
                             </h1>
-
                             <div className="flex gap-16">
                                 <div className="flex-1">
                                     <ul className="min-h-full">
@@ -1474,7 +1374,6 @@ const AccordionCard = ({ certStatus }) => {
                                         <li>Medulla</li>
                                     </ul>
                                 </div>
-
                                 <div className="flex-1">
                                     <ul className="min-h-full">
                                         <li>The Cerebellum</li>
@@ -1499,7 +1398,6 @@ const AccordionCard = ({ certStatus }) => {
                                         <li>Sensory neurons</li>
                                     </ul>
                                 </div>
-
                                 <div className="flex-1">
                                     <div className="min-h-full">
                                         <ul
@@ -1529,7 +1427,6 @@ const AccordionCard = ({ certStatus }) => {
                                         </ul>
                                     </div>
                                 </div>
-
                                 <div className="flex-1">
                                     <div className="min-h-full">
                                         <ul
@@ -1607,7 +1504,6 @@ const AccordionCard = ({ certStatus }) => {
                                 Complete 500 hours of relevant brain integration
                                 training.
                             </h1>
-
                             <p className="font-fira text-black text-base font-normal mt-2">
                                 The Brain Integration Training program requires
                                 a comprehensive 500-hour training to ensure
@@ -1617,7 +1513,6 @@ const AccordionCard = ({ certStatus }) => {
                                 and Competency Base. Below is a detailed
                                 breakdown of each component:
                             </p>
-
                             <h3 className="font-fira text-black text-base font-bold mt-2">
                                 Standard Knowledge Base
                             </h3>
@@ -1638,7 +1533,6 @@ const AccordionCard = ({ certStatus }) => {
                                 for brain integration and their practical
                                 applications in clinical settings.
                             </p>
-
                             <h3 className="font-fira text-black text-base font-bold mt-4">
                                 Professional Training
                             </h3>
@@ -1656,7 +1550,6 @@ const AccordionCard = ({ certStatus }) => {
                                 client management, record-keeping, and financial
                                 responsibilities.
                             </p>
-
                             <h3 className="font-fira text-black text-base font-bold mt-4">
                                 Competency Base
                             </h3>
@@ -1678,7 +1571,6 @@ const AccordionCard = ({ certStatus }) => {
                                 rigorous standards required to provide
                                 high-quality brain integration services.
                             </p>
-
                             <div className="form-flex gap-10 pt-20 pb-5 mt-4">
                                 <button
                                     disabled={isUploaded}

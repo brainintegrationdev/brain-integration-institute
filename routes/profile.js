@@ -70,7 +70,7 @@ profileRouter.post('/create-profile', async (req, res) => {
     console.log(req.body);
     try {
         // Find the user by their email to get the userId
-        const user = await UserModel.findOne({ userEmail: email }); // Assuming the userEmail is used to find the user
+        const user = await UserModel.findOne({ userEmail: email }); 
         if (!user) {
             return res
                 .status(404)
@@ -82,7 +82,7 @@ profileRouter.post('/create-profile', async (req, res) => {
         if (!profileData) {
             // Create the profile with the userId from the User model
             profileData = new ProfileModel({
-                userId: user._id, // Set the userId here
+                userId: user._id, 
                 firstName,
                 lastName,
                 suffix,

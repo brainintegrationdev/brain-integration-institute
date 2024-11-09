@@ -41,7 +41,6 @@ export const AdminProvider = ({ children }) => {
     };
 
     async function getAllUsers() {
-        // const token = await getManagementToken();
         try {
             const accessToken = await getAccessTokenSilently();
             const response = await axios.get(`http://localhost:8080/api/user`, {
@@ -96,24 +95,6 @@ export const AdminProvider = ({ children }) => {
         }
     };
 
-    //create delete user route
-    // const deleteUser = async (userEmail) => {
-    //     try {
-    //         const accessToken = await getAccessTokenSilently();
-    //         const response = await axios.delete(`/api/user/${userEmail}`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${accessToken}`,
-    //             },
-    //         });
-
-    //         console.log(
-    //             `User with ID ${userEmail} has been successfully deleted.`,
-    //         );
-    //         console.log(response.data);
-    //     } catch (error) {
-    //         console.error('Error deleting user:', error);
-    //     }
-    // };
 
     const deleteUser = async (userEmail) => {
         try {

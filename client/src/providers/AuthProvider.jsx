@@ -4,12 +4,6 @@ import { Auth0Provider } from '@auth0/auth0-react';
 
 export const AuthProvider = ({ children }) => {
     
-
-    // const handleLogin = (e) => {
-    //     e.preventDefault()
-    //     // login
-    // }
-
     return (
         <Auth0Provider
             domain={import.meta.env.VITE_AUTH0_DOMAIN}

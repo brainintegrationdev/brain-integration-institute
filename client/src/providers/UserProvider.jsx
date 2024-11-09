@@ -86,10 +86,6 @@ export const UserProvider = ({ children }) => {
                 ([key, value]) => value !== '' && value !== null,
             ),
         );
-        // if (!email) {
-        //     console.error('Email is required to update user profile.');
-        //     return;
-        // }
         try {
             const accessToken = await getAccessTokenSilently();
             const response = await fetch(

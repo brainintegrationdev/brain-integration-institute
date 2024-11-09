@@ -10,28 +10,24 @@ const UploadStatus = {
     DECLINED: 'declined',
 };
 
-// User Model Blueprint
 const UserSchema = new mg.Schema({
-    // User's Email
     userEmail: {
         type: String,
         required: true,
     },
 
     sub: { type: String, required: true, unique: true },
-    // User Profile Picture which a custom hook on the profile side will
-    // use the userId to pull the user's file from Cloudinary in a generated
-    // AdvanceImage.
+
     userProfilePicture: {
         type: String,
         default: '',
     },
-    // User's username
+ 
     userName: {
         type: String,
         required: true,
         unique: true,
-        default: '', // first and last name
+        default: '', 
     },
 
     firstName: {

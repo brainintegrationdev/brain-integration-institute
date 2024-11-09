@@ -49,7 +49,6 @@ const AddAdmins = (userId) => {
             <div>
             {users.length > 0 ? (
                 <div>
-                {/* <h2>{users[0].certListUploadStatus}</h2> */}
                 <h2>{users[1].userEmail}</h2>
                 </div>
                 ) : <div><h2>No users found</h2> </div>}

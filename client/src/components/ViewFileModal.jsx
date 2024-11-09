@@ -1,15 +1,14 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function ViewFileModal({
     open,
     onClose,
-    nickname,
     selectedDocumentName,
     imagesByDocType,
     onSubmit,
     onChange,
-    newDocStatus
+    newDocStatus,
 }) {
     useEffect(() => {
         if (open) {
@@ -47,7 +46,7 @@ export default function ViewFileModal({
                         View file for: {selectedDocumentName}
                     </h3>
                     {imagesByDocType.length > 0 ? (
-                        <img src={imagesByDocType[0].url} alt="Document file" />
+                        <img src={imagesByDocType[0].url} alt="Document file" className='w-100 h-100'/>
                     ) : (
                         <p>No image available</p>
                     )}
@@ -73,12 +72,11 @@ export default function ViewFileModal({
                                     className="mr-2"
                                     onChange={onChange}
                                     checked={newDocStatus === 'declined'}
-
                                 />
                                 Decline
                             </label>
                             <textarea
-                            onChange={onChange}
+                                onChange={onChange}
                                 placeholder="Reason for denial (if applicable)"
                                 className="border border-black rounded-xl p-5 mt-10 w-[300px]"
                             ></textarea>

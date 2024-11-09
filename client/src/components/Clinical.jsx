@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import {
-    
     AccordionItem,
     AccordionItemHeading,
     AccordionItemButton,
@@ -19,11 +18,8 @@ export default function Clinical(props) {
         setIsExpanded(!isExpanded);
     }
 
-  
-
     const { clinicalMetaData } = props;
 
-  
     return (
         <AccordionItem>
             <AccordionItemHeading>

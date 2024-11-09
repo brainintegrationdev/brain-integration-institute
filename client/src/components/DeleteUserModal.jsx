@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 export default function DeleteUserModal({
     open,
     onClose,
-    handleDeleteUserClick,
     handleDeleteProfileClick,
 }) {
     useEffect(() => {
@@ -55,13 +54,13 @@ export default function DeleteUserModal({
                     <div className="mt-4 flex justify-end gap-10">
                         <button
                             onClick={onClose}
-                             className="bg-light-gray w-[100px]  py-2 rounded text-white"
+                            className="bg-light-gray w-[100px]  py-2 rounded text-white"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleDeleteProfileClick}
-                             className="bg-red w-[100px] py-2 rounded text-white"
+                            className="bg-red w-[100px] py-2 rounded text-white"
                         >
                             Delete
                         </button>

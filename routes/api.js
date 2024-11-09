@@ -8,8 +8,6 @@ const { profileRouter } = require('./profile')
 const { adminRouter } = require('./admin')
 const { notifyRouter } = require('./notify')
 const { approvalMessagesRouter } = require('./approvalMessages')
-// const { exampleRouter } = require('./example');
-
 
 const apiRouter = ex.Router();
 
@@ -23,9 +21,6 @@ apiRouter.use('/profile', profileRouter)
 apiRouter.use('/admin', adminRouter)
 apiRouter.use('/notify', notifyRouter)
 apiRouter.use('/approvalmessages', approvalMessagesRouter)
-
-
-
 
 module.exports = {
     apiRouter

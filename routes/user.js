@@ -2,7 +2,6 @@ const ex = require('express');
 
 const {
     getUserMetaData,
-    createUserMetaData,
     editUserMetaData,
     getAllUserMetaData,
     deleteUserMetaData,
@@ -120,12 +119,12 @@ userRouter.put('/:email/progress', async (req, res) => {
 
     try {
         const user = await UserModel.findOneAndUpdate(
-            { userEmail: email }, // Updated to match the correct field name
-            { userUploadProgress }, // Increment the userUploadProgress field
+            { userEmail: email }, 
+            { userUploadProgress }, 
             { new: true, runValidators: true },
         );
 
-        console.log('User found:', user); // Log the found user (or null if not found)
+        console.log('User found:', user); 
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
@@ -243,21 +242,7 @@ userRouter.put('/:email/document-status', async (req, res) => {
     }
 });
 
-// try {
-//     console.log('Attempting to delete file with publicId:', publicId);
-//     const result = await cloudinary.uploader.destroy(publicId);
-//     console.log(result, "cloudinary delete")
-//     if (result.result === 'ok') {
-//         await File.findOneAndDelete({ publicId: publicId });
-//         res.status(200).json({ message: 'File deleted successfully' });
-//     } else {
-//         res.status(404).json({ message: 'File not found' });
-//     }
-// } catch (error) {
-//     console.error('Error deleting file from Cloudinary:', error);
-//     res.status(500).json({ message: 'Error deleting file', error });
-// }
-//});
+
 //delete user route - can only be accessed by admins
 userRouter.delete('/:email', async (req, res) => {
     const email = req.params.email

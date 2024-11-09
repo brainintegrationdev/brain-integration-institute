@@ -9,10 +9,6 @@ const certificateSchema = new Schema({
   
 });
 
-// /// publicId: result.info.public_id,
-// url: result.info.secure_url,
-// uploadDate: result.info.created_at,
-// filename: result.info.original_filename,
 
 const Certificate = mongoose.model('Certificate', certificateSchema);
 

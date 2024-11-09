@@ -7,7 +7,6 @@ import { Cloudinary } from '@cloudinary/url-gen';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 
-// Cloudinary Provider Component
 export const CloudinaryProvider = ({ children }) => {
     // eslint-disable-next-line no-unused-vars
     const [publicId, setPublicId] = useState('');
@@ -34,11 +33,6 @@ export const CloudinaryProvider = ({ children }) => {
     const [profilePhotoUploaded, setProfilePhotoUploaded] = useState(false);
     const [certListUploadStatus, setCertListUploadStatus] = useState({});
     const [certificateData, setCertificateData] = useState({});
-    // const [imagesByDocType, setImagesByDocType] = useState([]);
-
-    const handleProfileUpload = () => {
-        console.log('photo uploaded!');
-    };
 
     const uwConfig = {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUDNAME,
@@ -50,8 +44,6 @@ export const CloudinaryProvider = ({ children }) => {
     const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image/upload`;
     const apiSecret = import.meta.env.VITE_CLOUDINARY_API_SECRET;
     const apiKey = import.meta.VITE_CLOUDINARY_API_KEY;
-
-    // console.log(isAuthenticated);
 
     //gets file metadata
     const getFiles = async () => {
@@ -72,8 +64,6 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('Error fetching files:', error);
         }
     };
-
-    // console.log(user);
 
     //gets files from Cloudinary via callback/cors proxy
     const getFilesInFolder = async () => {
@@ -107,8 +97,6 @@ export const CloudinaryProvider = ({ children }) => {
                 },
             );
             const metaData = response.data;
-
-            // Update state with the fetched metadata
             setUserMetaData(metaData);
             setImageUrl(metaData.userProfilePicture);
 
@@ -117,27 +105,6 @@ export const CloudinaryProvider = ({ children }) => {
             console.error('Error fetching user metadata:', error);
         }
     };
-
-    // const getFilesByDocType = async (nickname, documentType) => {
-    //     try {
-    //         const accessToken = await getAccessTokenSilently();
-    //         const response = await fetch(
-    //             `/api/images/${nickname}/${documentType}`,
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${accessToken}`,
-    //                 },
-    //             },
-    //         );
-    //         if (!response.ok) {
-    //             throw new Error('Failed to fetch images');
-    //         }
-    //         const images = await response.json();
-    //         setImagesByDocType(images);
-    //     } catch (error) {
-    //         console.error('Error fetching images:', error);
-    //     }
-    // };
 
     // eslint-disable-next-line no-unused-vars
     const cld = new Cloudinary({
@@ -177,7 +144,7 @@ export const CloudinaryProvider = ({ children }) => {
         }
     }, [user]);
 
-    //this whole function is being called inside getStudyGuide in accordioncard
+    //this function is being called inside getStudyGuide in accordioncard
 
     const updateUserProgress = async (newProgress) => {
         console.log('updateUserProgress called with:', newProgress);
@@ -204,9 +171,6 @@ export const CloudinaryProvider = ({ children }) => {
                         }),
                     },
                 );
-
-                console.log('Response Status:', response.status);
-                console.log('Response Status Text:', response.statusText);
 
                 if (!response.ok) {
                     const errorData = await response.json();
@@ -456,35 +420,6 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
-    const updateUserMetadata = async (newStatus) => {
-        try {
-            const accessToken = await getAccessTokenSilently();
-
-            const response = await fetch(
-                `http://localhost:8080/api/user/${email}/metadata`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        certListUploadStatus: newStatus,
-                    }),
-                },
-            );
-
-            if (!response.ok) {
-                throw new Error('Failed to update user metadata');
-            }
-
-            const updatedUser = await response.json();
-            console.log('User metadata updated:', updatedUser);
-        } catch (error) {
-            console.error('Error updating user metadata:', error);
-        }
-    };
-
     //delete certification file
     const deleteFile = async (publicId, sectionName) => {
         try {
@@ -685,8 +620,7 @@ export const CloudinaryProvider = ({ children }) => {
                 deleteCertificate,
                 getCertificate,
                 certificateData,
-                setCertificateData
-              
+                setCertificateData,
             }}
         >
             {loaded && children}

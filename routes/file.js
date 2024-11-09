@@ -1,5 +1,4 @@
 const ex = require('express');
-// const { processFile } = require('../middleware/cdn');
 const { getAllFilesByOwner, createFile } = require('../services/file');
 const File  = require('../models/file');
 const cloudinary = require('cloudinary').v2; 
@@ -11,10 +10,6 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
-// fileRouter.get('/health', (req, res) => {
-//     res.status(200).json({ message: 'API is working!' });
-// });
 
 //gets user specific file metadata
 fileRouter.get('/files/:user', async (req, res) => {
@@ -45,7 +40,6 @@ fileRouter.get('/', async (req, res, next) => {
 
 // //creates metadata upon successful cloudinary upload
 
-//create put route to update isApproved on the file object
 
 fileRouter.post('/', async (req, res) => {
     try {
@@ -72,7 +66,6 @@ fileRouter.post('/', async (req, res) => {
     }
 });
 
-console.log('File model:', File);
 
 fileRouter.delete('/:publicId', async (req, res) => {
     const publicId = req.params.publicId;
