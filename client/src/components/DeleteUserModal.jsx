@@ -5,7 +5,7 @@ export default function DeleteUserModal({
     open,
     onClose,
     handleDeleteUserClick,
-    handleDeleteProfileClick
+    handleDeleteProfileClick,
 }) {
     useEffect(() => {
         if (open) {
@@ -42,25 +42,28 @@ export default function DeleteUserModal({
                 >
                     X
                 </button>
-                <div>
+                <div className="flex flex-col justify-center items-center gap-10 p-10">
                     <h3
                         id="delete-modal-title"
-                        className="text-lg font-semibold"
+                        className="text-xl font-semibold"
                     >
                         Are you sure you want to delete the selected user(s)?
                     </h3>
-                    <div className="mt-4 flex justify-end gap-2">
-                        <button
-                            onClick={handleDeleteProfileClick}
-                            className="px-4 py-2 bg-red text-white rounded hover:bg-red"
-                        >
-                            Delete
-                        </button>
+                    <h2 className="text-lg font-semibold">
+                        This action cannot be undone.
+                    </h2>
+                    <div className="mt-4 flex justify-end gap-10">
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 bg-gray-300 rounded border border-black hover:bg-gray"
+                             className="bg-light-gray w-[100px]  py-2 rounded text-white"
                         >
                             Cancel
+                        </button>
+                        <button
+                            onClick={handleDeleteProfileClick}
+                             className="bg-red w-[100px] py-2 rounded text-white"
+                        >
+                            Delete
                         </button>
                     </div>
                 </div>

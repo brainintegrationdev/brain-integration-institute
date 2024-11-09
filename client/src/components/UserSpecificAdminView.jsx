@@ -7,6 +7,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { AdminContext } from '../contexts';
 // import { CloudinaryContext } from '../contexts';
 import ViewFileModal from './ViewFileModal';
+import Trashcan from '../assets/icons/Trashcan.png';
 
 import ProgressBar0 from '../assets/icons/ProgressBar0.png';
 import ProgressBar1 from '../assets/icons/ProgressBar1.png';
@@ -234,6 +235,9 @@ const UserSpecificAdminView = () => {
             </div>
 
             <div className="flex flex-col items-start w-[739px] mt-4">
+            <button>
+                <img src={Trashcan} alt="Trash can" className="pb-10 pl-10" />
+            </button>
                 <ul className="pl-5">
                     {[
                         {

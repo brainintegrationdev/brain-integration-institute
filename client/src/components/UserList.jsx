@@ -42,6 +42,8 @@ function UserList() {
     const [searchInput, setSearchInput] = useState('');
     const [usersToDelete, setUsersToDelete] = useState([]);
     const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
+
+    const [confirmationText, setConfirmationText] = useState('');
     const navigate = useNavigate();
 
     const certProgressImages = [
@@ -112,6 +114,8 @@ function UserList() {
             // Close the modal and reset the usersToDelete state
             setDeleteUserModalOpen(false);
             setUsersToDelete([]);
+            getAllUsers();
+            setConfirmationText('Selected user(s) successfully deleted.');
         } catch (error) {
             console.error('Error deleting users:', error);
         }
@@ -144,9 +148,23 @@ function UserList() {
                 />
                 <img src={Pracsearch} alt={'magnifying glass'} />
             </div>
-            <button onClick={handleDeleteUserClick}>
-                <img src={Trashcan} alt="Trash can" className="pb-10 pl-10" />
-            </button>
+            <div className="flex items-center w-full">
+              
+                <button onClick={handleDeleteUserClick} className="mr-auto">
+                    <img
+                        src={Trashcan}
+                        alt="Trash can"
+                        className="pb-10 pl-10"
+                    />
+                </button>
+
+              
+                {confirmationText && (
+                     <h3 className="font-bold text-xl text-red mx-auto ml-4 pb-10">
+                        {confirmationText}
+                    </h3>
+                )}
+            </div>
             {deleteUserModalOpen && (
                 <DeleteUserModal
                     open={deleteUserModalOpen}

@@ -78,7 +78,9 @@ export const AdminProvider = ({ children }) => {
         const token = await getManagementToken();
         try {
             const response = await axios.patch(
-                `https://${process.env.AUTH0_DOMAIN}/api/v2/users/${userId}`,
+                `https://${
+                    import.meta.env.VITE_AUTH0_DOMAIN
+                }/api/v2/users/${userId}`,
                 {
                     app_metadata: { isAdmin: true },
                 },
@@ -95,19 +97,83 @@ export const AdminProvider = ({ children }) => {
     };
 
     //create delete user route
+    // const deleteUser = async (userEmail) => {
+    //     try {
+    //         const accessToken = await getAccessTokenSilently();
+    //         const response = await axios.delete(`/api/user/${userEmail}`, {
+    //             headers: {
+    //                 Authorization: `Bearer ${accessToken}`,
+    //             },
+    //         });
+
+    //         console.log(
+    //             `User with ID ${userEmail} has been successfully deleted.`,
+    //         );
+    //         console.log(response.data);
+    //     } catch (error) {
+    //         console.error('Error deleting user:', error);
+    //     }
+    // };
+
     const deleteUser = async (userEmail) => {
         try {
-            const accessToken = await getAccessTokenSilently();
-            const response = await axios.delete(`/api/user/${userEmail}`, {
+            const accessTokenforBackend = await getAccessTokenSilently();
+            const tokenResponse = await axios.post(
+                `/api/admin/get-management-token`,
+                {
+                    client_id: import.meta.env.VITE_AUTH0_M2M_CLIENT_ID,
+                    client_secret: import.meta.env.VITE_AUTH0_CLIENT_SECRET,
+                    audience: `https://${
+                        import.meta.env.VITE_AUTH0_DOMAIN
+                    }/api/v2/`,
+                    grant_type: 'client_credentials',
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessTokenforBackend}`, // Send the user's access token to the backend
+                    },
+                },
+            );
+
+            const { accessToken } = tokenResponse.data;
+            const userResponse = await axios.get(
+                `https://${
+                    import.meta.env.VITE_AUTH0_DOMAIN
+                }/api/v2/users-by-email`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    params: { email: userEmail },
+                },
+            );
+
+            const user = userResponse.data[0];
+            const userId = user.user_id;
+
+            await axios.delete(
+                `http://localhost:8080/api/admin/delete-user/${userId}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessTokenforBackend}`,
+                    },
+                    data: {
+                        accessToken: accessToken, 
+                    },
+                },
+            );
+
+            console.log(`User with email ${userEmail} deleted successfully`);
+
+            await axios.delete(`http://localhost:8080/api/user/${userEmail}`, {
                 headers: {
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${accessTokenforBackend}`,
                 },
             });
 
-            console.log(
-                `User with ID ${userEmail} has been successfully deleted.`,
-            );
-            console.log(response.data); 
+            console.log(`User with email ${userEmail} deleted successfully`);
         } catch (error) {
             console.error('Error deleting user:', error);
         }
@@ -215,7 +281,7 @@ export const AdminProvider = ({ children }) => {
                 selectedDocumentName,
                 setSelectedDocumentName,
                 updateDocumentStatusbyAdmin,
-                deleteUser
+                deleteUser,
             }}
         >
             {children}
