@@ -59,7 +59,7 @@ export const ContactUs = () => {
         }
     };
 
-    console.log(requiredFieldError)
+    console.log(requiredFieldError);
 
     const onRequiredBlur = (e) => {
         const { name, value } = e.target;
@@ -82,10 +82,10 @@ export const ContactUs = () => {
         console.log(formData);
         try {
             const result = await emailjs.sendForm(
-                'service_sxdj0vs',
-                'template_23bdyjf',
+                import.meta.env.VITE_EMAILJS_SERVICE,
+                import.meta.env.VITE_EMAILJS_TEMPLATE,
                 e.target,
-                'sDqTOHBHEGz35Rltp',
+                import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
             );
             console.log(result.text);
             setIsSubmitted(true);
