@@ -33,7 +33,8 @@ const UserSpecificAdminView = () => {
         selectedDocumentName,
         setSelectedDocumentName,
         updateDocumentStatusbyAdmin,
-        getUserById
+        getUserById,
+        updateUserToAdmin
     } = useContext(AdminContext);
 
     const { userId } = useParams();
@@ -98,6 +99,12 @@ const UserSpecificAdminView = () => {
             console.error('Error fetching images:', error);
         }
     };
+
+    const promoteUsertoAdmin = async () => {
+        const email = individualUser.userEmail
+        await updateUserToAdmin(email)
+        console.log("updated user to admin")
+    }
 
     useEffect(() => {
         fetchProfileData(individualUser);
@@ -198,7 +205,9 @@ const UserSpecificAdminView = () => {
                             </p>
                         </div>
                     )}
+         
                 </div>
+                <button className='border border-black rounded-md p-10' onClick={promoteUsertoAdmin}>Promote User to Admin</button>
                 <div>
                     <img
                         src={

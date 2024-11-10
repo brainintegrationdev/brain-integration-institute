@@ -113,38 +113,38 @@ export const Navbar = () => {
     const renderLinks = () => {
         if (isAuthenticated) {
             return (
-                <>
+                <div className='flex justify-between'>
                     <Link
-                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         to="/"
                     >
                         Home
                     </Link>
                     <Link
-                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         to="/about"
                     >
                         About Us
                     </Link>
 
                     <Link
-                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         to="/practitioner"
                     >
                         Find Practitioner
                     </Link>
                     <Link
-                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         to="/certification"
                     >
                         Certification
                     </Link>
                     {isAdmin && (
                         <Link
-                            className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                            className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
                             to="/admin"
                         >
-                            Admin Portal
+                            Admin Dashboard
                         </Link>
                     )}
                     <button
@@ -168,43 +168,39 @@ export const Navbar = () => {
                             />
                         </Link>
                     </div>
-                </>
+                </div>
             );
         } else {
             return (
-                <>
+                <div className='flex justify-between'>
                     <Link
                         to="/"
-                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
                     >
                         Home
                     </Link>
                     <Link
-                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         to="/about"
                     >
                         About Us
                     </Link>
                     <button
-                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         onClick={handleLogin}
                     >
                         Login
                     </button>
-                </>
+                </div>
             );
         }
     };
 
     return (
         <header className="bg-white">
-            <nav className="flex flex-col md:flex-row justify-between items-center text-dark-gray p-4">
+            <nav className="flex flex-col md:flex-row lg:flex-row justify-between items-center text-dark-gray p-4 pr-10">
                 <div className="flex items-center justify-between w-full">
-                    <img
-                        className="w-[134px] h-[134px] shrink-0"
-                        src={BrainIntegrationSeal}
-                        alt="Brand Logo"
-                    />
+                
                     {/* Hamburger button for mobile view */}
                     {!isLargeScreen && (
                         <button

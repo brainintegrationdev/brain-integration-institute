@@ -420,7 +420,7 @@ export const CloudinaryProvider = ({ children }) => {
         }
     };
 
-    //delete certification file
+   
     const deleteFile = async (publicId, sectionName) => {
         try {
             const accessToken = await getAccessTokenSilently();

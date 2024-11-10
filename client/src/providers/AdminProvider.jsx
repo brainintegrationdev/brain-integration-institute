@@ -73,28 +73,36 @@ export const AdminProvider = ({ children }) => {
         }
     };
 
-    const updateUserToAdmin = async (userId) => {
-        const token = await getManagementToken();
+    const changeAdminStatus = async (email, adminStatus) => {
+        const accessToken = await getAccessTokenSilently();
         try {
-            const response = await axios.patch(
-                `https://${
-                    import.meta.env.VITE_AUTH0_DOMAIN
-                }/api/v2/users/${userId}`,
+            const response = await fetch(
+                `http://localhost:8080/api/user/${email}/is-admin`,
                 {
-                    app_metadata: { isAdmin: true },
-                },
-                {
+                    method: 'PUT',
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessToken}`,
                     },
+                    body: JSON.stringify({
+                        isAdmin: adminStatus,
+                    }),
                 },
             );
-            console.log('User promoted to admin:', response.data);
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Failed to update admin status:', errorData);
+                throw new Error(
+                    errorData.error || 'Failed to update admin status',
+                );
+            }
+
+            const updatedUser = await response.json();
+            console.log('Admin status updated:', updatedUser);
         } catch (error) {
-            console.error('Error updating user metadata:', error);
+            console.error('Error updating user to admin:', error);
         }
     };
-
 
     const deleteUser = async (userEmail) => {
         try {
@@ -112,7 +120,7 @@ export const AdminProvider = ({ children }) => {
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${accessTokenforBackend}`, // Send the user's access token to the backend
+                        Authorization: `Bearer ${accessTokenforBackend}`, 
                     },
                 },
             );
@@ -141,7 +149,7 @@ export const AdminProvider = ({ children }) => {
                         Authorization: `Bearer ${accessTokenforBackend}`,
                     },
                     data: {
-                        accessToken: accessToken, 
+                        accessToken: accessToken,
                     },
                 },
             );
@@ -202,7 +210,6 @@ export const AdminProvider = ({ children }) => {
             try {
                 const accessToken = await getAccessTokenSilently();
 
-                // Dynamically construct the request body
                 const updateBody = {
                     certListUploadStatus: {
                         [selectedDocumentType]: newDocStatus,
@@ -244,7 +251,7 @@ export const AdminProvider = ({ children }) => {
     return (
         <AdminContext.Provider
             value={{
-                updateUserToAdmin,
+                changeAdminStatus,
                 getManagementToken,
                 getAllUsers,
                 users,

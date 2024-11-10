@@ -119,12 +119,12 @@ userRouter.put('/:email/progress', async (req, res) => {
 
     try {
         const user = await UserModel.findOneAndUpdate(
-            { userEmail: email }, 
-            { userUploadProgress }, 
+            { userEmail: email },
+            { userUploadProgress },
             { new: true, runValidators: true },
         );
 
-        console.log('User found:', user); 
+        console.log('User found:', user);
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
@@ -191,20 +191,28 @@ userRouter.put('/:email/study-guide', async (req, res) => {
 userRouter.put('/:email/is-admin', async (req, res) => {
     const { isAdmin } = req.body;
     const { email } = req.params;
+
     if (typeof isAdmin !== 'boolean') {
         return res.status(400).json({
             error: 'isAdmin is required and must be a boolean',
         });
     }
+
     try {
+        console.log(`Updating admin status for user ${email} to ${isAdmin}`);
+
         const user = await UserModel.findOneAndUpdate(
             { userEmail: email },
             { isAdmin },
             { new: true, runValidators: true },
         );
+
         if (!user) {
+            console.log(`User with email ${email} not found`);
             return res.status(404).json({ error: 'User not found' });
         }
+
+        console.log(`User ${email} admin status updated to:`, user.isAdmin);
         res.json(user);
     } catch (error) {
         console.error('Error updating admin status:', error);
@@ -242,13 +250,14 @@ userRouter.put('/:email/document-status', async (req, res) => {
     }
 });
 
-
 //delete user route - can only be accessed by admins
 userRouter.delete('/:email', async (req, res) => {
-    const email = req.params.email
-    console.log(email, "email")
+    const email = req.params.email;
+    console.log(email, 'email');
     try {
-        const deletedUser = await UserModel.findOneAndDelete({ userEmail: email });
+        const deletedUser = await UserModel.findOneAndDelete({
+            userEmail: email,
+        });
 
         if (!deletedUser) {
             console.log('[Delete Route] User not found');

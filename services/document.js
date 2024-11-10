@@ -51,12 +51,12 @@ const getThumbnailImages = async (folders) => {
                 const searchParams = {
                     expression: `folder=${folder}`,
                     // Add transformations for thumbnails (width, height, crop, and quality)
-                    max_results: 20, // Limits to 20 results per folder
+                    max_results: 20, 
                     transformation: {
-                        width: 150,   // Thumbnail width
-                        height: 150,  // Thumbnail height
-                        crop: "fill", // Crop to fill thumbnail dimensions
-                        quality: "auto" // Optimize quality
+                        width: 150,   
+                        height: 150,  
+                        crop: "fill", 
+                        quality: "auto" 
                     }
                 };
                 const response = await axios.post(requestURL, searchParams, {

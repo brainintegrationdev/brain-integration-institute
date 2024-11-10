@@ -46,7 +46,7 @@ export default function ViewFileModal({
                         View file for: {selectedDocumentName}
                     </h3>
                     {imagesByDocType.length > 0 ? (
-                        <img src={imagesByDocType[0].url} alt="Document file" className='w-100 h-100'/>
+                        <img src={imagesByDocType[0].url} alt="Document file" className='w-[700px] h-[600px]'/>
                     ) : (
                         <p>No image available</p>
                     )}

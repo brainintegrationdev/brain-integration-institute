@@ -9,7 +9,6 @@ import ProgressBar5 from '../assets/icons/ProgressBar5.png';
 import ProgressBar6 from '../assets/icons/ProgressBar6.png';
 import ProgressBar7 from '../assets/icons/ProgressBar7.png';
 import ProgressBar8 from '../assets/icons/ProgressBar8.png';
-import GreenRedDot from '../assets/icons/GreenRedDots.png';
 import Trashcan from '../assets/icons/Trashcan.png';
 import Pracsearch from '../assets/icons/Pracsearch.svg';
 import DeleteUserModal from './DeleteUserModal';
@@ -164,11 +163,7 @@ function UserList() {
                                         ? `${user.firstName} ${user.lastName}`
                                         : user.userEmail}
                                 </span>
-                                <img
-                                    src={GreenRedDot}
-                                    alt={'accept/decline radios'}
-                                    className="ml-2"
-                                />
+                             
                             </div>
                             <div className="flex items-center">
                                 <img
