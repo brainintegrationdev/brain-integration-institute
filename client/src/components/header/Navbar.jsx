@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import BrainIntegrationSeal from '../../assets/icons/BrainIntegrationSeal.png';
 import bell from '../../assets/icons/bell.png';
 import placeholderProfilePic from '../../assets/icons/placeholderProfilePic.png';
@@ -68,6 +68,10 @@ export const Navbar = () => {
     }, [user]);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [useLocation()]);
+
+    useEffect(() => {
         checkForAdmin();
     }, [userMetaData]);
 
@@ -113,7 +117,7 @@ export const Navbar = () => {
     const renderLinks = () => {
         if (isAuthenticated) {
             return (
-                <div className='flex justify-between'>
+                <div className="flex justify-between">
                     <Link
                         className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         to="/"
@@ -178,7 +182,7 @@ export const Navbar = () => {
             );
         } else {
             return (
-                <div className='flex justify-between'>
+                <div className="flex justify-between">
                     <Link
                         to="/"
                         className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
@@ -206,7 +210,6 @@ export const Navbar = () => {
         <header className="bg-white">
             <nav className="flex flex-col md:flex-row lg:flex-row justify-between items-center text-dark-gray p-4 pr-10">
                 <div className="flex items-center justify-between w-full">
-                
                     {/* Hamburger button for mobile view */}
                     {!isLargeScreen && (
                         <button
