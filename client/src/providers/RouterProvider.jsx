@@ -12,6 +12,7 @@ import { Practitioner } from '../routes/Practitioner';
 import { PaymentSuccessPage } from '../routes/PaymentSuccessPage';
 import { NotFound } from '../routes/NotFound';
 import { Admin } from '../routes/Admin';
+import { ContactUs } from '../routes/ContactUs';
 import AddAdmins from '../routes/AddAdmins';
 import PractitionerManagement from '../routes/PractitionerManagement';
 import AdminUploadManagement from '../routes/AdminUploadManagement';
@@ -28,12 +29,12 @@ const router = createBrowserRouter([
                 index: true,
                 element: <Home />,
             },
-           
+
             {
                 path: '/profile',
                 element: <Profile />,
             },
-         
+
             {
                 path: '/certification',
                 element: <Certification />,
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
             {
                 path: '/success',
                 element: <PaymentSuccessPage />,
+            },
+            {
+                path: '/contact-us',
+                element: <ContactUs />,
             },
             {
                 path: '/admin',

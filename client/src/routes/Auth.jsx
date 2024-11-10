@@ -8,31 +8,31 @@ const Auth = () => {
     const initValues = {
         username: '',
         userpassword: ''
-    } 
+    }
     const [user, setUser] = useState(initValues)
     const [newUser, setNewUser] = useState(true)
     const {  getAccessTokenSilently } = useAuth0();
 
     const createUserMetadata = async (user) => {
         const { email, name, picture } = user;
-        
-    
+
+
         try {
             const response = await fetch('http://localhost:8080/api/user/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${await getAccessTokenSilently()}`, 
+                    Authorization: `Bearer ${await getAccessTokenSilently()}`,
                 },
                 body: JSON.stringify({
                     userEmail: email,
                     userName: name,
-                    userProfilePicture: picture, 
+                    userProfilePicture: picture,
                 }),
             });
-    
+
             const data = await response.json();
-    
+
             if (!response.ok) {
                 console.error('Error creating or checking user metadata:', data.error);
             } else {
@@ -42,14 +42,15 @@ const Auth = () => {
             console.error('Error during check or create user metadata request:', error);
         }
     };
-    
+
     const toggle = () => {
         setNewUser(prevStatus => !prevStatus)
-    } 
+    }
     const handleChange = (e) => {
         const {name, value} = e.target
+        // JE: Wat?
         setUser
-    } 
+    }
     const handleSignUp = (e) => {
         e.preventDefault()
         createUserMetadata()
@@ -62,7 +63,7 @@ const Auth = () => {
         console.log('user created!')
         // login
     }
-    
+
     useEffect(()=> {
 
     }, [])
@@ -72,15 +73,15 @@ const Auth = () => {
             {newUser
                 ?
             <form onSubmit={handleSignUp}>
-                <input 
-                type="text" 
+                <input
+                type="text"
                 value={user[username]}
                 name='username'
                 placeholder="Username..."
                 onChange={handleChange}
                 />
-                <input 
-                type="text" 
+                <input
+                type="text"
                 value={user[userpassword]}
                 name='password'
                 placeholder="Pasword..."
@@ -91,15 +92,15 @@ const Auth = () => {
             </form>
             :
             <form onSubmit={handleLogin}>
-                <input 
-                type="text" 
+                <input
+                type="text"
                 value={user[username]}
                 name='username'
                 placeholder="Username..."
                 onChange={handleChange}
                 />
-                <input 
-                type="text" 
+                <input
+                type="text"
                 value={user[password]}
                 name='password'
                 placeholder="Pasword..."
