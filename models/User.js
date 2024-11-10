@@ -1,7 +1,7 @@
 const mg = require('mongoose');
 const Schema = mg.Schema;
 
-const ApprovalModel = require('./approvalMessages'); 
+const ApprovalModel = require('./approvalMessages');
 
 const UploadStatus = {
     WAITINGFORUPLOAD: 'waiting for upload',
@@ -22,12 +22,12 @@ const UserSchema = new mg.Schema({
         type: String,
         default: '',
     },
- 
+
     userName: {
         type: String,
         required: true,
         unique: true,
-        default: '', 
+        default: '',
     },
 
     firstName: {
@@ -119,7 +119,9 @@ const UserSchema = new mg.Schema({
     },
 
     approvalMessages: {
-        brainIntegrationTraining: [{ type: Schema.Types.ObjectId, ref: 'Approval' }],
+        brainIntegrationTraining: [
+            { type: Schema.Types.ObjectId, ref: 'Approval' },
+        ],
         clinicalHours: [{ type: Schema.Types.ObjectId, ref: 'Approval' }],
         firstAidTraining: [{ type: Schema.Types.ObjectId, ref: 'Approval' }],
         cprCert: [{ type: Schema.Types.ObjectId, ref: 'Approval' }],
@@ -142,12 +144,24 @@ const UserSchema = new mg.Schema({
     // a pre-determined timeframe.
     subscriptionActiveStatus: {
         type: Boolean,
-        required: false,
+        default: false,
+    },
+
+    //will toggle to true once all docs approved and assessment receives passing score
+    isCertified: {
+        status: {
+            type: Boolean,
+            default: false,
+        },
+        certifiedDate: {
+            type: Date,
+            default: null,
+        },
     },
 });
 
 const UserModel = mg.model('User', UserSchema);
 
 module.exports = {
-    UserModel
+    UserModel,
 };

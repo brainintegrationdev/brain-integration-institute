@@ -152,7 +152,7 @@ export const Navbar = () => {
                         </Link>
                     )}
                     <Link
-                        className="py-2 px-8 transition duration-200 border-b-2 border-transparent hover:bg-medium-pale-green rounded-2xl hover:text-white text-xl whitespace-nowrap"
+                        className="py-3 px-4 w-full block transition duration-200 border-b-2 border-transparent hover:bg-green-500 rounded-2xl hover:text-white text-xl whitespace-nowrap"
                         to="/contact-us"
                     >
                         Contact Us
